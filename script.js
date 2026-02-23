@@ -2,12 +2,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-const firebaseConfig = { apiKey: "AIzaSyB_8sjnJNMpUi0LAQv7U5lFmMvRlh5x0nU", authDomain: "nagra-app.firebaseapp.com", projectId: "nagra-app", storageBucket: "nagra-app.firebasestorage.app", messagingSenderId: "29893867141", appId: "1:29893867141:web:e8b4e0a15d80898575dbec" };
 const app = initializeApp(firebaseConfig); 
 const db = getFirestore(app); 
 const auth = getAuth(app); 
 const googleProvider = new GoogleAuthProvider();
-
+const 
 window.currentUser = ""; 
 window.selectedNetwork = ""; 
 window.currentService = "";
