@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نَقْرَة | Nagra</title>
-    <meta name="description" content="تطبيق نَقْرَة (Nagra) - محفظتك الرقمية المتكاملة لشحن الرصيد، شراء بطاقات الألعاب، وتجديد الاشتراكات.">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -13,27 +12,32 @@
     <div id="login-screen" class="auth-container">
         <div class="auth-box">
             <div class="app-logo-large">📱</div>
+            
             <div class="auth-tabs">
                 <div id="tab-login" class="active" onclick="switchAuth('login')">دخول</div>
                 <div id="tab-signup" onclick="switchAuth('signup')">تسجيل</div>
             </div>
+
             <div id="login-form">
                 <h2 style="color: #2c3e50; margin-bottom: 20px;">مرحباً بك مجدداً</h2>
                 <input type="email" id="login-email" class="modern-input" placeholder="البريد الإلكتروني">
                 <input type="password" id="login-pass" class="modern-input" placeholder="كلمة المرور">
                 <button id="btn-login-execute" class="primary-btn">دخول آمن</button>
+                
                 <div class="divider">أو عبر</div>
                 <button class="btn-google" onclick="signInWithGoogle()">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
                     متابعة باستخدام Google
                 </button>
             </div>
+
             <div id="signup-form" style="display: none;">
                 <h2 style="color: #2c3e50; margin-bottom: 20px;">إنشاء حساب جديد</h2>
                 <input type="text" id="reg-name" class="modern-input" placeholder="الاسم بالكامل">
                 <input type="email" id="reg-email" class="modern-input" placeholder="البريد الإلكتروني">
                 <input type="password" id="reg-pass" class="modern-input" placeholder="كلمة مرور قوية">
                 <button id="btn-signup-execute" class="primary-btn">إنشاء الحساب</button>
+                
                 <div class="divider">أو عبر</div>
                 <button class="btn-google" onclick="signInWithGoogle()">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
@@ -44,10 +48,11 @@
     </div>
 
     <div id="main-app" style="display: none;">
+        
         <div class="balance-card-pro">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <span style="font-size: 14px; opacity: 0.9;">Nagra Pay • محفظتك الرقمية</span>
-                <span style="font-size: 20px;" onclick="forceLogout()" style="cursor:pointer;">🚪</span>
+                <span style="font-size: 20px; cursor: pointer;" onclick="forceLogout()">🚪</span>
             </div>
             <h1 id="user-balance" style="margin: 0; font-size: 38px; font-weight: 900; letter-spacing: 1px;">0 ج.س</h1>
         </div>
@@ -63,27 +68,31 @@
         <h3 style="color: #2c3e50; margin: 25px 0 15px; font-weight: 800;">الخدمات السريعة</h3>
         
         <div class="services-grid">
+            
             <div class="service-item" onclick="openOrderModal('شحن رصيد')">
-                <div class="icon-wrapper transparent-bg">
-                    <img src="رابط_صورة_شحن_الرصيد" class="custom-icon-img" alt="شحن">
+                <div class="icon-wrapper">
+                    <img src="رابط_صورة_شحن_الرصيد_هنا" alt="شحن رصيد">
                 </div>
                 <p>شحن رصيد</p>
             </div>
+            
             <div class="service-item" onclick="openOrderModal('ألعاب')">
-                <div class="icon-wrapper transparent-bg">
-                    <img src="رابط_صورة_الالعاب" class="custom-icon-img" alt="ألعاب">
+                <div class="icon-wrapper">
+                    <img src="رابط_صورة_الالعاب_هنا" alt="ألعاب">
                 </div>
                 <p>بطاقات ألعاب</p>
             </div>
+            
             <div class="service-item" onclick="openOrderModal('اشتراكات')">
-                <div class="icon-wrapper transparent-bg">
-                    <img src="رابط_صورة_الاشتراكات" class="custom-icon-img" alt="اشتراكات">
+                <div class="icon-wrapper">
+                    <img src="رابط_صورة_الاشتراكات_هنا" alt="اشتراكات">
                 </div>
                 <p>اشتراكات</p>
             </div>
+            
             <div class="service-item" onclick="openOrderModal('بطاقات دفع')">
-                <div class="icon-wrapper transparent-bg">
-                    <img src="رابط_صورة_البطاقات" class="custom-icon-img" alt="بطاقات">
+                <div class="icon-wrapper">
+                    <img src="رابط_صورة_البطاقات_هنا" alt="بطاقات دفع">
                 </div>
                 <p>بطاقات دفع</p>
             </div>
@@ -95,13 +104,18 @@
                     <p style="margin: 0; font-size: 12px; color: #7f8c8d;">تابع حالة شحناتك السابقة</p>
                 </div>
             </div>
+
         </div>
     </div>
 
     <div id="recharge-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <h3 style="color: #11998e;">تغذية المحفظة</h3>
-            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">قم بتحويل المبلغ عبر تطبيق بنكك إلى الحساب: <br><b style="color: #2c3e50; font-size: 16px;">1234567</b><br>ثم أدخل بيانات الإشعار هنا</p>
+            <p style="font-size: 13px; color: #7f8c8d; margin-bottom: 15px;">
+                قم بتحويل المبلغ عبر تطبيق بنكك إلى الحساب: <br>
+                <b style="color: #2c3e50; font-size: 16px;">1234567</b><br>
+                ثم أدخل بيانات الإشعار هنا
+            </p>
             <input type="number" id="recharge-amount" class="modern-input" placeholder="المبلغ المحول (ج.س)">
             <input type="text" id="recharge-receipt" class="modern-input" placeholder="رقم الإشعار أو العملية">
             <div class="modal-buttons">
@@ -114,9 +128,12 @@
     <div id="order-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <h3 id="modal-title" style="color: #11998e;">اختر الخدمة</h3>
+            
             <div id="step-1-options" class="dynamic-grid"></div>
+            
             <div id="step-2-details" style="display: none;">
                 <div id="card-info-box" style="display: none; background: #f8f9fa; padding: 15px; border-radius: 15px; border: 2px dashed #11998e; margin-bottom: 15px; text-align: right; font-size: 13px; color: #2c3e50; line-height: 1.8;"></div>
+
                 <input type="text" id="order-target" class="modern-input" placeholder="البيانات المطلوبة">
                 <input type="number" id="order-amount" class="modern-input" placeholder="المبلغ (المعادل بـ ج.س)">
                 <div class="modal-buttons">
@@ -136,6 +153,7 @@
     </div>
 
     <div id="toast-message" class="toast"></div>
+
     <script type="module" src="script.js"></script>
 </body>
 </html>
