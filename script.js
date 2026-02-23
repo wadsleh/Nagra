@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-// إعدادات فايربيس
 const firebaseConfig = { 
     apiKey: "AIzaSyB_8sjnJNMpUi0LAQv7U5lFmMvRlh5x0nU", 
     authDomain: "nagra-app.firebaseapp.com", 
@@ -21,7 +20,6 @@ window.currentUser = "";
 window.selectedNetwork = ""; 
 window.currentService = "";
 
-// نظام التنبيهات
 window.showToast = (msg, isError = false) => {
     const t = document.getElementById('toast-message'); 
     t.innerText = msg;
@@ -29,7 +27,6 @@ window.showToast = (msg, isError = false) => {
     setTimeout(() => t.className = "toast", 3000);
 }
 
-// التبديل بين الدخول والتسجيل
 window.switchAuth = (type) => {
     document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
     document.getElementById('signup-form').style.display = type === 'signup' ? 'block' : 'none';
@@ -37,7 +34,6 @@ window.switchAuth = (type) => {
     document.getElementById('tab-signup').className = type === 'signup' ? 'active' : '';
 }
 
-// الدخول بجوجل
 window.signInWithGoogle = () => {
     window.showToast("جاري التحويل لجوجل... ⏳", false);
     signInWithRedirect(auth, googleProvider).catch(e => window.showToast("خطأ في الاتصال بجوجل", true));
@@ -47,7 +43,6 @@ getRedirectResult(auth).then(res => {
     if(res?.user) window.showToast("تم الدخول بنجاح! 🚀", false); 
 });
 
-// مراقبة حالة المستخدم
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         const userRef = doc(db, "users", user.uid); 
@@ -72,7 +67,6 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// إنشاء حساب
 document.getElementById('btn-signup-execute').onclick = async () => {
     const name = document.getElementById('reg-name').value; 
     const email = document.getElementById('reg-email').value; 
@@ -84,7 +78,6 @@ document.getElementById('btn-signup-execute').onclick = async () => {
     } catch (e) { window.showToast("فشل التسجيل", true); }
 }
 
-// تسجيل الدخول العادي
 document.getElementById('btn-login-execute').onclick = async () => {
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
@@ -93,7 +86,6 @@ document.getElementById('btn-login-execute').onclick = async () => {
     } catch (e) { window.showToast("بيانات الدخول خاطئة", true); }
 }
 
-// جلب سجل الطلبات
 function loadOrders(userId) {
     onSnapshot(query(collection(db, "orders"), where("uid", "==", userId)), (snap) => {
         const list = document.getElementById('user-orders-list'); 
@@ -119,11 +111,9 @@ function loadOrders(userId) {
     });
 }
 
-// نوافذ التطبيق
 window.openRechargeModal = () => document.getElementById('recharge-modal').style.display = 'flex';
 window.closeRechargeModal = () => document.getElementById('recharge-modal').style.display = 'none';
 
-// فتح نافذة الخدمات (مرتبة جداً لتعديل الصور)
 window.openOrderModal = (s) => { 
     window.currentService = s; 
     document.getElementById('order-modal').style.display = 'flex'; 
@@ -132,6 +122,8 @@ window.openOrderModal = (s) => {
     document.getElementById('modal-title').innerText = "اختر نوع " + s; 
     
     const grid = document.getElementById('dynamic-options-grid'); 
+    
+    // ستايل موحد للصور
     const imgStyle = "width:100%; height:100%; object-fit:contain; border-radius:8px;";
     const divStyle = "border:none; padding:0; overflow:hidden; background: transparent;";
 
@@ -139,23 +131,15 @@ window.openOrderModal = (s) => {
         grid.style.gridTemplateColumns = 'repeat(3, 1fr)'; 
         grid.innerHTML = `
             <div class="network-card" onclick="proceedToStep2('زين')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_زين" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_زين" style="${imgStyle}"></div>
                 <p>زين</p>
             </div>
-            
             <div class="network-card" onclick="proceedToStep2('سوداني')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_سوداني" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_سوداني" style="${imgStyle}"></div>
                 <p>سوداني</p>
             </div>
-            
             <div class="network-card" onclick="proceedToStep2('MTN')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_ام_تي_ان" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_ام_تي_ان" style="${imgStyle}"></div>
                 <p>MTN</p>
             </div>
         `;
@@ -164,16 +148,11 @@ window.openOrderModal = (s) => {
         grid.style.gridTemplateColumns = 'repeat(2, 1fr)'; 
         grid.innerHTML = `
             <div class="network-card" onclick="proceedToStep2('PUBG')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_ببجي" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_ببجي" style="${imgStyle}"></div>
                 <p>ببجي</p>
             </div>
-            
             <div class="network-card" onclick="proceedToStep2('Free Fire')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_فري_فاير" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_فري_فاير" style="${imgStyle}"></div>
                 <p>فري فاير</p>
             </div>
         `;
@@ -182,16 +161,11 @@ window.openOrderModal = (s) => {
         grid.style.gridTemplateColumns = 'repeat(2, 1fr)'; 
         grid.innerHTML = `
             <div class="network-card" onclick="proceedToStep2('Netflix')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_نتفليكس" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_نتفليكس" style="${imgStyle}"></div>
                 <p>نتفليكس</p>
             </div>
-            
             <div class="network-card" onclick="proceedToStep2('Spotify')">
-                <div class="pro-logo" style="${divStyle}">
-                    <img src="رابط_صورة_سبوتيفاي" style="${imgStyle}">
-                </div>
+                <div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_سبوتيفاي" style="${imgStyle}"></div>
                 <p>سبوتيفاي</p>
             </div>
         `;
@@ -202,4 +176,3 @@ window.openOrderModal = (s) => {
             <div class="network-card" onclick="proceedToStep2('Visa')">
                 <div class="pro-logo" style="${divStyle}">
                     <img src="http://googleusercontent.com/generated_image_content/0
- 
