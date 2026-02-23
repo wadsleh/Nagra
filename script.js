@@ -1,3 +1,5 @@
+import { firebaseConfig } from './config.js';
+ 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -6,7 +8,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); 
 const auth = getAuth(app); 
 const googleProvider = new GoogleAuthProvider();
-const key = gitignore.env.
+
 window.currentUser = ""; 
 window.selectedNetwork = ""; 
 window.currentService = "";
