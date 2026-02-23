@@ -6,7 +6,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app); 
 const auth = getAuth(app); 
 const googleProvider = new GoogleAuthProvider();
-const 
+const key = gitignore.env.
 window.currentUser = ""; 
 window.selectedNetwork = ""; 
 window.currentService = "";
