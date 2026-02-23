@@ -116,20 +116,31 @@ window.openOrderModal = (s) => {
     document.getElementById('modal-title').innerText = "اختر نوع " + s; 
     const grid = document.getElementById('dynamic-options-grid'); 
     
+    // ستايل موحد لصور اللوجوهات
+    const imgStyle = "width:100%; height:100%; object-fit:contain; border-radius:8px;";
+    const divStyle = "border:none; padding:0; overflow:hidden; background: transparent;";
+
     if(s==='شحن رصيد'){ 
         grid.style.gridTemplateColumns='repeat(3, 1fr)'; 
-        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('زين')"><div class="pro-logo zain-logo">زين</div><p>زين</p></div><div class="network-card" onclick="proceedToStep2('سوداني')"><div class="pro-logo sudani-logo">SD</div><p>سوداني</p></div><div class="network-card" onclick="proceedToStep2('MTN')"><div class="pro-logo mtn-logo">MTN</div><p>MTN</p></div>`;
+        grid.innerHTML=`
+            <div class="network-card" onclick="proceedToStep2('زين')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_زين" style="${imgStyle}"></div><p>زين</p></div>
+            <div class="network-card" onclick="proceedToStep2('سوداني')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_سوداني" style="${imgStyle}"></div><p>سوداني</p></div>
+            <div class="network-card" onclick="proceedToStep2('MTN')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_ام_تي_ان" style="${imgStyle}"></div><p>MTN</p></div>`;
     } else if(s==='ألعاب'){ 
         grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
-        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('PUBG')"><div class="pro-logo pubg-logo">🎮</div><p>ببجي</p></div><div class="network-card" onclick="proceedToStep2('Free Fire')"><div class="pro-logo ff-logo">🔥</div><p>فري فاير</p></div>`;
+        grid.innerHTML=`
+            <div class="network-card" onclick="proceedToStep2('PUBG')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_ببجي" style="${imgStyle}"></div><p>ببجي</p></div>
+            <div class="network-card" onclick="proceedToStep2('Free Fire')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_فري_فاير" style="${imgStyle}"></div><p>فري فاير</p></div>`;
     } else if(s==='اشتراكات'){ 
         grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
-        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('Netflix')"><div class="pro-logo netflix-logo">N</div><p>نتفليكس</p></div><div class="network-card" onclick="proceedToStep2('Spotify')"><div class="pro-logo spotify-logo">S</div><p>سبوتيفاي</p></div>`;
+        grid.innerHTML=`
+            <div class="network-card" onclick="proceedToStep2('Netflix')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_نتفليكس" style="${imgStyle}"></div><p>نتفليكس</p></div>
+            <div class="network-card" onclick="proceedToStep2('Spotify')"><div class="pro-logo" style="${divStyle}"><img src="رابط_صورة_سبوتيفاي" style="${imgStyle}"></div><p>سبوتيفاي</p></div>`;
     } else if(s==='بطاقات دفع'){ 
         grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
         grid.innerHTML=`
-            <div class="network-card" onclick="proceedToStep2('Visa')"><div class="pro-logo" style="border:none; padding:0; overflow:hidden;"><img src="http://googleusercontent.com/generated_image_content/1" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div><p>فيزا</p></div>
-            <div class="network-card" onclick="proceedToStep2('Mastercard')"><div class="pro-logo" style="border:none; padding:0; overflow:hidden;"><img src="http://googleusercontent.com/generated_image_content/0" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"></div><p>ماستركارد</p></div>`;
+            <div class="network-card" onclick="proceedToStep2('Visa')"><div class="pro-logo" style="${divStyle}"><img src="http://googleusercontent.com/generated_image_content/1" style="${imgStyle}"></div><p>فيزا</p></div>
+            <div class="network-card" onclick="proceedToStep2('Mastercard')"><div class="pro-logo" style="${divStyle}"><img src="http://googleusercontent.com/generated_image_content/0" style="${imgStyle}"></div><p>ماستركارد</p></div>`;
     } 
 }
 
