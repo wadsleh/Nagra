@@ -135,8 +135,7 @@ window.openOrderModal = (s) => {
                 <p>MTN</p>
             </div>
         `;
-    } 
-        else if(s==='ألعاب'){
+       } else if(s==='ألعاب'){
         grid.style.gridTemplateColumns='repeat(2, 1fr)';
         grid.innerHTML=`
             <div class="network-card" onclick="proceedToStep2('PUBG')">
@@ -144,11 +143,12 @@ window.openOrderModal = (s) => {
                 <p>ببجي</p>
             </div>
             <div class="network-card" onclick="proceedToStep2('Free Fire')">
-                <div class="pro-logo ff-logo">🔥</div>
+                <div class="pro-logo"><img src="images/freefire.jpeg" alt="فري فاير"></div>
                 <p>فري فاير</p>
             </div>
         `;
     }
+
  else if(s==='اشتراكات'){ 
         grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
         grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('Netflix')"><div class="pro-logo netflix-logo">N</div><p>نتفليكس</p></div><div class="network-card" onclick="proceedToStep2('Spotify')"><div class="pro-logo spotify-logo">S</div><p>سبوتيفاي</p></div>`;
