@@ -1,4 +1,7 @@
-body {
+* { 
+    box-sizing: border-box; 
+}
+
 /* تثبيت لون الخلفية عشان ما يخرب مع الـ Dark Mode */
 body {
     font-family: 'Tajawal', sans-serif;
@@ -7,6 +10,15 @@ body {
     padding: 20px;
     direction: rtl;
     color: #333;
+}
+
+/* Auth - شاشة الدخول */
+.auth-container { 
+    display: flex; justify-content: center; align-items: center; min-height: 90vh; 
+}
+
+.auth-box { 
+    background: white; padding: 30px 25px; border-radius: 25px; width: 100%; max-width: 340px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); text-align: center; 
 }
 
 /* تنسيق اللوجو الجديد عشان يكون فخم ومندمج */
@@ -19,425 +31,121 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08); /* ظل خفيف ورا اللوجو */
-    overflow: hidden; /* عشان يقص أي حواف مربعة ويخليها دائرية */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    overflow: hidden; 
 }
 
 .app-logo-large img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* بتخلي اللوجو يملأ الدائرة بشكل ممتاز */
+    object-fit: cover; 
 }
 
-
-.overlay,
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.auth-tabs { 
+    display: flex; background: #f8f9fa; border-radius: 12px; margin-bottom: 25px; overflow: hidden; 
 }
 
-.login-box,
-.modal-box {
-    background: white;
-    padding: 25px;
-    border-radius: 25px;
-    text-align: center;
-    width: 85%;
-    max-width: 320px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+.auth-tabs div { 
+    flex: 1; padding: 12px; font-weight: 700; cursor: pointer; color: #7f8c8d; transition: 0.3s; 
 }
 
-
-.auth-tabs {
-    display: flex;
-    background: #f1f2f6;
-    border-radius: 12px;
-    padding: 5px;
-    margin-bottom: 25px;
+.auth-tabs div.active { 
+    background: white; color: #11998e; box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
 }
 
-.auth-tabs button {
-    flex: 1;
-    border: none;
-    padding: 12px;
-    border-radius: 10px;
-    font-family: 'Tajawal';
-    font-weight: 700;
-    cursor: pointer;
-    background: transparent;
-    color: #7f8c8d;
-    transition: 0.3s;
+.modern-input { 
+    width: 100%; padding: 15px; margin-bottom: 15px; border: 1.5px solid #ecf0f1; border-radius: 12px; font-family: 'Tajawal'; font-size: 15px; transition: 0.3s; outline: none; background: #fcfcfc; 
 }
 
-.auth-tabs button.active {
-    background: white;
-    color: #11998e;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.modern-input:focus { border-color: #11998e; background: white; }
+
+.primary-btn { 
+    width: 100%; padding: 15px; background: linear-gradient(135deg, #11998e, #38ef7d); color: white; border: none; border-radius: 12px; font-family: 'Tajawal'; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(17, 153, 142, 0.3); 
 }
 
-/* المدخلات والأزرار */
-.input-group input,
-.modern-input {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 12px;
-    border: 2px solid #f1f2f6;
-    border-radius: 15px;
-    box-sizing: border-box;
-    font-family: 'Tajawal';
-    font-size: 14px;
-    outline: none;
+.primary-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4); }
+
+.divider { margin: 20px 0; color: #bdc3c7; font-size: 13px; position: relative; }
+.divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 35%; height: 1px; background: #ecf0f1; }
+.divider::before { right: 0; } .divider::after { left: 0; }
+
+.btn-google { 
+    width: 100%; padding: 12px; background: white; color: #2c3e50; border: 1.5px solid #ecf0f1; border-radius: 12px; font-family: 'Tajawal'; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.3s; 
+}
+.btn-google:hover { background: #f8f9fa; }
+.btn-google img { width: 24px; height: 24px; }
+
+/* Main App - التطبيق الرئيسي */
+.balance-card-pro { 
+    background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(44, 62, 80, 0.3); margin-bottom: 20px; 
 }
 
-.input-group input:focus {
-    border-color: #11998e;
+.recharge-btn-pro { 
+    width: 100%; background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; border: none; padding: 18px 25px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-family: 'Tajawal'; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); transition: 0.3s; 
+}
+.recharge-btn-pro:active { transform: scale(0.98); }
+
+.services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+
+.service-item { 
+    background: white; padding: 20px 10px; border-radius: 20px; text-align: center; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.03); transition: 0.3s; display: flex; flex-direction: column; align-items: center; border: 1px solid #fcfcfc; 
+}
+.service-item:active { transform: scale(0.95); }
+.service-item p { margin: 10px 0 0; font-weight: 700; color: #2c3e50; font-size: 14px; }
+.service-item.full-width { grid-column: 1 / -1; flex-direction: row; text-align: right; padding: 20px; gap: 15px; }
+
+/* Icon Wrapper for 3D Images - مكان صور الخدمات */
+.icon-wrapper { 
+    width: 65px; height: 65px; border-radius: 18px; margin: 0 auto; display: flex; justify-content: center; align-items: center; overflow: hidden; background: transparent;
+}
+.icon-wrapper img { max-width: 90%; max-height: 90%; object-fit: contain; }
+
+.teal-bg { background: #e0f2f1; color: #009688; font-size: 24px; line-height: 65px;}
+
+/* Modals - النوافذ المنبثقة */
+.modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 1000; 
 }
 
-.btn-primary,
-.confirm-btn {
-    width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
-    border: none;
-    border-radius: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 16px;
+.modal-box { 
+    background: white; padding: 25px; border-radius: 25px; width: 90%; max-width: 320px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s ease-out; 
 }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-.cancel-btn {
-    padding: 15px;
-    background: #f1f2f6;
-    color: #576574;
-    border: none;
-    border-radius: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    flex: 1;
+.dynamic-grid { display: grid; gap: 10px; margin-top: 15px; }
+
+.network-card { 
+    background: #f8f9fa; padding: 15px; border-radius: 15px; cursor: pointer; border: 1.5px solid transparent; transition: 0.2s; 
 }
+.network-card:hover { border-color: #11998e; background: #f0fbf9; }
 
-.modal-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+.pro-logo { 
+    width: 50px; height: 50px; border-radius: 12px; margin: 0 auto 8px; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 14px; color: white; overflow: hidden; background: transparent;
 }
+.pro-logo img { width: 100%; height: 100%; object-fit: contain; }
 
-/* المحفظة والخدمات */
-.header {
-    background: white;
-    padding: 20px 20px 50px;
-    border-radius: 0 0 35px 35px;
+.modal-buttons { display: flex; gap: 10px; margin-top: 15px; }
+.modal-buttons button { flex: 1; padding: 12px; border-radius: 12px; font-family: 'Tajawal'; font-weight: bold; cursor: pointer; border: none; }
+.confirm-btn { background: #11998e; color: white; }
+.cancel-btn { background: #ecf0f1; color: #7f8c8d; }
+
+/* Orders History - سجل الطلبات */
+.orders-history-container { max-height: 350px; overflow-y: auto; text-align: right; margin-top: 15px; padding-right: 5px; }
+.order-card-pro { 
+    background: #f8f9fa; padding: 12px 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 4px solid #bdc3c7; font-size: 13px; 
 }
+.order-card-pro.completed { border-right-color: #2ecc71; background: #eafaf1; }
+.order-card-pro.pending { border-right-color: #f39c12; background: #fef5e7; }
+.order-card-pro.rejected { border-right-color: #e74c3c; background: #fdedec; }
 
-.wallet-card {
-    background: linear-gradient(135deg, #2b5876, #4e4376);
-    margin: -35px 20px 20px;
-    padding: 25px;
-    border-radius: 25px;
-    color: white;
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-    position: relative;
-    overflow: hidden;
+.status-pill { padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.status-completed { color: #27ae60; background: #d5f5e3; }
+.status-pending { color: #d35400; background: #fad7a1; }
+.status-rejected { color: #c0392b; background: #f5b7b1; }
+
+/* Toast - التنبيهات */
+.toast { 
+    visibility: hidden; min-width: 250px; background-color: #11998e; color: #fff; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 2000; left: 50%; bottom: 30px; transform: translateX(-50%); font-weight: bold; font-family: 'Tajawal'; font-size: 14px; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.2); 
 }
-
-.balance-title {
-    font-size: 14px;
-    opacity: 0.8;
-    margin-bottom: 5px;
-}
-
-.balance-amount {
-    font-size: 32px;
-    font-weight: 900;
-}
-
-.services-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 0 20px 30px;
-}
-
-.service-item {
-    background: white;
-    padding: 20px 10px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-    cursor: pointer;
-    border: 1px solid #f1f2f6;
-    transition: 0.2s;
-}
-
-.service-item:active {
-    transform: scale(0.95);
-}
-
-.service-item.full-width {
-    grid-column: span 2;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 20px;
-    text-align: right;
-}
-
-.icon-wrapper {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    margin: 0 auto 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-}
-
-/* كروت الشبكات، الألعاب، والفيزا */
-.network-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-/* خليناها 2 عشان تاخد راحتها */
-.network-card {
-    background: #fff;
-    border: 2px solid #f4f7f6;
-    border-radius: 18px;
-    padding: 15px 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.network-card p {
-    margin: 0;
-    font-weight: 800;
-    font-size: 13px;
-    color: #2c3e50;
-}
-
-.network-card:hover {
-    border-color: #11998e;
-    transform: translateY(-3px);
-}
-
-.pro-logo {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 8px;
-    font-weight: 900;
-    font-size: 12px;
-    color: white;
-    border: 2px solid;
-}
-
-/* ألوان الشركات الجديدة */
-.zain-logo {
-    background: #2d3436;
-    color: #ff4757;
-    border-color: #ff4757;
-}
-
-.sudani-logo {
-    background: #0984e3;
-    color: #fdcb6e;
-    border-color: #fdcb6e;
-}
-
-.mtn-logo {
-    background: #fdcb6e;
-    color: #2d3436;
-    border-color: #2d3436;
-}
-
-.pubg-logo {
-    background: #2c3e50;
-    color: #f1c40f;
-    border-color: #f1c40f;
-    font-size: 16px;
-}
-
-.ff-logo {
-    background: #e74c3c;
-    color: white;
-    border-color: #c0392b;
-    font-size: 16px;
-}
-
-.visa-logo {
-    background: #192a56;
-    color: white;
-    border-color: #e1b12c;
-    font-size: 16px;
-    font-family: sans-serif;
-}
-
-.master-logo {
-    background: #eb4d4b;
-    color: #f0932b;
-    border-color: #f0932b;
-    font-size: 16px;
-}
-
-.netflix-logo {
-    background: #e50914;
-    color: white;
-    border-color: #b81d24;
-    font-size: 18px;
-}
-
-.spotify-logo {
-    background: #1db954;
-    color: white;
-    border-color: #191414;
-    font-size: 18px;
-}
-
-/* السجل والتنبيهات */
-.orders-history-container {
-    max-height: 350px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-.order-card-pro {
-    background: #fafafa;
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #eee;
-    border-right: 5px solid #11998e;
-}
-
-.status-pill {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
-    color: white;
-}
-
-.completed {
-    border-right-color: #2ecc71;
-}
-
-.status-completed {
-    background: #2ecc71;
-}
-
-.pending {
-    border-right-color: #f1c40f;
-}
-
-.status-pending {
-    background: #f1c40f;
-    color: #2c3e50;
-}
-
-.rejected {
-    border-right-color: #e74c3c;
-}
-
-.status-rejected {
-    background: #e74c3c;
-}
-
-.toast {
-    visibility: hidden;
-    min-width: 250px;
-    background: #11998e;
-    color: white;
-    text-align: center;
-    border-radius: 50px;
-    padding: 15px;
-    position: fixed;
-    z-index: 3000;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    transition: 0.3s;
-    font-weight: bold;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.toast.show {
-    visibility: visible;
-    bottom: 50px;
-}
-
-.divider {
-    position: relative;
-    margin: 25px 0;
-    text-align: center;
-    border-top: 1px solid #eee;
-}
-
-.divider span {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 0 15px;
-    color: #a4b0be;
-    font-size: 12px;
-}
-
-.btn-google {
-    width: 100%;
-    padding: 12px;
-    background: white;
-    border: 2px solid #f1f2f6;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-family: 'Tajawal';
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.blue-bg {
-    background: #e3f2fd;
-}
-
-.purple-bg {
-    background: #f3e5f5;
-}
-
-.orange-bg {
-    background: #fff3e0;
-}
-
-.green-bg {
-    background: #e8f5e9;
-}
-
-.teal-bg {
-    background: #e0f2f1;
-}
-
-/* ضبط مقاس أيقونة جوجل */
-.btn-google img {
-    width: 24px;
-    height: 24px;
-    }
+.toast.error { background-color: #e74c3c; }
+.toast.show { visibility: visible; bottom: 50px; }
