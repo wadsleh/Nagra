@@ -457,65 +457,124 @@ body {
    💎 التصميم النهائي الفخم (Big & Clean Icons)
    ========================================= */
 
-/* 1. شبكة الخدمات (ترتيب ومسافات متناسقة) */
-.services-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 15px !important;
-    padding: 0 20px !important;
+/* =========================================
+   👑 تصميم e& money المستنسخ (UI Clone)
+   ========================================= */
+
+/* الهيدر المتدرج */
+.top-hero-section {
+    background: linear-gradient(135deg, #192a56, #273c75);
+    padding: 20px 20px 80px 20px;
+    border-radius: 0 0 25px 25px;
+    color: white;
 }
 
-/* 2. تصميم الكارت (خلفية بيضاء نظيفة، ظل ناعم، بدون إطار مزعج) */
-.service-item {
-    background: #ffffff !important;
-    border-radius: 24px !important; /* حواف ناعمة جداً */
-    padding: 15px 10px !important;  /* تقليل الحواف الداخلية عشان الأيقونة تكبر */
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    /* ظل احترافي ناعم جداً */
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 5px 10px -5px rgba(0,0,0,0.02) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important; /* إطار شبه شفاف */
-    aspect-ratio: 1 / 1 !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+/* زر السجل الأبيض */
+.history-btn-top {
+    background: white;
+    color: #192a56;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-family: 'Tajawal';
+    font-weight: 800;
+    font-size: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-.service-item:active {
-    transform: scale(0.96) !important;
-    background: #f8f9fa !important;
+/* الكارت الأبيض الرئيسي (المتداخل) */
+.main-actions-card {
+    background: white;
+    border-radius: 20px;
+    margin: -50px 20px 0;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 10;
 }
 
-/* 3. حاوية الأيقونة (إزالة القيود وتكبير الحجم) */
-.service-item .icon-wrapper {
-    width: 85px !important;  /* 🌟 تكبير الحجم بشكل ملحوظ */
-    height: 85px !important; /* 🌟 تكبير الحجم بشكل ملحوظ */
-    background: transparent !important; /* خلفية شفافة تماماً */
-    border-radius: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    margin-bottom: 5px !important; /* تقريب النص من الأيقونة */
-    padding: 0 !important; /* إلغاء الحواف الداخلية للحاوية */
-    border: none !important;
-    box-shadow: none !important;
+/* الصفوف داخل الكارت */
+.actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.actions-row.row-2 {
+    justify-content: space-around;
 }
 
-/* 4. ضبط الصورة وإضافة عمق */
-.service-item .icon-wrapper img, 
-.service-item .icon-wrapper span {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-    /* ظل خفيف للصورة نفسها عشان تبرز عن الكارت الأبيض */
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08)) !important; 
+/* الخط الفاصل */
+.actions-divider {
+    border: 0;
+    height: 1px;
+    background: #f1f2f6;
+    margin: 15px 0;
 }
 
-/* 5. تنسيق النص */
-.service-item p {
-    margin: 0 !important;
-    font-size: 15px !important; /* تكبير الخط سنة */
-    font-weight: 800 !important;
-    color: #2d3436 !important;
+/* أزرار العمليات (دوائر بحواف ملونة) */
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    width: 30%;
 }
+.action-btn p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+.icon-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    background: white;
+    border: 1.5px solid;
+    transition: 0.3s;
+}
+.text-blue { border-color: #3498db; color: #3498db; }
+.text-green { border-color: #2ecc71; color: #2ecc71; }
+.text-red { border-color: #e74c3c; color: #e74c3c; }
+.text-orange { border-color: #f39c12; color: #f39c12; }
+.text-purple { border-color: #9b59b6; color: #9b59b6; }
+.action-btn:active .icon-circle { transform: scale(0.9); background: #f8f9fa; }
+
+/* 🌟 شبكة الفئات (3 مربعات صغيرة في الصف) */
+.categories-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.cat-item {
+    background: white;
+    border-radius: 15px;
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    border: 1px solid #f8f9fa;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.cat-item:active { transform: scale(0.95); }
+.cat-item p { margin: 8px 0 0; font-size: 12px; font-weight: 800; color: #2c3e50; }
+.cat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.cat-icon img { width: 100%; height: 100%; object-fit: contain; }
 
