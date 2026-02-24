@@ -14,8 +14,12 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-box { background: white; color: #2c3e50; padding: 30px 20px; border-radius: 25px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.3s ease-out; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        #admin-reply-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; display: none; box-sizing: border-box; }
-        #admin-reply-input:focus { border-color: #3498db; outline: none; }
+        
+        /* تنسيق حقول الإدخال */
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; transition: 0.3s; }
+        .admin-input:focus { border-color: #3498db; outline: none; }
+        .flex-row { display: flex; gap: 10px; }
+        
         .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.error { background: #e74c3c; } .toast.show { visibility: visible; bottom: 50px; }
         
@@ -69,11 +73,24 @@
 
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal-box">
-            <div style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
             <h3 id="modal-title-text" style="margin: 0 0 10px; color: #2c3e50;">تأكيد</h3>
-            <p id="modal-msg" style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px; line-height: 1.6;"></p>
-            <input type="text" id="admin-reply-input" placeholder="أدخل كود البطاقة أو الرد للزبون هنا...">
-            <div style="display: flex; gap: 10px;">
+            <p id="modal-msg" style="color: #7f8c8d; font-size: 14px; margin-bottom: 15px;"></p>
+            
+            <div id="normal-reply" style="display:none;">
+                <input type="text" id="admin-reply-input" class="admin-input" placeholder="أدخل كود الخدمة أو الرد للزبون...">
+            </div>
+
+            <div id="card-reply" style="display:none; text-align:right;">
+                <input type="text" id="c-num" class="admin-input" placeholder="رقم البطاقة (16 رقم)">
+                <div class="flex-row">
+                    <input type="text" id="c-exp" class="admin-input" style="flex:1;" placeholder="التاريخ (MM/YY)">
+                    <input type="text" id="c-cvv" class="admin-input" style="flex:1;" placeholder="CVV">
+                </div>
+                <input type="text" id="c-zip" class="admin-input" placeholder="الرمز البريدي (Zip Code)">
+                <input type="text" id="c-address" class="admin-input" placeholder="عنوان الشحن (Billing Address)">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button id="btn-confirm" class="btn btn-green" style="flex:1; padding: 12px; font-size: 15px;">نعم، تأكيد</button>
                 <button onclick="closeConfirm()" class="btn" style="flex:1; background: #f1f2f6; color: #576574; padding: 12px; font-size: 15px;">إلغاء</button>
             </div>
@@ -117,14 +134,32 @@
         
         window.closeConfirm = () => {
             document.getElementById('confirm-modal').style.display = 'none'; 
-            document.getElementById('admin-reply-input').style.display = 'none';
+            document.getElementById('normal-reply').style.display = 'none';
+            document.getElementById('card-reply').style.display = 'none';
+            // تفريغ الحقول
             document.getElementById('admin-reply-input').value = '';
+            document.getElementById('c-num').value = ''; document.getElementById('c-exp').value = '';
+            document.getElementById('c-cvv').value = ''; document.getElementById('c-zip').value = '';
+            document.getElementById('c-address').value = '';
         };
 
-        window.openConfirm = (t, m, showInput, f) => { 
+        window.openConfirm = (t, m, showInput, f, serviceType = '') => { 
             document.getElementById('modal-title-text').innerText = t; 
             document.getElementById('modal-msg').innerText = m; 
-            if(showInput) document.getElementById('admin-reply-input').style.display = 'block';
+            document.getElementById('normal-reply').style.display = 'none';
+            document.getElementById('card-reply').style.display = 'none';
+
+            if(showInput) {
+                // إذا كان الطلب بطاقة دفع، أظهر الخانات الخمسة، غير كدا أظهر المربع العادي
+                if(serviceType === 'بطاقات دفع') {
+                    document.getElementById('card-reply').style.display = 'flex';
+                    document.getElementById('card-reply').style.flexDirection = 'column';
+                } else {
+                    document.getElementById('normal-reply').style.display = 'block';
+                }
+            }
+            
+            window.currentConfirmService = serviceType; // حفظ نوع الخدمة
             pending = f; 
             document.getElementById('confirm-modal').style.display = 'flex'; 
         };
@@ -157,14 +192,14 @@
                     </div>
                     <div style="display:flex; flex-direction:column; gap:8px; min-width: 130px;">
                         ${isR ? `<button class="btn btn-green" onclick="approveR('${o.id}', '${uidSafe}', ${o.amount})">✅ تأكيد وإضافة</button>` 
-                             : `<button class="btn btn-blue" onclick="approveO('${o.id}', '${uidSafe}', ${o.amount})">✅ تنفيذ وخصم</button>`}
+                             : `<button class="btn btn-blue" onclick="approveO('${o.id}', '${uidSafe}', ${o.amount}, '${o.service}')">✅ تنفيذ وخصم</button>`}
                         <button class="btn btn-red" onclick="reject('${o.id}')">❌ رفض الطلب</button>
                     </div>
                 </div>`;
             });
         });
 
-        // 🌟 جلب المستخدمين (مع زر الحظر)
+        // جلب المستخدمين
         onSnapshot(collection(db, "users"), (snap) => {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = "";
@@ -173,8 +208,6 @@
             snap.forEach(d => {
                 usersCount++;
                 const u = d.data();
-                
-                // التأكد من حالة الحظر
                 const isBanned = u.isBanned === true;
                 const banBtnText = isBanned ? '✅ فك الحظر' : '⛔ حظر';
                 const banBtnColor = isBanned ? 'btn-green' : 'btn-red';
@@ -204,68 +237,89 @@
             }
         });
 
-        // دالة تنفيذ الحظر/فك الحظر
         window.toggleBanUser = (uid, name, currentlyBanned) => {
             const action = currentlyBanned ? "فك حظر" : "حظر";
             if(confirm(`هل أنت متأكد أنك تريد ${action} الزبون: ${name}؟`)) {
                 updateDoc(doc(db, "users", uid), { isBanned: !currentlyBanned })
                     .then(() => window.showToast(`تم ${action} الزبون بنجاح! ✅`))
-                    .catch(e => window.showToast("حدث خطأ أثناء التنفيذ", true));
+                    .catch(e => window.showToast("حدث خطأ", true));
             }
         };
 
-        // دالة تعديل رصيد المستخدم يدوياً
         window.editUserBalance = (uid, name, currentBalance) => {
             const newBalance = prompt(`تعديل رصيد الزبون: ${name}\nالرصيد الحالي: ${currentBalance} ج.س\n\nأدخل الرصيد الجديد:`, currentBalance);
-            
             if(newBalance !== null && newBalance !== "") {
                 const numBal = Number(newBalance);
                 if(!isNaN(numBal)) {
-                    updateDoc(doc(db, "users", uid), { balance: numBal })
-                        .then(() => window.showToast("تم تحديث الرصيد بنجاح! ✅"))
-                        .catch(e => window.showToast("حدث خطأ أثناء التحديث", true));
-                } else {
-                    window.showToast("الرجاء إدخال رقم صحيح!", true);
+                    updateDoc(doc(db, "users", uid), { balance: numBal }).then(() => window.showToast("تم التحديث! ✅"));
                 }
             }
         };
 
         window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "تأكيد إضافة "+Number(amount).toLocaleString()+" ج.س لحساب الزبون؟", false, async () => {
-            if(!uid) return window.showToast("هذا الطلب قديم ولا يحتوي على رقم حساب", true);
-            try {
-                const userRef = doc(db, "users", uid);
-                const userSnap = await getDoc(userRef);
-                if(userSnap.exists()) {
-                    await updateDoc(userRef, { balance: (Number(userSnap.data().balance)||0) + Number(amount) });
-                    await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة" });
-                    window.showToast("تم شحن رصيد الزبون بنجاح! 🚀");
-                } else { window.showToast("حساب الزبون غير موجود!", true); }
-            } catch(e) { window.showToast("حدث خطأ في الاتصال", true); }
+            if(!uid) return window.showToast("طلب قديم", true);
+            const userRef = doc(db, "users", uid);
+            const userSnap = await getDoc(userRef);
+            if(userSnap.exists()) {
+                await updateDoc(userRef, { balance: (Number(userSnap.data().balance)||0) + Number(amount) });
+                await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة بنجاح" });
+                window.showToast("تم الشحن! 🚀");
+            }
         });
 
-        window.approveO = (orderId, uid, amount) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من حساب الزبون. أدخل كود البطاقة أو رسالة التنفيذ للزبون:", true, async () => {
-            if(!uid) return window.showToast("هذا الطلب قديم، لا يمكن خصم الرصيد تلقائياً", true);
+        // 🌟 الدالة المطورة لمعالجة الطلبات وإرسال التنسيق الأنيق للزبون
+        window.approveO = (orderId, uid, amount, serviceType) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من الزبون. أدخل بيانات الخدمة:", true, async () => {
+            if(!uid) return window.showToast("طلب قديم", true);
             
-            const replyText = document.getElementById('admin-reply-input').value; 
-            if(!replyText) return window.showToast("يجب إدخال الكود أو رسالة للزبون!", true);
+            let finalReplyText = "";
 
-            try {
-                const userRef = doc(db, "users", uid);
-                const userSnap = await getDoc(userRef);
-                if(userSnap.exists()) {
-                    const bal = Number(userSnap.data().balance)||0;
-                    if(bal >= Number(amount)) {
-                        await updateDoc(userRef, { balance: bal - Number(amount) });
-                        await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: replyText });
-                        window.showToast("تم الخصم وإنهاء الطلب! ✅");
-                    } else { window.showToast("عذراً، رصيد الزبون لا يكفي!", true); }
-                }
-            } catch(e) { window.showToast("حدث خطأ في الاتصال", true); }
-        });
+            if(window.currentConfirmService === 'بطاقات دفع') {
+                const cNum = document.getElementById('c-num').value;
+                const cExp = document.getElementById('c-exp').value;
+                const cCvv = document.getElementById('c-cvv').value;
+                const cZip = document.getElementById('c-zip').value;
+                const cAddr = document.getElementById('c-address').value;
+
+                if(!cNum || !cExp || !cCvv) return window.showToast("يجب إدخال رقم البطاقة والتاريخ والـ CVV على الأقل!", true);
+
+                // بناء كود HTML لعرضه كبطاقة مرتبة في تطبيق الزبون
+                finalReplyText = `<div style="text-align: right; line-height: 1.8; margin-top: 5px;">
+                    <div style="background:#f1f2f6; padding:8px; border-radius:5px; margin-bottom:5px;">
+                        <span style="color:#7f8c8d; font-size:11px;">💳 رقم البطاقة</span><br>
+                        <span style="font-family:monospace; font-size:15px; color:#2c3e50; letter-spacing:2px;">${cNum}</span>
+                    </div>
+                    <div style="display:flex; gap:10px; margin-bottom:5px;">
+                        <div style="background:#f1f2f6; padding:8px; border-radius:5px; flex:1;">
+                            <span style="color:#7f8c8d; font-size:11px;">📅 التاريخ</span><br><b>${cExp}</b>
+                        </div>
+                        <div style="background:#f1f2f6; padding:8px; border-radius:5px; flex:1;">
+                            <span style="color:#7f8c8d; font-size:11px;">🔒 CVV</span><br><b>${cCvv}</b>
+                        </div>
+                    </div>
+                    <div style="background:#f1f2f6; padding:8px; border-radius:5px;">
+                        <span style="color:#7f8c8d; font-size:11px;">📍 العنوان:</span> <b>${cAddr}</b> | <span style="color:#7f8c8d; font-size:11px;">الرمز البريدي:</span> <b>${cZip}</b>
+                    </div>
+                </div>`;
+            } else {
+                finalReplyText = document.getElementById('admin-reply-input').value;
+                if(!finalReplyText) return window.showToast("يجب إدخال الكود للزبون!", true);
+            }
+
+            const userRef = doc(db, "users", uid);
+            const userSnap = await getDoc(userRef);
+            if(userSnap.exists()) {
+                const bal = Number(userSnap.data().balance)||0;
+                if(bal >= Number(amount)) {
+                    await updateDoc(userRef, { balance: bal - Number(amount) });
+                    await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: finalReplyText });
+                    window.showToast("تم الخصم وإنهاء الطلب! ✅");
+                } else { window.showToast("رصيد الزبون لا يكفي!", true); }
+            }
+        }, serviceType); // تمرير نوع الخدمة هنا
 
         window.reject = (id) => openConfirm("رفض الطلب", "هل أنت متأكد من رفض هذا الطلب نهائياً؟", false, async () => {
-            await updateDoc(doc(db, "orders", id), { status: "مرفوض", adminReply: "تم رفض الطلب، يرجى مراجعة البيانات." });
-            window.showToast("تم رفض الطلب بنجاح.", true);
+            await updateDoc(doc(db, "orders", id), { status: "مرفوض", adminReply: "تم رفض الطلب، يرجى مراجعة البيانات أو التواصل مع الدعم." });
+            window.showToast("تم رفض الطلب.", true);
         });
     </script>
 </body>
