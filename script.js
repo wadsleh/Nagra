@@ -110,12 +110,19 @@ function loadOrders(userId) {
         orders.forEach(o => {
             const statusClass = o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending');
             
-            // عرض رد الإدمن (كود البطاقة أو سبب الرفض) للزبون
+            // عرض رد الإدمن (كود البطاقة أو سبب الرفض) للزبون في سجل الطلبات
             let replyHtml = "";
             if (o.adminReply) {
-                replyHtml = `<div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 10px; font-size: 13px; color: #0984e3; border: 1px dashed #74b9ff; font-weight: bold;">
-                    رد الإدارة: <span style="color:#2d3436; user-select: all;">${o.adminReply}</span>
-                </div>`;
+                // لو الخدمة بطاقة بنكية، نخلي الرد يظهر بعبارة مخصصة بدل عرض البيانات الكاملة في السجل
+                if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
+                    replyHtml = `<div style="margin-top: 10px; padding: 10px; background: #e8f8f5; border-radius: 10px; font-size: 13px; color: #27ae60; font-weight: bold; text-align: center;">
+                        💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي الرقمية)
+                    </div>`;
+                } else {
+                    replyHtml = `<div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 10px; font-size: 13px; color: #0984e3; border: 1px dashed #74b9ff; font-weight: bold;">
+                        رد الإدارة: <span style="color:#2d3436; user-select: all;">${o.adminReply}</span>
+                    </div>`;
+                }
             }
 
             list.innerHTML += `<div class="order-card-pro ${statusClass}" style="display:flex; flex-direction:column; gap:5px;">
@@ -262,8 +269,56 @@ window.submitOrder = async () => {
     window.closeModal();
 }
 
+// 🌟 الإضافة الجديدة والمطورة: عرض البطاقات في شكل "بطاقة بلاستيكية"
+window.openMyCards = () => {
+    document.getElementById('cards-modal').style.display = 'flex';
+    const list = document.getElementById('my-cards-list');
+    list.innerHTML = "<p style='text-align:center; color: #7f8c8d;'>جاري جلب البطاقات... ⏳</p>";
+
+    onSnapshot(query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid)), (snap) => {
+        list.innerHTML = ""; 
+        let cards = [];
+        
+        snap.forEach(d => {
+            let o = d.data();
+            if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
+                cards.push(o);
+            }
+        });
+        cards.sort((a,b) => b.date.toMillis() - a.date.toMillis());
+
+        if(cards.length === 0) {
+            list.innerHTML = "<div style='text-align:center; padding: 20px;'><div style='font-size: 40px; margin-bottom: 10px;'>📭</div><p style='color: #e74c3c; font-weight: bold;'>لا توجد بطاقات محفوظة حالياً</p></div>";
+            return;
+        }
+
+        cards.forEach(c => {
+            // تحديد لون البطاقة حسب النوع (فيزا = أزرق كحلي، ماستركارد = برتقالي/أحمر)
+            let cardGradient = c.network === 'Visa' ? 'linear-gradient(135deg, #1e3c72, #2a5298)' : 'linear-gradient(135deg, #2c3e50, #bdc3c7)';
+            if (c.network === 'Mastercard') cardGradient = 'linear-gradient(135deg, #eb3349, #f45c43)';
+
+            list.innerHTML += `
+                <div style="background: ${cardGradient}; padding: 20px; border-radius: 15px; margin-bottom: 15px; text-align: right; box-shadow: 0 10px 20px rgba(0,0,0,0.25); color: white; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
+                    
+                    <div style="width: 45px; height: 35px; background: linear-gradient(135deg, #ffd700, #daa520); border-radius: 6px; margin-bottom: 15px; opacity: 0.9; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3); border: 1px solid #b8860b;"></div>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 15px; padding-bottom: 5px;">
+                        <span style="font-weight: 900; font-size: 22px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-family: monospace; letter-spacing: 2px;">${c.network}</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);">🟢 فعالة</span>
+                    </div>
+                    
+                    <div style="background: white; border-radius: 10px; padding: 12px; color: #333; margin-top: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
+                        ${c.adminReply}
+                    </div>
+                </div>
+            `;
+        });
+    });
+};
+
+window.closeCardsModal = () => document.getElementById('cards-modal').style.display = 'none';
+
 window.forceLogout = async () => { await signOut(auth); location.reload(); }
 let timer; 
 const reset = () => { clearTimeout(timer); timer = setTimeout(forceLogout, 5 * 60 * 1000); }
 document.onmousemove = reset; document.onclick = reset; document.ontouchstart = reset;
- 
