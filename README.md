@@ -17,6 +17,15 @@
 - **📜 سجل الطلبات:** تتبع ديناميكي لحالة العمليات (مكتملة، قيد التنفيذ، مرفوضة) لحظة بلحظة.
 
 ---
+## 📸 لقطات من داخل التطبيق (Screenshots)
+
+<div align="center">
+  <img src="images/home.png" alt="الواجهة الرئيسية" width="250" style="margin: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  
+  <img src="images/services.png" alt="الخدمات" width="250" style="margin: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  
+  <img src="images/admin.png" alt="لوحة التحكم" width="250" style="margin: 10px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+</div>
 
 ## 🛠️ التقنيات المستخدمة (Tech Stack)
 
