@@ -233,28 +233,37 @@ body {
 }
 
 .pro-logo {
-/* الكود الجديد لعرض الشعارات الحقيقية */
-.pro-logo {
-    width: 55px; /* كبرناها شوية عشان الشعار يوضح */
-    height: 55px;
-    border-radius: 50%; /* دائري */
-    margin: 0 auto 8px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    background: white; /* خلفية بيضاء عشان الشعار يبرز */
-    border: 1px solid #ecf0f1; /* إطار خفيف */
-    padding: 8px; /* مسافة داخلية عشان الشعار ما يلزق في الحواف */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin: 0 auto 8px;
+    font-weight: 900;
+    font-size: 12px;
+    color: white;
+    border: 2px solid;
 }
 
-.pro-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* يخلي الشعار كامل ظاهر جوة الدائرة */
+/* ألوان الشركات الجديدة */
+.zain-logo {
+    background: #2d3436;
+    color: #ff4757;
+    border-color: #ff4757;
 }
 
+.sudani-logo {
+    background: #0984e3;
+    color: #fdcb6e;
+    border-color: #fdcb6e;
+}
+
+.mtn-logo {
+    background: #fdcb6e;
+    color: #2d3436;
+    border-color: #2d3436;
+}
 
 .pubg-logo {
     background: #2c3e50;
@@ -431,4 +440,4 @@ body {
 .btn-google img {
     width: 24px;
     height: 24px;
-   } 
+   }  
