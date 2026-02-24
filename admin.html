@@ -14,12 +14,21 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-box { background: white; color: #2c3e50; padding: 30px 20px; border-radius: 25px; text-align: center; width: 85%; max-width: 320px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.3s ease-out; }
         @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        /* تنسيق مربع إدخال الكود الجديد */
+        #admin-reply-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; display: none; box-sizing: border-box; }
+        #admin-reply-input:focus { border-color: #3498db; outline: none; }
+
         .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.error { background: #e74c3c; } .toast.show { visibility: visible; bottom: 50px; }
     </style>
 </head>
-<body>
-    <h1 style="text-align:center; color:#11998e; margin-top: 10px;">غرفة تحكم نَقْرَة ⚙️</h1>
+<body style="display: none;" id="admin-body"> <h1 style="text-align:center; color:#11998e; margin-top: 10px;">غرفة تحكم نَقْرَة ⚙️</h1>
+    
+    <div style="text-align: left; margin-bottom: 15px;">
+        <button onclick="logoutAdmin()" class="btn btn-red">تسجيل خروج</button>
+    </div>
+
     <div class="card">
         <h3 style="border-bottom: 2px solid #eee; padding-bottom: 15px; margin-top: 0;">📦 الطلبات الواردة</h3>
         <div id="orders-container"><p style="text-align:center; color: #7f8c8d;">جاري جلب الطلبات... ⏳</p></div>
@@ -30,6 +39,9 @@
             <div style="font-size: 45px; margin-bottom: 10px;">⚠️</div>
             <h3 id="modal-title-text" style="margin: 0 0 10px; color: #2c3e50;">تأكيد</h3>
             <p id="modal-msg" style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px; line-height: 1.6;"></p>
+            
+            <input type="text" id="admin-reply-input" placeholder="أدخل كود البطاقة أو الرد للزبون هنا...">
+            
             <div style="display: flex; gap: 10px;">
                 <button id="btn-confirm" class="btn btn-green" style="flex:1; padding: 12px; font-size: 15px;">نعم، تأكيد</button>
                 <button onclick="closeConfirm()" class="btn" style="flex:1; background: #f1f2f6; color: #576574; padding: 12px; font-size: 15px;">إلغاء</button>
@@ -42,11 +54,27 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js"; // استدعاء أدوات الحماية
         
         const firebaseConfig = { apiKey: "AIzaSyB_8sjnJNMpUi0LAQv7U5lFmMvRlh5x0nU", authDomain: "nagra-app.firebaseapp.com", projectId: "nagra-app", storageBucket: "nagra-app.firebasestorage.app", messagingSenderId: "29893867141", appId: "1:29893867141:web:e8b4e0a15d80898575dbec" };
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app);
-        
+        const auth = getAuth(app);
+
+        // ⚠️ ضع إيميلك الشخصي هنا (الإيميل الوحيد المسموح له بدخول لوحة التحكم)
+        const ADMIN_EMAIL = "ضع_إيميلك_هنا@gmail.com"; 
+
+        // حماية الصفحة: طرد أي شخص غير الإدمن
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === ADMIN_EMAIL) {
+                document.getElementById('admin-body').style.display = 'block'; // إظهار اللوحة للإدمن
+            } else {
+                window.location.href = "index.html"; // طرد أي شخص آخر للتطبيق الرئيسي
+            }
+        });
+
+        window.logoutAdmin = async () => { await signOut(auth); window.location.href = "index.html"; };
+
         window.showToast = (msg, isError = false) => { 
             const t = document.getElementById('toast-message'); t.innerText = msg; 
             t.className = isError ? "toast error show" : "toast show"; 
@@ -54,15 +82,26 @@
         };
         
         let pending = null; 
-        window.closeConfirm = () => document.getElementById('confirm-modal').style.display = 'none'; 
-        window.openConfirm = (t, m, f) => { 
+        
+        window.closeConfirm = () => {
+            document.getElementById('confirm-modal').style.display = 'none'; 
+            document.getElementById('admin-reply-input').style.display = 'none'; // إخفاء المربع عند الإغلاق
+            document.getElementById('admin-reply-input').value = '';
+        };
+
+        window.openConfirm = (t, m, showInput, f) => { 
             document.getElementById('modal-title-text').innerText = t; 
             document.getElementById('modal-msg').innerText = m; 
+            if(showInput) {
+                document.getElementById('admin-reply-input').style.display = 'block';
+            }
             pending = f; 
             document.getElementById('confirm-modal').style.display = 'flex'; 
         };
+        
         document.getElementById('btn-confirm').onclick = async () => { if(pending) await pending(); closeConfirm(); };
 
+        // جلب الطلبات
         onSnapshot(collection(db, "orders"), (snap) => {
             const container = document.getElementById('orders-container'); 
             container.innerHTML = ""; let data = []; 
@@ -93,21 +132,27 @@
             });
         });
 
-        window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "تأكيد إضافة "+Number(amount).toLocaleString()+" ج.س لحساب الزبون؟", async () => {
+        // دالة تأكيد الرصيد (لا تحتاج إدخال كود)
+        window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "تأكيد إضافة "+Number(amount).toLocaleString()+" ج.س لحساب الزبون؟", false, async () => {
             if(!uid) return window.showToast("هذا الطلب قديم ولا يحتوي على رقم حساب", true);
             try {
                 const userRef = doc(db, "users", uid);
                 const userSnap = await getDoc(userRef);
                 if(userSnap.exists()) {
                     await updateDoc(userRef, { balance: (Number(userSnap.data().balance)||0) + Number(amount) });
-                    await updateDoc(doc(db, "orders", orderId), { status: "مكتمل" });
+                    await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة" });
                     window.showToast("تم شحن رصيد الزبون بنجاح! 🚀");
                 } else { window.showToast("حساب الزبون غير موجود!", true); }
             } catch(e) { window.showToast("حدث خطأ في الاتصال", true); }
         });
 
-        window.approveO = (orderId, uid, amount) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من حساب الزبون. هل قمت بالتنفيذ؟", async () => {
+        // دالة تنفيذ الخدمات (تطلب إدخال كود البطاقة)
+        window.approveO = (orderId, uid, amount) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من حساب الزبون. أدخل كود البطاقة أو رسالة التنفيذ للزبون:", true, async () => {
             if(!uid) return window.showToast("هذا الطلب قديم، لا يمكن خصم الرصيد تلقائياً", true);
+            
+            const replyText = document.getElementById('admin-reply-input').value; // أخذ النص اللي كتبه الإدمن
+            if(!replyText) return window.showToast("يجب إدخال الكود أو رسالة للزبون!", true);
+
             try {
                 const userRef = doc(db, "users", uid);
                 const userSnap = await getDoc(userRef);
@@ -115,15 +160,16 @@
                     const bal = Number(userSnap.data().balance)||0;
                     if(bal >= Number(amount)) {
                         await updateDoc(userRef, { balance: bal - Number(amount) });
-                        await updateDoc(doc(db, "orders", orderId), { status: "مكتمل" });
+                        // إضافة رد الإدمن (الكود) للطلب عشان يظهر للزبون
+                        await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: replyText });
                         window.showToast("تم الخصم وإنهاء الطلب! ✅");
                     } else { window.showToast("عذراً، رصيد الزبون لا يكفي!", true); }
                 }
             } catch(e) { window.showToast("حدث خطأ في الاتصال", true); }
         });
 
-        window.reject = (id) => openConfirm("رفض الطلب", "هل أنت متأكد من رفض هذا الطلب نهائياً؟", async () => {
-            await updateDoc(doc(db, "orders", id), { status: "مرفوض" });
+        window.reject = (id) => openConfirm("رفض الطلب", "هل أنت متأكد من رفض هذا الطلب نهائياً؟", false, async () => {
+            await updateDoc(doc(db, "orders", id), { status: "مرفوض", adminReply: "تم رفض الطلب، يرجى مراجعة البيانات." });
             window.showToast("تم رفض الطلب بنجاح.", true);
         });
     </script>
