@@ -454,69 +454,68 @@ body {
     color: #2c3e50 !important;
 }
 /* =========================================
-   🌟 تعديل جديد: إزالة الخلفية البيضاء وتكبير الأيقونات
-   ========================================= */
-
-/* =========================================
-   👑 التصميم الاحترافي النهائي (Premium Fintech UI)
+   💎 التصميم النهائي الفخم (Big & Clean Icons)
    ========================================= */
 
 /* 1. شبكة الخدمات (ترتيب ومسافات متناسقة) */
 .services-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 16px !important;
+    gap: 15px !important;
     padding: 0 20px !important;
 }
 
-/* 2. تصميم الكارت (خلفية بيضاء نقية، حواف ناعمة، ظل فخم وخفيف) */
+/* 2. تصميم الكارت (خلفية بيضاء نظيفة، ظل ناعم، بدون إطار مزعج) */
 .service-item {
     background: #ffffff !important;
-    border-radius: 26px !important; /* حواف دائرية ناعمة جداً */
-    padding: 15px !important;
+    border-radius: 24px !important; /* حواف ناعمة جداً */
+    padding: 15px 10px !important;  /* تقليل الحواف الداخلية عشان الأيقونة تكبر */
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03), 0 2px 5px rgba(0,0,0,0.02) !important;
-    border: 1px solid rgba(240, 240, 240, 0.8) !important;
-    aspect-ratio: 1 / 1 !important; /* يحافظ على الشكل المربع المثالي */
+    /* ظل احترافي ناعم جداً */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 5px 10px -5px rgba(0,0,0,0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.5) !important; /* إطار شبه شفاف */
+    aspect-ratio: 1 / 1 !important;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
 }
 
 .service-item:active {
-    transform: scale(0.95) !important; /* حركة تصغير أنيقة عند الضغط */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03) !important;
+    transform: scale(0.96) !important;
+    background: #f8f9fa !important;
 }
 
-/* 3. حاوية الأيقونة (مربع صغير ناعم يبرز الأيقونة ويرتبها) */
+/* 3. حاوية الأيقونة (إزالة القيود وتكبير الحجم) */
 .service-item .icon-wrapper {
-    width: 60px !important;
-    height: 60px !important;
-    background: #f8f9fa !important; /* لون رمادي فاتح جداً مريح للعين */
-    border-radius: 18px !important; /* شكل Squircle احترافي */
+    width: 85px !important;  /* 🌟 تكبير الحجم بشكل ملحوظ */
+    height: 85px !important; /* 🌟 تكبير الحجم بشكل ملحوظ */
+    background: transparent !important; /* خلفية شفافة تماماً */
+    border-radius: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-bottom: 15px !important;
-    padding: 12px !important;
-    box-sizing: border-box !important;
+    margin-bottom: 5px !important; /* تقريب النص من الأيقونة */
+    padding: 0 !important; /* إلغاء الحواف الداخلية للحاوية */
     border: none !important;
+    box-shadow: none !important;
 }
 
-/* 4. ضبط مقاس الصور وإضافة عمق (3D Effect) */
-.service-item .icon-wrapper img {
+/* 4. ضبط الصورة وإضافة عمق */
+.service-item .icon-wrapper img, 
+.service-item .icon-wrapper span {
     width: 100% !important;
     height: 100% !important;
     object-fit: contain !important;
-    filter: drop-shadow(0 6px 8px rgba(0,0,0,0.12)) !important; /* ظل خفيف للصورة نفسها يعطيها بروز */
+    /* ظل خفيف للصورة نفسها عشان تبرز عن الكارت الأبيض */
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08)) !important; 
 }
 
-/* 5. تنسيق النص (خط عريض ولون رسمي) */
+/* 5. تنسيق النص */
 .service-item p {
     margin: 0 !important;
-    font-size: 14px !important;
+    font-size: 15px !important; /* تكبير الخط سنة */
     font-weight: 800 !important;
-    color: #1e293b !important; /* لون رمادي كحلي غامق رسمي */
-    text-shadow: none !important;
+    color: #2d3436 !important;
 }
+
