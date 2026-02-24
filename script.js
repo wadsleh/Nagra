@@ -163,25 +163,88 @@ window.proceedToStep2 = (subService) => {
     window.selectedNetwork = subService;
     document.getElementById('step-1-options').style.display = 'none';
     document.getElementById('step-2-details').style.display = 'block';
+window.openOrderModal = (s) => {
+    window.currentService = s;
+    document.getElementById('order-modal').style.display = 'flex';
+    document.getElementById('step-1-options').style.display = 'block';
+    document.getElementById('step-2-details').style.display = 'none';
+    document.getElementById('modal-title').innerText = "اختر نوع " + s;
+    const grid = document.getElementById('dynamic-options-grid');
+
+    if(s==='شحن رصيد'){
+        grid.style.gridTemplateColumns='repeat(3, 1fr)';
+        grid.innerHTML=`
+            <div class="network-card" onclick="proceedToStep2('زين')">
+                <div class="pro-logo"><img src="images/zain.jpeg" alt="زين"></div>
+                <p>زين</p>
+            </div>
+            <div class="network-card" onclick="proceedToStep2('سوداني')">
+                <div class="pro-logo"><img src="images/sudani_logo.jpeg" alt="سوداني"></div>
+                <p>سوداني</p>
+            </div>
+            <div class="network-card" onclick="proceedToStep2('MTN')">
+                <div class="pro-logo"><img src="images/MTN_Logo.svg.png" alt="MTN"></div>
+                <p>MTN</p>
+            </div>
+        `;
+    } else if(s==='ألعاب'){
+        grid.style.gridTemplateColumns='repeat(2, 1fr)';
+        grid.innerHTML=`
+            <div class="network-card" onclick="proceedToStep2('PUBG')">
+                <div class="pro-logo"><img src="images/pubg.jpeg" alt="ببجي"></div>
+                <p>ببجي</p>
+            </div>
+            <div class="network-card" onclick="proceedToStep2('Free Fire')">
+                <div class="pro-logo"><img src="images/freefire.jpeg" alt="فري فاير"></div>
+                <p>فري فاير</p>
+            </div>
+        `;
+    } else if(s==='اشتراكات'){
+        grid.style.gridTemplateColumns='repeat(2, 1fr)';
+        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('Netflix')"><div class="pro-logo netflix-logo">N</div><p>نتفليكس</p></div><div class="network-card" onclick="proceedToStep2('Spotify')"><div class="pro-logo spotify-logo">S</div><p>سبوتيفاي</p></div>`;
+    } else if(s==='بطاقات دفع'){
+        grid.style.gridTemplateColumns='repeat(2, 1fr)';
+        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('Visa')"><div class="pro-logo visa-logo">V</div><p>فيزا</p></div><div class="network-card" onclick="proceedToStep2('Mastercard')"><div class="pro-logo master-logo">M</div><p>ماستركارد</p></div>`;
+    } else if(s==='عملات مشفرة'){
+        // الحل هنا: ضفنا أزرار العملات المشفرة بدل ما تطلع شبكات الاتصال
+        grid.style.gridTemplateColumns='repeat(2, 1fr)';
+        grid.innerHTML=`
+            <div class="network-card" onclick="proceedToStep2('USDT')">
+                <div class="pro-logo" style="background:#26a69a; color:white; font-size:14px; border:none;">USDT</div>
+                <p>USDT</p>
+            </div>
+            <div class="network-card" onclick="proceedToStep2('Bitcoin')">
+                <div class="pro-logo" style="background:#f7931a; color:white; font-size:14px; border:none;">BTC</div>
+                <p>بيتكوين</p>
+            </div>
+        `;
+    }
+}
+
+window.proceedToStep2 = (subService) => {
+    window.selectedNetwork = subService;
+    document.getElementById('step-1-options').style.display = 'none';
+    document.getElementById('step-2-details').style.display = 'block';
     document.getElementById('modal-title').innerText = "طلب " + subService;
-    
+
     const infoBox = document.getElementById('card-info-box');
     if(infoBox) {
-        infoBox.style.display = 'none'; 
+        infoBox.style.display = 'none';
         infoBox.innerHTML = '';
     }
-    
+
     let placeholder = "البيانات المطلوبة";
-    
+
     if(window.currentService === 'شحن رصيد') placeholder = "رقم الهاتف (10 أرقام)";
     if(window.currentService === 'ألعاب') placeholder = "رقم اللاعب (ID)";
     if(window.currentService === 'اشتراكات') placeholder = "إيميل الحساب";
-    
+    if(window.currentService === 'عملات مشفرة') placeholder = "رابط المحفظة (Wallet Address)";
+
     if(window.currentService === 'بطاقات دفع') {
         placeholder = "الاسم المراد طباعته على البطاقة (بالإنجليزي)";
         let price = subService === 'Visa' ? '28$' : '18$';
         let badgeColor = subService === 'Visa' ? '#192a56' : '#eb4d4b';
-        
+
         if(infoBox) {
             infoBox.style.display = 'block';
             infoBox.innerHTML = `
@@ -196,10 +259,11 @@ window.proceedToStep2 = (subService) => {
             `;
         }
     }
-    
+
     document.getElementById('order-target').placeholder = placeholder;
-    document.getElementById('order-amount').value = ''; 
+    document.getElementById('order-amount').value = '';
 }
+
 
 window.closeModal = () => document.getElementById('order-modal').style.display = 'none'; 
 window.openHistoryModal = () => document.getElementById('history-modal').style.display = 'flex'; 
