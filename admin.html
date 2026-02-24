@@ -19,14 +19,13 @@
         .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         .toast.error { background: #e74c3c; } .toast.show { visibility: visible; bottom: 50px; }
         
-        /* تنسيق جدول المستخدمين */
         table { width: 100%; border-collapse: collapse; text-align: right; }
         th { background: #f1f2f6; padding: 12px; border-bottom: 2px solid #ddd; color: #2c3e50; }
         td { padding: 12px; border-bottom: 1px solid #eee; color: #34495e; font-size: 14px; }
         tr:hover { background: #f8f9fa; }
     </style>
 </head>
-<body style="display: none;" id="admin-body">
+<body id="admin-body" style="display: none;">
     <h1 style="text-align:center; color:#11998e; margin-top: 10px;">غرفة تحكم نَقْرَة ⚙️</h1>
     
     <div style="text-align: left; margin-bottom: 15px;">
@@ -93,14 +92,16 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // ⚠️ اكتب إيميلك هنا بالضبط زي ما مسجل بيه دخول
+        // ⚠️ اكتب إيميلك هنا بالضبط
         const ADMIN_EMAIL = "wadsalihhamed@gmail.com"; 
 
         onAuthStateChanged(auth, (user) => {
             if (user && user.email === ADMIN_EMAIL) {
                 document.getElementById('admin-body').style.display = 'block'; 
             } else {
-                window.location.href = "index.html"; 
+                document.body.innerHTML = "<h2 style='color:#e74c3c; text-align:center; margin-top:50px;'>⛔ غير مصرح لك بالدخول. جاري التحويل...</h2>";
+                document.body.style.display = 'block';
+                setTimeout(() => { window.location.href = "index.html"; }, 2000);
             }
         });
 
@@ -140,7 +141,6 @@
             });
             data.sort((a,b) => (b.date?.toMillis() || 0) - (a.date?.toMillis() || 0));
             
-            // تحديث إحصائية الطلبات
             document.getElementById('stats-orders').innerText = data.length;
 
             if(data.length === 0) { container.innerHTML = "<p style='text-align:center; color: #7f8c8d; padding: 20px;'>لا توجد طلبات معلقة حالياً ☕</p>"; return; }
@@ -164,8 +164,7 @@
             });
         });
 
-        // جلب المستخدمين
-                // جلب المستخدمين (محدثة مع زر الحظر)
+        // 🌟 جلب المستخدمين (مع زر الحظر)
         onSnapshot(collection(db, "users"), (snap) => {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = "";
@@ -179,11 +178,11 @@
                 const isBanned = u.isBanned === true;
                 const banBtnText = isBanned ? '✅ فك الحظر' : '⛔ حظر';
                 const banBtnColor = isBanned ? 'btn-green' : 'btn-red';
-                const rowOpacity = isBanned ? '0.5' : '1'; // تبهيت لون الزبون المحظور
+                const rowOpacity = isBanned ? '0.5' : '1';
 
                 tbody.innerHTML += `
                     <tr style="opacity: ${rowOpacity};">
-                        <td style="font-weight: bold;">${u.name || 'بدون اسم'} ${isBanned ? '(محظور)' : ''}</td>
+                        <td style="font-weight: bold;">${u.name || 'بدون اسم'} ${isBanned ? '<span style="color:#e74c3c; font-size:11px;">(محظور)</span>' : ''}</td>
                         <td style="color: #7f8c8d;">${u.email}</td>
                         <td style="color: #27ae60; font-weight: bold;">${(Number(u.balance)||0).toLocaleString()} ج.س</td>
                         <td style="display: flex; gap: 5px; justify-content: center;">
@@ -214,15 +213,6 @@
                     .catch(e => window.showToast("حدث خطأ أثناء التنفيذ", true));
             }
         };
-
-
-            // تحديث إحصائية المستخدمين
-            document.getElementById('stats-users').innerText = usersCount;
-
-            if(usersCount === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#7f8c8d;">لا يوجد مستخدمين مسجلين حتى الآن.</td></tr>`;
-            }
-        });
 
         // دالة تعديل رصيد المستخدم يدوياً
         window.editUserBalance = (uid, name, currentBalance) => {
