@@ -87,7 +87,7 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
-function loadOrders(userId) {
+// تم إصلاح الخطأ هنا (إزالة السطر المكرر)
 function loadOrders(userId) {
     onSnapshot(query(collection(db, "orders"), where("uid", "==", userId)), (snap) => {
         const list = document.getElementById('user-orders-list'); 
@@ -119,11 +119,11 @@ function loadOrders(userId) {
                         <span class="status-pill status-${statusClass}" style="display:inline-block; margin-top:5px;">${o.status}</span>
                     </div>
                 </div>
-                ${replyHtml} </div>`;
+                ${replyHtml}
+            </div>`;
         });
     });
 }
-
 
 window.openRechargeModal = () => document.getElementById('recharge-modal').style.display = 'flex';
 window.closeRechargeModal = () => document.getElementById('recharge-modal').style.display = 'none';
@@ -256,4 +256,3 @@ window.forceLogout = async () => { await signOut(auth); location.reload(); }
 let timer; 
 const reset = () => { clearTimeout(timer); timer = setTimeout(forceLogout, 5 * 60 * 1000); }
 document.onmousemove = reset; document.onclick = reset; document.ontouchstart = reset;
- 
