@@ -51,7 +51,7 @@ onAuthStateChanged(auth, async (user) => {
             await updateDoc(userRef, { balance: 0 });
         }
 
-                onSnapshot(userRef, (s) => {
+        onSnapshot(userRef, (s) => {
             if (s.exists()) {
                 const data = s.data(); 
                 
@@ -72,7 +72,6 @@ onAuthStateChanged(auth, async (user) => {
                 loadOrders(user.uid);
             }
         });
-);
     }
 });
 
@@ -99,7 +98,6 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
-// تم إصلاح الخطأ هنا (إزالة السطر المكرر)
 function loadOrders(userId) {
     onSnapshot(query(collection(db, "orders"), where("uid", "==", userId)), (snap) => {
         const list = document.getElementById('user-orders-list'); 
@@ -112,7 +110,7 @@ function loadOrders(userId) {
         orders.forEach(o => {
             const statusClass = o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending');
             
-            // 🌟 الجزء الجديد: عرض رد الإدمن (كود البطاقة أو سبب الرفض) للزبون
+            // عرض رد الإدمن (كود البطاقة أو سبب الرفض) للزبون
             let replyHtml = "";
             if (o.adminReply) {
                 replyHtml = `<div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 10px; font-size: 13px; color: #0984e3; border: 1px dashed #74b9ff; font-weight: bold;">
@@ -268,3 +266,4 @@ window.forceLogout = async () => { await signOut(auth); location.reload(); }
 let timer; 
 const reset = () => { clearTimeout(timer); timer = setTimeout(forceLogout, 5 * 60 * 1000); }
 document.onmousemove = reset; document.onclick = reset; document.ontouchstart = reset;
+ 
