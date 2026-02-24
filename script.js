@@ -88,6 +88,7 @@ document.getElementById('btn-login-execute').onclick = async () => {
 }
 
 function loadOrders(userId) {
+function loadOrders(userId) {
     onSnapshot(query(collection(db, "orders"), where("uid", "==", userId)), (snap) => {
         const list = document.getElementById('user-orders-list'); 
         list.innerHTML = ""; 
@@ -98,13 +99,31 @@ function loadOrders(userId) {
         
         orders.forEach(o => {
             const statusClass = o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending');
-            list.innerHTML += `<div class="order-card-pro ${statusClass}">
-                <div><h4 style="margin:0;">${o.service} (${o.network || 'شحن'})</h4><p style="margin:3px 0 0; font-size:12px; color:#7f8c8d;">${o.targetInfo}</p></div>
-                <div style="text-align:left"><b>${o.amount}</b><br><span class="status-pill status-${statusClass}">${o.status}</span></div>
-            </div>`;
+            
+            // 🌟 الجزء الجديد: عرض رد الإدمن (كود البطاقة أو سبب الرفض) للزبون
+            let replyHtml = "";
+            if (o.adminReply) {
+                replyHtml = `<div style="margin-top: 10px; padding: 10px; background: #e3f2fd; border-radius: 10px; font-size: 13px; color: #0984e3; border: 1px dashed #74b9ff; font-weight: bold;">
+                    رد الإدارة: <span style="color:#2d3436; user-select: all;">${o.adminReply}</span>
+                </div>`;
+            }
+
+            list.innerHTML += `<div class="order-card-pro ${statusClass}" style="display:flex; flex-direction:column; gap:5px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                    <div>
+                        <h4 style="margin:0;">${o.service} ${o.network ? '('+o.network+')' : ''}</h4>
+                        <p style="margin:3px 0 0; font-size:12px; color:#7f8c8d;">${o.targetInfo}</p>
+                    </div>
+                    <div style="text-align:left">
+                        <b>${Number(o.amount).toLocaleString()} ج.س</b><br>
+                        <span class="status-pill status-${statusClass}" style="display:inline-block; margin-top:5px;">${o.status}</span>
+                    </div>
+                </div>
+                ${replyHtml} </div>`;
         });
     });
 }
+
 
 window.openRechargeModal = () => document.getElementById('recharge-modal').style.display = 'flex';
 window.closeRechargeModal = () => document.getElementById('recharge-modal').style.display = 'none';
