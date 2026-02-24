@@ -364,3 +364,92 @@ body {
 .orange-bg { background: #fff3e0; }
 .green-bg { background: #e8f5e9; }
 .teal-bg { background: #e0f2f1; }
+/* =========================================
+   🌟 التنسيقات الحديثة (Modern UI Final)
+   ========================================= */
+
+/* تنسيقات صفحة الدخول (Login Redesign) */
+.login-box {
+    background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+    border-radius: 25px; padding: 40px 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    width: 90%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.8);
+}
+.modern-input-login {
+    width: 100%; padding: 15px; margin-bottom: 12px; border: 2px solid #e1e8ed; border-radius: 12px;
+    font-family: 'Tajawal', sans-serif; background: #f8f9fa; transition: 0.3s; box-sizing: border-box; font-size: 14px;
+}
+.modern-input-login:focus {
+    border-color: #11998e; background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(17, 153, 142, 0.1);
+}
+.auth-tabs { display: flex; background: #f1f2f6; border-radius: 15px; padding: 5px; margin-bottom: 25px; }
+.auth-tabs button {
+    flex: 1; padding: 12px; border: none; background: transparent; border-radius: 10px; font-family: 'Tajawal';
+    font-weight: bold; color: #7f8c8d; cursor: pointer; transition: 0.3s; font-size: 15px;
+}
+.auth-tabs button.active { background: white; color: #11998e; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+/* زر الواتساب العائم */
+.whatsapp-btn {
+    position: fixed; bottom: 25px; left: 25px; background: #25D366; color: white; padding: 12px 20px;
+    border-radius: 50px; text-decoration: none; font-family: 'Tajawal'; font-weight: bold;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); display: flex; align-items: center; gap: 8px; z-index: 1000; transition: 0.3s;
+}
+.whatsapp-btn:hover { transform: translateY(-3px); }
+
+/* التصميم الجديد للتداخل (Overlap Layout) */
+.top-hero-section {
+    background: linear-gradient(135deg, #192a56, #273c75);
+    padding: 20px 20px 70px 20px;
+    border-radius: 0 0 35px 35px;
+    color: white;
+    position: relative;
+}
+.bottom-content-section {
+    background: #f8f9fa;
+    border-radius: 35px 35px 0 0;
+    margin-top: -40px; 
+    padding: 25px 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* 🌟 إصلاح شكل مربعات الخدمات (عشان تكون مربعة 100%) */
+.services-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+    padding: 0 20px !important;
+    align-items: start !important; 
+}
+
+.service-item {
+    background: white !important;
+    border-radius: 20px !important;
+    padding: 20px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04) !important;
+    border: 1px solid #f1f2f6 !important;
+    aspect-ratio: 1 / 1 !important; /* السر هنا اللي بيخليها مربعة */
+    transition: 0.3s !important;
+}
+
+.service-item .icon-wrapper {
+    width: 55px !important;
+    height: 55px !important;
+    margin-bottom: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.service-item p {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #2c3e50 !important;
+}
