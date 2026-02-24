@@ -165,6 +165,7 @@
         });
 
         // جلب المستخدمين
+                // جلب المستخدمين (محدثة مع زر الحظر)
         onSnapshot(collection(db, "users"), (snap) => {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = "";
@@ -173,19 +174,47 @@
             snap.forEach(d => {
                 usersCount++;
                 const u = d.data();
+                
+                // التأكد من حالة الحظر
+                const isBanned = u.isBanned === true;
+                const banBtnText = isBanned ? '✅ فك الحظر' : '⛔ حظر';
+                const banBtnColor = isBanned ? 'btn-green' : 'btn-red';
+                const rowOpacity = isBanned ? '0.5' : '1'; // تبهيت لون الزبون المحظور
+
                 tbody.innerHTML += `
-                    <tr>
-                        <td style="font-weight: bold;">${u.name || 'بدون اسم'}</td>
+                    <tr style="opacity: ${rowOpacity};">
+                        <td style="font-weight: bold;">${u.name || 'بدون اسم'} ${isBanned ? '(محظور)' : ''}</td>
                         <td style="color: #7f8c8d;">${u.email}</td>
                         <td style="color: #27ae60; font-weight: bold;">${(Number(u.balance)||0).toLocaleString()} ج.س</td>
-                        <td>
-                            <button class="btn btn-orange" style="padding: 6px 12px; font-size: 12px;" onclick="editUserBalance('${d.id}', '${u.name}', ${u.balance || 0})">
-                                ✏️ تعديل الرصيد
+                        <td style="display: flex; gap: 5px; justify-content: center;">
+                            <button class="btn btn-orange" style="padding: 6px 10px; font-size: 12px;" onclick="editUserBalance('${d.id}', '${u.name}', ${u.balance || 0})">
+                                ✏️ تعديل
+                            </button>
+                            <button class="btn ${banBtnColor}" style="padding: 6px 10px; font-size: 12px;" onclick="toggleBanUser('${d.id}', '${u.name}', ${isBanned})">
+                                ${banBtnText}
                             </button>
                         </td>
                     </tr>
                 `;
             });
+
+            document.getElementById('stats-users').innerText = usersCount;
+
+            if(usersCount === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#7f8c8d;">لا يوجد مستخدمين مسجلين حتى الآن.</td></tr>`;
+            }
+        });
+
+        // دالة تنفيذ الحظر/فك الحظر
+        window.toggleBanUser = (uid, name, currentlyBanned) => {
+            const action = currentlyBanned ? "فك حظر" : "حظر";
+            if(confirm(`هل أنت متأكد أنك تريد ${action} الزبون: ${name}؟`)) {
+                updateDoc(doc(db, "users", uid), { isBanned: !currentlyBanned })
+                    .then(() => window.showToast(`تم ${action} الزبون بنجاح! ✅`))
+                    .catch(e => window.showToast("حدث خطأ أثناء التنفيذ", true));
+            }
+        };
+
 
             // تحديث إحصائية المستخدمين
             document.getElementById('stats-users').innerText = usersCount;
