@@ -1,4 +1,3 @@
-body {
 /* تثبيت لون الخلفية عشان ما يخرب مع الـ Dark Mode */
 body {
     font-family: 'Tajawal', sans-serif;
@@ -19,16 +18,15 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08); /* ظل خفيف ورا اللوجو */
-    overflow: hidden; /* عشان يقص أي حواف مربعة ويخليها دائرية */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    overflow: hidden; 
 }
 
 .app-logo-large img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* بتخلي اللوجو يملأ الدائرة بشكل ممتاز */
+    object-fit: cover; 
 }
-
 
 .overlay,
 .modal-overlay {
@@ -55,7 +53,6 @@ body {
     max-width: 320px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
-
 
 .auth-tabs {
     display: flex;
@@ -210,7 +207,6 @@ body {
     gap: 10px;
 }
 
-/* خليناها 2 عشان تاخد راحتها */
 .network-card {
     background: #fff;
     border: 2px solid #f4f7f6;
@@ -232,81 +228,38 @@ body {
     transform: translateY(-3px);
 }
 
+/* التعديل الجديد عشان يقبل الشعارات الحقيقية (زين، سوداني، MTN) */
 .pro-logo {
-    width: 45px;
-    height: 45px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
+    margin: 0 auto 8px;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0 auto 8px;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #ecf0f1;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     font-weight: 900;
     font-size: 12px;
     color: white;
-    border: 2px solid;
 }
 
-/* ألوان الشركات الجديدة */
-.zain-logo {
-    background: #2d3436;
-    color: #ff4757;
-    border-color: #ff4757;
+/* ضبط حجم الصور داخل الشعارات */
+.pro-logo img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
 }
 
-.sudani-logo {
-    background: #0984e3;
-    color: #fdcb6e;
-    border-color: #fdcb6e;
-}
-
-.mtn-logo {
-    background: #fdcb6e;
-    color: #2d3436;
-    border-color: #2d3436;
-}
-
-.pubg-logo {
-    background: #2c3e50;
-    color: #f1c40f;
-    border-color: #f1c40f;
-    font-size: 16px;
-}
-
-.ff-logo {
-    background: #e74c3c;
-    color: white;
-    border-color: #c0392b;
-    font-size: 16px;
-}
-
-.visa-logo {
-    background: #192a56;
-    color: white;
-    border-color: #e1b12c;
-    font-size: 16px;
-    font-family: sans-serif;
-}
-
-.master-logo {
-    background: #eb4d4b;
-    color: #f0932b;
-    border-color: #f0932b;
-    font-size: 16px;
-}
-
-.netflix-logo {
-    background: #e50914;
-    color: white;
-    border-color: #b81d24;
-    font-size: 18px;
-}
-
-.spotify-logo {
-    background: #1db954;
-    color: white;
-    border-color: #191414;
-    font-size: 18px;
-}
+/* ألوان الشركات (للالعاب والاشتراكات) */
+.pubg-logo { background: #2c3e50; color: #f1c40f; font-size: 16px; border: 2px solid #f1c40f;}
+.ff-logo { background: #e74c3c; color: white; font-size: 16px; border: 2px solid #c0392b;}
+.visa-logo { background: #192a56; color: white; font-size: 16px; font-family: sans-serif; border: 2px solid #e1b12c;}
+.master-logo { background: #eb4d4b; color: #f0932b; font-size: 16px; border: 2px solid #f0932b;}
+.netflix-logo { background: #e50914; color: white; font-size: 18px; border: 2px solid #b81d24;}
+.spotify-logo { background: #1db954; color: white; font-size: 18px; border: 2px solid #191414;}
 
 /* السجل والتنبيهات */
 .orders-history-container {
@@ -335,30 +288,12 @@ body {
     color: white;
 }
 
-.completed {
-    border-right-color: #2ecc71;
-}
-
-.status-completed {
-    background: #2ecc71;
-}
-
-.pending {
-    border-right-color: #f1c40f;
-}
-
-.status-pending {
-    background: #f1c40f;
-    color: #2c3e50;
-}
-
-.rejected {
-    border-right-color: #e74c3c;
-}
-
-.status-rejected {
-    background: #e74c3c;
-}
+.completed { border-right-color: #2ecc71; }
+.status-completed { background: #2ecc71; }
+.pending { border-right-color: #f1c40f; }
+.status-pending { background: #f1c40f; color: #2c3e50; }
+.rejected { border-right-color: #e74c3c; }
+.status-rejected { background: #e74c3c; }
 
 .toast {
     visibility: hidden;
@@ -401,6 +336,7 @@ body {
     font-size: 12px;
 }
 
+/* زرار جوجل */
 .btn-google {
     width: 100%;
     padding: 12px;
@@ -416,28 +352,15 @@ body {
     cursor: pointer;
 }
 
-.blue-bg {
-    background: #e3f2fd;
-}
-
-.purple-bg {
-    background: #f3e5f5;
-}
-
-.orange-bg {
-    background: #fff3e0;
-}
-
-.green-bg {
-    background: #e8f5e9;
-}
-
-.teal-bg {
-    background: #e0f2f1;
-}
-
-/* ضبط مقاس أيقونة جوجل */
+/* ضبط مقاس أيقونة جوجل (تم حل المشكلة هنا) */
 .btn-google img {
-    width: 24px;
-    height: 24px;
-   }  
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain;
+}
+
+.blue-bg { background: #e3f2fd; }
+.purple-bg { background: #f3e5f5; }
+.orange-bg { background: #fff3e0; }
+.green-bg { background: #e8f5e9; }
+.teal-bg { background: #e0f2f1; }
