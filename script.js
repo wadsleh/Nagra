@@ -2,7 +2,8 @@ import { firebaseConfig } from './config.js';
  
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+// 🌟 تم إضافة أداة استعادة كلمة المرور (sendPasswordResetEmail) هنا
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
 const app = initializeApp(firebaseConfig); 
 const db = getFirestore(app); 
@@ -27,6 +28,19 @@ window.switchAuth = (type) => {
     document.getElementById('tab-signup').className = type === 'signup' ? 'active' : '';
 }
 
+// 🌟 ميزة نسيت كلمة المرور
+window.forgotPassword = async () => {
+    const email = document.getElementById('login-email').value;
+    if(!email) return window.showToast("الرجاء إدخال إيميلك أولاً في حقل البريد أعلاه 📧", true);
+    
+    try {
+        await sendPasswordResetEmail(auth, email);
+        window.showToast("تم إرسال رابط تغيير كلمة المرور إلى إيميلك! ✅");
+    } catch(e) {
+        window.showToast("حدث خطأ! تأكد من صحة البريد الإلكتروني", true);
+    }
+};
+
 window.signInWithGoogle = async () => {
     try {
         window.showToast("جاري فتح نافذة جوجل... ⏳", false);
@@ -35,7 +49,6 @@ window.signInWithGoogle = async () => {
             window.showToast("تم الدخول بنجاح! 🚀", false);
         }
     } catch (error) {
-        console.error(error);
         window.showToast("حدث خطأ أثناء الدخول بجوجل", true);
     }
 };
@@ -55,16 +68,14 @@ onAuthStateChanged(auth, async (user) => {
             if (s.exists()) {
                 const data = s.data(); 
                 
-                // 🌟 نظام الحماية الجديد: فحص إذا كان الزبون محظور
                 if(data.isBanned === true) {
                     window.showToast("⛔ تم إيقاف حسابك من قبل الإدارة", true);
                     signOut(auth).then(() => {
                         setTimeout(() => location.reload(), 2000);
                     });
-                    return; // إيقاف باقي الأوامر عشان ما يدخل
+                    return; 
                 }
 
-                // لو ما محظور، يكمل دخوله عادي
                 window.currentUser = data.name;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
@@ -81,12 +92,13 @@ document.getElementById('btn-signup-execute').onclick = async () => {
     const pass = document.getElementById('reg-pass').value;
     
     if(!name || !email || !pass) return window.showToast("املأ البيانات", true);
+    if(pass.length < 6) return window.showToast("كلمة المرور يجب أن تكون 6 أحرف على الأقل", true);
     
     try {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "users", res.user.uid), { name, email, balance: 0 });
     } catch (e) { 
-        window.showToast("فشل التسجيل", true); 
+        window.showToast("فشل التسجيل، قد يكون الإيميل مستخدم", true); 
     }
 }
 
@@ -94,7 +106,7 @@ document.getElementById('btn-login-execute').onclick = async () => {
     try { 
         await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); 
     } catch (e) { 
-        window.showToast("بيانات خاطئة", true); 
+        window.showToast("كلمة المرور أو الإيميل غير صحيح", true); 
     }
 }
 
@@ -110,10 +122,8 @@ function loadOrders(userId) {
         orders.forEach(o => {
             const statusClass = o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending');
             
-            // عرض رد الإدمن (كود البطاقة أو سبب الرفض) للزبون في سجل الطلبات
             let replyHtml = "";
             if (o.adminReply) {
-                // لو الخدمة بطاقة بنكية، نخلي الرد يظهر بعبارة مخصصة بدل عرض البيانات الكاملة في السجل
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
                     replyHtml = `<div style="margin-top: 10px; padding: 10px; background: #e8f8f5; border-radius: 10px; font-size: 13px; color: #27ae60; font-weight: bold; text-align: center;">
                         💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي الرقمية)
@@ -254,6 +264,9 @@ window.submitRecharge = async () => {
     const rec = document.getElementById('recharge-receipt').value;
     if(!amt || !rec) return window.showToast("أكمل البيانات", true);
     
+    // 🌟 حماية الأرقام السالبة والصفر
+    if(Number(amt) <= 0) return window.showToast("المبلغ غير صحيح! 🚫", true);
+    
     await addDoc(collection(db, "orders"), { uid: auth.currentUser.uid, user: window.currentUser, service: "تغذية المحفظة", targetInfo: "إشعار رقم: " + rec, amount: Number(amt), status: "قيد المراجعة", date: new Date() });
     window.showToast("تم الإرسال 🚀"); 
     window.closeRechargeModal();
@@ -264,12 +277,14 @@ window.submitOrder = async () => {
     const amt = document.getElementById('order-amount').value;
     if(!tar || !amt) return window.showToast("أكمل البيانات", true);
     
+    // 🌟 حماية الأرقام السالبة والصفر
+    if(Number(amt) <= 0) return window.showToast("المبلغ غير صحيح! 🚫", true);
+    
     await addDoc(collection(db, "orders"), { uid: auth.currentUser.uid, user: window.currentUser, service: window.currentService, network: window.selectedNetwork, targetInfo: tar, amount: Number(amt), status: "قيد التنفيذ", date: new Date() });
     window.showToast("تم إرسال طلبك 📦"); 
     window.closeModal();
 }
 
-// 🌟 الإضافة الجديدة والمطورة: عرض البطاقات في شكل "بطاقة بلاستيكية"
 window.openMyCards = () => {
     document.getElementById('cards-modal').style.display = 'flex';
     const list = document.getElementById('my-cards-list');
@@ -293,20 +308,16 @@ window.openMyCards = () => {
         }
 
         cards.forEach(c => {
-            // تحديد لون البطاقة حسب النوع (فيزا = أزرق كحلي، ماستركارد = برتقالي/أحمر)
             let cardGradient = c.network === 'Visa' ? 'linear-gradient(135deg, #1e3c72, #2a5298)' : 'linear-gradient(135deg, #2c3e50, #bdc3c7)';
             if (c.network === 'Mastercard') cardGradient = 'linear-gradient(135deg, #eb3349, #f45c43)';
 
             list.innerHTML += `
                 <div style="background: ${cardGradient}; padding: 20px; border-radius: 15px; margin-bottom: 15px; text-align: right; box-shadow: 0 10px 20px rgba(0,0,0,0.25); color: white; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
-                    
                     <div style="width: 45px; height: 35px; background: linear-gradient(135deg, #ffd700, #daa520); border-radius: 6px; margin-bottom: 15px; opacity: 0.9; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3); border: 1px solid #b8860b;"></div>
-                    
                     <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 15px; padding-bottom: 5px;">
                         <span style="font-weight: 900; font-size: 22px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-family: monospace; letter-spacing: 2px;">${c.network}</span>
                         <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);">🟢 فعالة</span>
                     </div>
-                    
                     <div style="background: white; border-radius: 10px; padding: 12px; color: #333; margin-top: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
                         ${c.adminReply}
                     </div>
@@ -322,3 +333,4 @@ window.forceLogout = async () => { await signOut(auth); location.reload(); }
 let timer; 
 const reset = () => { clearTimeout(timer); timer = setTimeout(forceLogout, 5 * 60 * 1000); }
 document.onmousemove = reset; document.onclick = reset; document.ontouchstart = reset;
+ 
