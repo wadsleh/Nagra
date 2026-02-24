@@ -164,7 +164,7 @@
             });
         });
 
-        // 🌟 جلب المستخدمين (الكود الجديد)
+        // جلب المستخدمين
         onSnapshot(collection(db, "users"), (snap) => {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = "";
@@ -195,7 +195,7 @@
             }
         });
 
-        // 🌟 دالة تعديل رصيد المستخدم يدوياً
+        // دالة تعديل رصيد المستخدم يدوياً
         window.editUserBalance = (uid, name, currentBalance) => {
             const newBalance = prompt(`تعديل رصيد الزبون: ${name}\nالرصيد الحالي: ${currentBalance} ج.س\n\nأدخل الرصيد الجديد:`, currentBalance);
             
@@ -211,4 +211,44 @@
             }
         };
 
-        window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "ت
+        window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "تأكيد إضافة "+Number(amount).toLocaleString()+" ج.س لحساب الزبون؟", false, async () => {
+            if(!uid) return window.showToast("هذا الطلب قديم ولا يحتوي على رقم حساب", true);
+            try {
+                const userRef = doc(db, "users", uid);
+                const userSnap = await getDoc(userRef);
+                if(userSnap.exists()) {
+                    await updateDoc(userRef, { balance: (Number(userSnap.data().balance)||0) + Number(amount) });
+                    await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة" });
+                    window.showToast("تم شحن رصيد الزبون بنجاح! 🚀");
+                } else { window.showToast("حساب الزبون غير موجود!", true); }
+            } catch(e) { window.showToast("حدث خطأ في الاتصال", true); }
+        });
+
+        window.approveO = (orderId, uid, amount) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من حساب الزبون. أدخل كود البطاقة أو رسالة التنفيذ للزبون:", true, async () => {
+            if(!uid) return window.showToast("هذا الطلب قديم، لا يمكن خصم الرصيد تلقائياً", true);
+            
+            const replyText = document.getElementById('admin-reply-input').value; 
+            if(!replyText) return window.showToast("يجب إدخال الكود أو رسالة للزبون!", true);
+
+            try {
+                const userRef = doc(db, "users", uid);
+                const userSnap = await getDoc(userRef);
+                if(userSnap.exists()) {
+                    const bal = Number(userSnap.data().balance)||0;
+                    if(bal >= Number(amount)) {
+                        await updateDoc(userRef, { balance: bal - Number(amount) });
+                        await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: replyText });
+                        window.showToast("تم الخصم وإنهاء الطلب! ✅");
+                    } else { window.showToast("عذراً، رصيد الزبون لا يكفي!", true); }
+                }
+            } catch(e) { window.showToast("حدث خطأ في الاتصال", true); }
+        });
+
+        window.reject = (id) => openConfirm("رفض الطلب", "هل أنت متأكد من رفض هذا الطلب نهائياً؟", false, async () => {
+            await updateDoc(doc(db, "orders", id), { status: "مرفوض", adminReply: "تم رفض الطلب، يرجى مراجعة البيانات." });
+            window.showToast("تم رفض الطلب بنجاح.", true);
+        });
+    </script>
+</body>
+</html>
+ 
