@@ -51,9 +51,20 @@ onAuthStateChanged(auth, async (user) => {
             await updateDoc(userRef, { balance: 0 });
         }
 
-        onSnapshot(userRef, (s) => {
+                onSnapshot(userRef, (s) => {
             if (s.exists()) {
                 const data = s.data(); 
+                
+                // 🌟 نظام الحماية الجديد: فحص إذا كان الزبون محظور
+                if(data.isBanned === true) {
+                    window.showToast("⛔ تم إيقاف حسابك من قبل الإدارة", true);
+                    signOut(auth).then(() => {
+                        setTimeout(() => location.reload(), 2000);
+                    });
+                    return; // إيقاف باقي الأوامر عشان ما يدخل
+                }
+
+                // لو ما محظور، يكمل دخوله عادي
                 window.currentUser = data.name;
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
@@ -61,6 +72,7 @@ onAuthStateChanged(auth, async (user) => {
                 loadOrders(user.uid);
             }
         });
+);
     }
 });
 
