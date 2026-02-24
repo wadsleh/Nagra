@@ -119,30 +119,20 @@ window.openOrderModal = (s) => {
     document.getElementById('modal-title').innerText = "اختر نوع " + s; 
     const grid = document.getElementById('dynamic-options-grid'); 
     
-        if(s==='شحن رصيد'){ 
+    if(s==='شحن رصيد'){ 
         grid.style.gridTemplateColumns='repeat(3, 1fr)'; 
-        grid.innerHTML=`
-            <div class="network-card" onclick="proceedToStep2('زين')">
-                <div class="pro-logo">
-                    <img src="images/zain.png" alt="زين">
-                </div>
-                <p>زين</p>
-            </div>
-            <div class="network-card" onclick="proceedToStep2('سوداني')">
-                <div class="pro-logo">
-                    <img src="images/sudani.png" alt="سوداني">
-                </div>
-                <p>سوداني</p>
-            </div>
-            <div class="network-card" onclick="proceedToStep2('MTN')">
-                <div class="pro-logo">
-                    <img src="images/mtn.png" alt="MTN">
-                </div>
-                <p>MTN</p>
-            </div>
-        `;
-    }
-
+        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('زين')"><div class="pro-logo zain-logo">زين</div><p>زين</p></div><div class="network-card" onclick="proceedToStep2('سوداني')"><div class="pro-logo sudani-logo">SD</div><p>سوداني</p></div><div class="network-card" onclick="proceedToStep2('MTN')"><div class="pro-logo mtn-logo">MTN</div><p>MTN</p></div>`;
+    } else if(s==='ألعاب'){ 
+        grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
+        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('PUBG')"><div class="pro-logo pubg-logo">🎮</div><p>ببجي</p></div><div class="network-card" onclick="proceedToStep2('Free Fire')"><div class="pro-logo ff-logo">🔥</div><p>فري فاير</p></div>`;
+    } else if(s==='اشتراكات'){ 
+        grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
+        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('Netflix')"><div class="pro-logo netflix-logo">N</div><p>نتفليكس</p></div><div class="network-card" onclick="proceedToStep2('Spotify')"><div class="pro-logo spotify-logo">S</div><p>سبوتيفاي</p></div>`;
+    } else if(s==='بطاقات دفع'){ 
+        grid.style.gridTemplateColumns='repeat(2, 1fr)'; 
+        grid.innerHTML=`<div class="network-card" onclick="proceedToStep2('Visa')"><div class="pro-logo visa-logo">V</div><p>فيزا</p></div><div class="network-card" onclick="proceedToStep2('Mastercard')"><div class="pro-logo master-logo">M</div><p>ماستركارد</p></div>`;
+    } 
+}
 
 // التحديث الخاص بصندوق معلومات البطاقات
 window.proceedToStep2 = (subService) => {
@@ -215,4 +205,4 @@ window.forceLogout = async () => { await signOut(auth); location.reload(); }
 let timer; 
 const reset = () => { clearTimeout(timer); timer = setTimeout(forceLogout, 5 * 60 * 1000); }
 document.onmousemove = reset; document.onclick = reset; document.ontouchstart = reset;
- 
+  
