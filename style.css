@@ -453,3 +453,29 @@ body {
     font-weight: 800 !important;
     color: #2c3e50 !important;
 }
+/* =========================================
+   🌟 تعديل جديد: إزالة الخلفية البيضاء وتكبير الأيقونات
+   ========================================= */
+
+/* الخطوة 1: إلغاء تصميم "الصندوق" الأبيض */
+.service-item {
+    background: transparent !important; /* جعل الخلفية شفافة */
+    box-shadow: none !important;        /* إلغاء الضل */
+    border: none !important;            /* إلغاء الإطار */
+    padding: 0 !important;              /* إلغاء الحواف الداخلية عشان الأيقونة تاخد راحتها */
+    aspect-ratio: auto !important;      /* إلغاء إجبار الشكل المربع للسماح للأيقونة بالتمدد */
+}
+
+/* الخطوة 2: تكبير الأيقونات لتملأ الفراغ */
+.service-item .icon-wrapper {
+    width: 110px !important;  /* تكبير عرض الأيقونة */
+    height: 110px !important; /* تكبير طول الأيقونة */
+    margin-bottom: 10px !important; /* مسافة بسيطة بين الأيقونة والنص تحتها */
+}
+
+/* الخطوة 3: تحسين شكل النص تحت الأيقونة */
+.service-item p {
+    font-size: 15px !important;   /* تكبير الخط سنة بسيطة */
+    font-weight: 900 !important;  /* زيادة سماكة الخط */
+    text-shadow: 0 2px 5px rgba(255,255,255,0.5); /* إضافة ضل أبيض خفيف للنص عشان يبرز */
+}
