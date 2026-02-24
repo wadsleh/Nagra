@@ -143,7 +143,7 @@ window.openOrderModal = (s) => {
                 <p>ببجي</p>
             </div>
             <div class="network-card" onclick="proceedToStep2('Free Fire')">
-                <div class="pro-logo"><img src="images/free-fire.jpeg" alt="فري فاير"></div>
+                <div class="pro-logo"><img src="images/free-fire.jpg" alt="فري فاير"></div>
                 <p>فري فاير</p>
             </div>
         `;
