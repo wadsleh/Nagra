@@ -100,8 +100,9 @@
     <div id="toast-message" class="toast"></div>
 
     <script type="module">
+        // 🌟 إضافة addDoc و serverTimestamp للاستيراد
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         
         const firebaseConfig = { apiKey: "AIzaSyB_8sjnJNMpUi0LAQv7U5lFmMvRlh5x0nU", authDomain: "nagra-app.firebaseapp.com", projectId: "nagra-app", storageBucket: "nagra-app.firebasestorage.app", messagingSenderId: "29893867141", appId: "1:29893867141:web:e8b4e0a15d80898575dbec" };
@@ -136,7 +137,6 @@
             document.getElementById('confirm-modal').style.display = 'none'; 
             document.getElementById('normal-reply').style.display = 'none';
             document.getElementById('card-reply').style.display = 'none';
-            // تفريغ الحقول
             document.getElementById('admin-reply-input').value = '';
             document.getElementById('c-num').value = ''; document.getElementById('c-exp').value = '';
             document.getElementById('c-cvv').value = ''; document.getElementById('c-zip').value = '';
@@ -256,12 +256,11 @@
         };
 
         // ==========================================
-        // 🛡️ 1. دالة إضافة الرصيد (محمية ضد التكرار)
+        // 🛡️ 1. دالة إضافة الرصيد (مع نظام السجل)
         // ==========================================
         window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "تأكيد إضافة "+Number(amount).toLocaleString()+" ج.س لحساب الزبون؟", false, async () => {
             if(!uid) return window.showToast("طلب قديم", true);
             
-            // 🚨 كود الحماية
             const orderRef = doc(db, "orders", orderId);
             const orderSnap = await getDoc(orderRef);
             if(!orderSnap.exists()) return window.showToast("الطلب غير موجود!", true);
@@ -276,17 +275,27 @@
             if(userSnap.exists()) {
                 await updateDoc(userRef, { balance: (Number(userSnap.data().balance)||0) + Number(amount) });
                 await updateDoc(orderRef, { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة بنجاح" });
+                
+                // 🌟 إضافة المعاملة في دفتر الأستاذ (Transaction Log)
+                await addDoc(collection(db, "transactions"), {
+                    userId: uid,
+                    type: "credit",
+                    amount: Number(amount),
+                    source: "bank deposit",
+                    orderId: orderId,
+                    date: serverTimestamp()
+                });
+
                 window.showToast("تم الشحن! 🚀");
             }
         });
 
         // ==========================================
-        // 🛡️ 2. دالة تنفيذ الخدمات والخصم (محمية ضد التكرار)
+        // 🛡️ 2. دالة تنفيذ الخدمات والخصم (مع نظام السجل)
         // ==========================================
         window.approveO = (orderId, uid, amount, serviceType) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من الزبون. أدخل بيانات الخدمة:", true, async () => {
             if(!uid) return window.showToast("طلب قديم", true);
             
-            // 🚨 كود الحماية
             const orderRef = doc(db, "orders", orderId);
             const orderSnap = await getDoc(orderRef);
             if(!orderSnap.exists()) return window.showToast("الطلب غير موجود!", true);
@@ -338,6 +347,17 @@
                     if(bal >= Number(amount)) {
                         await updateDoc(userRef, { balance: bal - Number(amount) });
                         await updateDoc(orderRef, { status: "مكتمل", adminReply: finalReplyText });
+                        
+                        // 🌟 إضافة المعاملة في دفتر الأستاذ (Transaction Log)
+                        await addDoc(collection(db, "transactions"), {
+                            userId: uid,
+                            type: "debit",
+                            amount: Number(amount),
+                            source: serviceType,
+                            orderId: orderId,
+                            date: serverTimestamp()
+                        });
+
                         window.showToast("تم الخصم وإنهاء الطلب! ✅");
                     } else { window.showToast("رصيد الزبون لا يكفي!", true); }
                 } else {
@@ -352,7 +372,6 @@
         // 🛡️ 3. دالة رفض الطلب (محمية ضد التكرار)
         // ==========================================
         window.reject = (id) => openConfirm("رفض الطلب", "هل أنت متأكد من رفض هذا الطلب نهائياً؟", false, async () => {
-            // 🚨 كود الحماية
             const orderRef = doc(db, "orders", id);
             const orderSnap = await getDoc(orderRef);
             if(!orderSnap.exists()) return window.showToast("الطلب غير موجود!", true);
