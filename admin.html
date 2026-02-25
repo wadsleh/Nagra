@@ -14,7 +14,7 @@
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-box { background: white; color: #2c3e50; padding: 25px; border-radius: 25px; text-align: center; width: 90%; max-width: 350px; }
-        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; }
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; } /* 🌟 تم إصلاح البروز هنا */
         .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; }
         .toast.show { visibility: visible; bottom: 50px; }
         .toast.error { background: #e74c3c; }
@@ -22,7 +22,10 @@
         th { background: #f1f2f6; padding: 10px; border-bottom: 2px solid #ddd; }
         td { padding: 10px; border-bottom: 1px solid #eee; }
         .banned-row { opacity: 0.5; background: #ffebee !important; }
-        .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin-bottom: 15px; font-family: 'Tajawal'; }
+        /* 🌟 صندوق البحث المحسن */
+        .search-container { position: relative; margin-bottom: 15px; }
+        .search-box { width: 100%; padding: 12px 40px 12px 12px; border-radius: 15px; border: 1px solid #eee; font-family: 'Tajawal'; box-sizing: border-box; background: #f8f9fa; }
+        .search-icon { position: absolute; right: 12px; top: 12px; color: #95a5a6; }
     </style>
 </head>
 <body id="admin-body" style="display: none;">
@@ -30,6 +33,17 @@
     
     <div style="text-align: left; margin-bottom: 15px;">
         <button onclick="logoutAdmin()" class="btn btn-red">خروج</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
+        <div class="card" style="margin-bottom: 0; padding: 15px; text-align: center;">
+            <p style="margin:0; font-size:12px; color:#7f8c8d;">إجمالي أرصدة المستخدمين</p>
+            <h3 id="total-users-balance" style="margin:5px 0; color:#27ae60;">0</h3>
+        </div>
+        <div class="card" style="margin-bottom: 0; padding: 15px; text-align: center;">
+            <p style="margin:0; font-size:12px; color:#7f8c8d;">عدد العمليات الناجحة</p>
+            <h3 id="total-tx-count" style="margin:5px 0; color:#3498db;">0</h3>
+        </div>
     </div>
 
     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -50,7 +64,10 @@
 
     <div class="card">
         <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">👥 المستخدمين</h3>
-        <input type="text" id="userSearch" class="search-box" placeholder="🔍 ابحث بالاسم أو البريد...">
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="userSearch" class="search-box" placeholder="ابحث بالاسم أو البريد...">
+        </div>
         <div style="overflow-x: auto;">
             <table>
                 <thead><tr><th>الاسم</th><th>الرصيد</th><th>إجراء</th></tr></thead>
@@ -69,14 +86,16 @@
         </div>
     </div>
 
-    <div id="balance-modal" class="modal-overlay">
+    <div id="action-modal" class="modal-overlay">
         <div class="modal-box">
-            <h3>تعديل رصيد الزبون ✏️</h3>
-            <p id="bal-modal-user" style="color: #7f8c8d; font-weight: bold;"></p>
-            <input type="number" id="new-bal-input" class="admin-input" placeholder="أدخل الرصيد الجديد">
+            <h3 id="action-modal-title">تنبيه</h3>
+            <p id="action-modal-msg" style="color: #7f8c8d;"></p>
+            <div id="action-input-container" style="display:none;">
+                <input type="number" id="action-value-input" class="admin-input" placeholder="أدخل القيمة...">
+            </div>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button id="btn-save-bal" class="btn btn-green" style="flex:1;">حفظ</button>
-                <button onclick="closeBalModal()" class="btn" style="flex:1; background: #eee; color: #555;">إلغاء</button>
+                <button id="btn-action-confirm" class="btn btn-green" style="flex:1;">تأكيد</button>
+                <button onclick="closeActionModal()" class="btn" style="flex:1; background: #eee; color: #555;">إلغاء</button>
             </div>
         </div>
     </div>
@@ -111,6 +130,7 @@
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
         const ADMIN_EMAIL = "wadsalihhamed@gmail.com"; 
         let pending = null;
+        let actionPending = null;
         let allUsers = [];
 
         onAuthStateChanged(auth, (user) => {
@@ -123,7 +143,7 @@
         window.logoutAdmin = () => signOut(auth);
         window.showToast = (msg, err=false) => { const t=document.getElementById('toast-message'); t.innerText=msg; t.className=err?"toast show error":"toast show"; setTimeout(()=>t.className="toast", 3000); };
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; document.getElementById('normal-reply').style.display='none'; document.getElementById('card-reply').style.display='none'; };
-        window.closeBalModal = () => { document.getElementById('balance-modal').style.display='none'; };
+        window.closeActionModal = () => { document.getElementById('action-modal').style.display='none'; };
 
         function initListeners() {
             onSnapshot(collection(db, "orders"), (snap) => {
@@ -153,9 +173,15 @@
 
             onSnapshot(collection(db, "users"), (snap) => {
                 allUsers = [];
-                snap.forEach(d => allUsers.push({id: d.id, ...d.data()}));
+                let totalBal = 0;
+                snap.forEach(d => {
+                    const u = d.data();
+                    allUsers.push({id: d.id, ...u});
+                    totalBal += (Number(u.balance) || 0);
+                });
                 renderUsers(allUsers);
                 document.getElementById('stats-users').innerText = allUsers.length;
+                document.getElementById('total-users-balance').innerText = totalBal.toLocaleString() + " ج.س";
             });
 
             onSnapshot(collection(db, "transactions"), (snap) => {
@@ -163,6 +189,7 @@
                 let logs = [];
                 snap.forEach(d => logs.push(d.data()));
                 logs.sort((a,b) => (b.date?.toMillis() || 0) - (a.date?.toMillis() || 0));
+                document.getElementById('total-tx-count').innerText = logs.length;
                 logs.forEach(l => {
                     const isCredit = l.type === "credit";
                     tbody.innerHTML += `<tr>
@@ -184,8 +211,8 @@
                     <td style="color:#27ae60; font-weight:bold;">${(u.balance||0).toLocaleString()}</td>
                     <td>
                         <div style="display:flex; gap:5px;">
-                            <button class="btn btn-orange" onclick="editBalModal('${u.id}', '${u.name}', ${u.balance||0})">✏️</button>
-                            <button class="btn ${isBanned?'btn-green':'btn-red'}" onclick="toggleBan('${u.id}', ${isBanned})">${isBanned?'🔓':'🚫'}</button>
+                            <button class="btn btn-orange" onclick="customEditBal('${u.id}', '${u.name}', ${u.balance||0})">✏️</button>
+                            <button class="btn ${isBanned?'btn-green':'btn-red'}" onclick="customToggleBan('${u.id}', '${u.name}', ${isBanned})">${isBanned?'🔓':'🚫'}</button>
                         </div>
                     </td>
                 </tr>`;
@@ -198,24 +225,37 @@
             renderUsers(filtered);
         };
 
-        window.editBalModal = (id, name, cur) => {
-            document.getElementById('bal-modal-user').innerText = name;
-            document.getElementById('new-bal-input').value = cur;
-            document.getElementById('balance-modal').style.display = 'flex';
-            document.getElementById('btn-save-bal').onclick = () => {
-                const val = Number(document.getElementById('new-bal-input').value);
+        // 🌟 استبدال prompt و confirm بمودال احترافي
+        window.customEditBal = (id, name, cur) => {
+            document.getElementById('action-modal-title').innerText = "تعديل الرصيد ✏️";
+            document.getElementById('action-modal-msg').innerText = "تعديل رصيد الزبون: " + name;
+            document.getElementById('action-input-container').style.display = 'block';
+            document.getElementById('action-value-input').value = cur;
+            document.getElementById('action-modal').style.display = 'flex';
+            actionPending = () => {
+                const val = Number(document.getElementById('action-value-input').value);
                 updateDoc(doc(db, "users", id), { balance: val }).then(() => {
                     showToast("تم تحديث الرصيد ✅");
-                    closeBalModal();
+                    closeActionModal();
                 });
             };
         };
 
-        window.toggleBan = (id, currentlyBanned) => {
-            if(confirm(`هل متأكد من ${currentlyBanned?'فك حظر':'حظر'} هذا المستخدم؟`)) {
-                updateDoc(doc(db, "users", id), { isBanned: !currentlyBanned }).then(() => showToast("تمت العملية بنجاح"));
-            }
+        window.customToggleBan = (id, name, currentlyBanned) => {
+            const action = currentlyBanned ? "فك حظر" : "حظر";
+            document.getElementById('action-modal-title').innerText = "تأكيد " + action + " 🚫";
+            document.getElementById('action-modal-msg').innerText = "هل أنت متأكد من " + action + " الزبون: " + name + "؟";
+            document.getElementById('action-input-container').style.display = 'none';
+            document.getElementById('action-modal').style.display = 'flex';
+            actionPending = () => {
+                updateDoc(doc(db, "users", id), { isBanned: !currentlyBanned }).then(() => {
+                    showToast("تمت العملية بنجاح ✅");
+                    closeActionModal();
+                });
+            };
         };
+
+        document.getElementById('btn-action-confirm').onclick = () => { if(actionPending) actionPending(); };
 
         window.openConfirm = (t, m, showInp, f, sType='') => {
             document.getElementById('modal-title-text').innerText = t;
