@@ -8,7 +8,7 @@ const db = getFirestore(app);
 const auth = getAuth(app); 
 const googleProvider = new GoogleAuthProvider();
 
-// 1️⃣ State Management نظيف
+// 1️⃣ State Management نظيف جداً
 const state = {
     currentUser: null,
     currentService: null,
@@ -17,7 +17,7 @@ const state = {
     unsubscribeCards: null
 };
 
-// 4️⃣ Service Config System احترافي
+// 2️⃣ Service Config System احترافي
 const servicesConfig = {
     "شحن رصيد": {
         columns: 3,
@@ -91,7 +91,6 @@ window.signInWithGoogle = async () => {
     }
 };
 
-// 2️⃣ الاعتماد على state.currentUser بدلاً من window
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         const userRef = doc(db, "users", user.uid); 
@@ -111,10 +110,11 @@ onAuthStateChanged(auth, async (user) => {
                     return; 
                 }
 
-                state.currentUser = data.name; // تحديث الـ State
+                // حفظ بيانات المستخدم في State
+                state.currentUser = data.name; 
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
-                document.getElementById('user-balance').innerText = (Number(data.balance) || 0).toLocaleString() + " ج.س";
+                document.getElementById('user-balance').innerHTML = `<span style="font-size: 18px;">👁️</span> ${(Number(data.balance) || 0).toLocaleString()} ج.س`;
                 
                 loadOrders(user.uid);
             }
@@ -145,10 +145,10 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
-// 3️⃣ Listener Control & 5️⃣ حماية أولية ضد XSS باستخدام createElement
+// 3️⃣ حل مشكلة Memory Leak وحماية XSS
 function loadOrders(userId) {
     if (state.unsubscribeOrders) {
-        state.unsubscribeOrders(); // إيقاف الاستماع القديم لمنع تسريب الذاكرة
+        state.unsubscribeOrders(); 
     }
 
     const q = query(collection(db, "orders"), where("uid", "==", userId));
@@ -168,7 +168,6 @@ function loadOrders(userId) {
             div.style.flexDirection = "column";
             div.style.gap = "5px";
 
-            // بناء العناصر باستخدام DOM Methods لحماية XSS
             const topDiv = document.createElement("div");
             topDiv.style.display = "flex";
             topDiv.style.justifyContent = "space-between";
@@ -208,7 +207,6 @@ function loadOrders(userId) {
             topDiv.appendChild(amountDiv);
             div.appendChild(topDiv);
 
-            // إضافة الرد بشكل آمن
             if (o.adminReply) {
                 const replyDiv = document.createElement("div");
                 replyDiv.style.marginTop = "10px";
@@ -220,29 +218,25 @@ function loadOrders(userId) {
                 replyDiv.style.border = "1px dashed #74b9ff";
                 replyDiv.style.fontWeight = "bold";
                 
-                const replyLabel = document.createTextNode("رد الإدارة: ");
-                const replySpan = document.createElement("span");
-                replySpan.style.color = "#2d3436";
-                replySpan.style.userSelect = "all";
-                // استخدام innerHTML فقط إذا كان الرد مصمماً كبطاقة دفع (محتوى موثوق من الإدارة)، 
-                // أو textContent إذا كان نصاً عادياً للحماية.
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
-                    replySpan.innerHTML = o.adminReply; 
+                    replyDiv.innerHTML = `<div style="text-align: center; color: #27ae60;">💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي)</div>`; 
                 } else {
+                    const replyLabel = document.createTextNode("رد الإدارة: ");
+                    const replySpan = document.createElement("span");
+                    replySpan.style.color = "#2d3436";
+                    replySpan.style.userSelect = "all";
                     replySpan.textContent = o.adminReply;
+                    replyDiv.appendChild(replyLabel);
+                    replyDiv.appendChild(replySpan);
                 }
-
-                replyDiv.appendChild(replyLabel);
-                replyDiv.appendChild(replySpan);
                 div.appendChild(replyDiv);
             }
-
             container.appendChild(div);
         });
     });
 }
 
-// 4️⃣ الاعتماد على Service Config System
+// 4️⃣ الاعتماد الكلي على Config System (بدون تكرار كود)
 window.openOrderModal = (service) => {
     state.currentService = service;
     const config = servicesConfig[service];
@@ -261,21 +255,18 @@ window.openOrderModal = (service) => {
     config.options.forEach(opt => {
         const item = document.createElement("div");
         item.className = "network-card";
-        
         item.innerHTML = `
             <div class="pro-logo"><img src="${opt.img}" alt="${opt.name}"></div>
             <p>${opt.name}</p>
         `;
-
         item.addEventListener("click", () => {
             window.proceedToStep2(opt.name);
         });
-
         grid.appendChild(item);
     });
 }
 
-// 5️⃣ Event System بدون onclick في الـ HTML الرئيسي
+// 5️⃣ Event Delegation: ربط الكروت في HTML بـ الجافاسكريبت
 document.querySelectorAll(".service-item").forEach(item => {
     item.addEventListener("click", () => {
         const serviceName = item.dataset.service;
@@ -297,15 +288,35 @@ window.proceedToStep2 = (subService) => {
 }
 
 window.closeModal = () => document.getElementById('order-modal').style.display = 'none'; 
+window.openHistoryModal = () => document.getElementById('history-modal').style.display = 'flex';
 window.closeHistoryModal = () => document.getElementById('history-modal').style.display = 'none';
+window.openRechargeModal = () => document.getElementById('recharge-modal').style.display = 'flex';
+window.closeRechargeModal = () => document.getElementById('recharge-modal').style.display = 'none';
 
-window.submitRecharge = async () => { ... } // (الكود كما هو سابقاً)
+window.submitRecharge = async () => {
+    const amt = document.getElementById('recharge-amount').value; 
+    const rec = document.getElementById('recharge-receipt').value;
+    if(!amt || !rec) return window.showToast("أكمل البيانات", true);
+    if(Number(amt) <= 0) return window.showToast("المبلغ غير صحيح! 🚫", true);
+    
+    await addDoc(collection(db, "orders"), { 
+        uid: auth.currentUser.uid, 
+        user: state.currentUser, 
+        service: "تغذية المحفظة", 
+        targetInfo: "إشعار رقم: " + rec, 
+        amount: Number(amt), 
+        status: "قيد المراجعة", 
+        date: new Date() 
+    });
+    window.showToast("تم الإرسال 🚀"); 
+    window.closeRechargeModal();
+}
 
-// 6️⃣ منع ضغط زر الطلب مرتين
+// 6️⃣ منع الزبون من ضغط الزرار مرتين
 window.submitOrder = async () => {
     const tar = document.getElementById('order-target').value; 
     const amt = document.getElementById('order-amount').value;
-    const btn = document.getElementById('submitBtn'); // تأكد من وجود id="submitBtn" في الـ HTML
+    const btn = document.getElementById('submitBtn');
 
     if(!tar || !amt) return window.showToast("أكمل البيانات", true);
     if(Number(amt) <= 0) return window.showToast("المبلغ غير صحيح! 🚫", true);
@@ -338,7 +349,49 @@ window.submitOrder = async () => {
     }
 }
 
-// 7️⃣ Auto Logout احترافي
+window.openMyCards = () => {
+    document.getElementById('cards-modal').style.display = 'flex';
+    const list = document.getElementById('my-cards-list');
+    list.innerHTML = "<p style='text-align:center; color: #7f8c8d;'>جاري جلب البطاقات... ⏳</p>";
+
+    onSnapshot(query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid)), (snap) => {
+        list.innerHTML = ""; 
+        let cards = [];
+        
+        snap.forEach(d => {
+            let o = d.data();
+            if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') cards.push(o);
+        });
+        cards.sort((a,b) => b.date.toMillis() - a.date.toMillis());
+
+        if(cards.length === 0) {
+            list.innerHTML = "<div style='text-align:center; padding: 20px;'><div style='font-size: 40px; margin-bottom: 10px;'>📭</div><p style='color: #e74c3c; font-weight: bold;'>لا توجد بطاقات محفوظة حالياً</p></div>";
+            return;
+        }
+
+        cards.forEach(c => {
+            let cardGradient = c.network === 'Visa' ? 'linear-gradient(135deg, #1e3c72, #2a5298)' : 'linear-gradient(135deg, #2c3e50, #bdc3c7)';
+            if (c.network === 'Mastercard') cardGradient = 'linear-gradient(135deg, #eb3349, #f45c43)';
+
+            list.innerHTML += `
+                <div style="background: ${cardGradient}; padding: 20px; border-radius: 15px; margin-bottom: 15px; text-align: right; box-shadow: 0 10px 20px rgba(0,0,0,0.25); color: white; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
+                    <div style="width: 45px; height: 35px; background: linear-gradient(135deg, #ffd700, #daa520); border-radius: 6px; margin-bottom: 15px; opacity: 0.9; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3); border: 1px solid #b8860b;"></div>
+                    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 15px; padding-bottom: 5px;">
+                        <span style="font-weight: 900; font-size: 22px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-family: monospace; letter-spacing: 2px;">${c.network}</span>
+                        <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);">🟢 فعالة</span>
+                    </div>
+                    <div style="background: white; border-radius: 10px; padding: 12px; color: #333; margin-top: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
+                        ${c.adminReply}
+                    </div>
+                </div>
+            `;
+        });
+    });
+};
+
+window.closeCardsModal = () => document.getElementById('cards-modal').style.display = 'none';
+
+// 7️⃣ Auto Logout System
 let logoutTimer;
 function resetTimer() {
     clearTimeout(logoutTimer);
@@ -346,10 +399,11 @@ function resetTimer() {
         if (auth.currentUser) {
             signOut(auth).then(() => location.reload());
         }
-    }, 10 * 60 * 1000); // 10 دقائق
+    }, 10 * 60 * 1000); 
 }
 
 ['click', 'mousemove', 'keydown', 'touchstart'].forEach(evt => document.addEventListener(evt, resetTimer));
 resetTimer();
 
 window.forceLogout = async () => { await signOut(auth); location.reload(); }
+ 
