@@ -8,20 +8,21 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; background: #0f2027; color: white; padding: 20px; direction: rtl; margin: 0; }
         .card { background: white; color: #2c3e50; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .item-row { background: #f8f9fa; padding: 15px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #11998e; border: 1px solid #eee; border-right-width: 5px; flex-wrap: wrap; gap: 10px; }
+        .item-row { background: #f8f9fa; padding: 15px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #11998e; border: 1px solid #eee; flex-wrap: wrap; gap: 10px; }
         .btn { padding: 10px 15px; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; font-family: 'Tajawal'; transition: 0.3s; font-size: 14px; }
         .btn-green { background: #2ecc71; } .btn-blue { background: #3498db; } .btn-red { background: #e74c3c; } .btn-orange { background: #f39c12; }
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-box { background: white; color: #2c3e50; padding: 25px; border-radius: 25px; text-align: center; width: 90%; max-width: 350px; }
         .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; }
-        .flex-row { display: flex; gap: 10px; }
         .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; }
         .toast.show { visibility: visible; bottom: 50px; }
         .toast.error { background: #e74c3c; }
         table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
         th { background: #f1f2f6; padding: 10px; border-bottom: 2px solid #ddd; }
         td { padding: 10px; border-bottom: 1px solid #eee; }
+        .banned-row { opacity: 0.5; background: #ffebee !important; }
+        .search-box { width: 100%; padding: 12px; border-radius: 15px; border: 1px solid #ddd; margin-bottom: 15px; font-family: 'Tajawal'; }
     </style>
 </head>
 <body id="admin-body" style="display: none;">
@@ -48,31 +49,35 @@
     </div>
 
     <div class="card">
-        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">👥 المستخدمين المسجلين</h3>
+        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">👥 المستخدمين</h3>
+        <input type="text" id="userSearch" class="search-box" placeholder="🔍 ابحث بالاسم أو البريد...">
         <div style="overflow-x: auto;">
             <table>
-                <thead><tr><th>الاسم</th><th>الرصيد الحالي</th><th>إجراء</th></tr></thead>
+                <thead><tr><th>الاسم</th><th>الرصيد</th><th>إجراء</th></tr></thead>
                 <tbody id="users-table-body"></tbody>
             </table>
         </div>
     </div>
 
     <div class="card">
-        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #f39c12;">📜 دفتر السجلات (آخر العمليات)</h3>
+        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #f39c12;">📜 دفتر السجلات</h3>
         <div style="overflow-x: auto;">
             <table>
-                <thead>
-                    <tr>
-                        <th>التاريخ</th>
-                        <th>النوع</th>
-                        <th>المبلغ</th>
-                        <th>الخدمة</th>
-                    </tr>
-                </thead>
-                <tbody id="transactions-table-body">
-                    <tr><td colspan="4" style="text-align:center; color:#7f8c8d;">جاري جلب السجلات... ⏳</td></tr>
-                </tbody>
+                <thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>الخدمة</th></tr></thead>
+                <tbody id="transactions-table-body"></tbody>
             </table>
+        </div>
+    </div>
+
+    <div id="balance-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>تعديل رصيد الزبون ✏️</h3>
+            <p id="bal-modal-user" style="color: #7f8c8d; font-weight: bold;"></p>
+            <input type="number" id="new-bal-input" class="admin-input" placeholder="أدخل الرصيد الجديد">
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button id="btn-save-bal" class="btn btn-green" style="flex:1;">حفظ</button>
+                <button onclick="closeBalModal()" class="btn" style="flex:1; background: #eee; color: #555;">إلغاء</button>
+            </div>
         </div>
     </div>
 
@@ -83,12 +88,10 @@
             <div id="normal-reply" style="display:none;"><input type="text" id="admin-reply-input" class="admin-input" placeholder="أدخل الكود هنا..."></div>
             <div id="card-reply" style="display:none; text-align:right;">
                 <input type="text" id="c-num" class="admin-input" placeholder="رقم البطاقة">
-                <div class="flex-row">
+                <div style="display:flex; gap:10px;">
                     <input type="text" id="c-exp" class="admin-input" style="flex:1;" placeholder="MM/YY">
                     <input type="text" id="c-cvv" class="admin-input" style="flex:1;" placeholder="CVV">
                 </div>
-                <input type="text" id="c-zip" class="admin-input" placeholder="Zip Code">
-                <input type="text" id="c-address" class="admin-input" placeholder="العنوان">
             </div>
             <div style="display: flex; gap: 10px; margin-top: 15px;">
                 <button id="btn-confirm" class="btn btn-green" style="flex:1;">تأكيد</button>
@@ -108,25 +111,23 @@
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
         const ADMIN_EMAIL = "wadsalihhamed@gmail.com"; 
         let pending = null;
+        let allUsers = [];
 
         onAuthStateChanged(auth, (user) => {
             if (user && user.email === ADMIN_EMAIL) {
                 document.getElementById('admin-body').style.display = 'block';
                 initListeners();
-            } else {
-                window.location.href = "index.html";
-            }
+            } else { window.location.href = "index.html"; }
         });
 
         window.logoutAdmin = () => signOut(auth);
         window.showToast = (msg, err=false) => { const t=document.getElementById('toast-message'); t.innerText=msg; t.className=err?"toast show error":"toast show"; setTimeout(()=>t.className="toast", 3000); };
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; document.getElementById('normal-reply').style.display='none'; document.getElementById('card-reply').style.display='none'; };
+        window.closeBalModal = () => { document.getElementById('balance-modal').style.display='none'; };
 
         function initListeners() {
-            // متابعة الطلبات
             onSnapshot(collection(db, "orders"), (snap) => {
-                const container = document.getElementById('orders-container'); 
-                container.innerHTML = "";
+                const container = document.getElementById('orders-container'); container.innerHTML = "";
                 let count = 0;
                 snap.forEach(d => {
                     const o = d.data();
@@ -148,52 +149,73 @@
                     }
                 });
                 document.getElementById('stats-orders').innerText = count;
-                if(count === 0) container.innerHTML = "لا توجد طلبات حالياً.";
             });
 
-            // متابعة المستخدمين
             onSnapshot(collection(db, "users"), (snap) => {
-                const tbody = document.getElementById('users-table-body'); 
-                tbody.innerHTML = "";
-                let count = 0;
-                snap.forEach(d => {
-                    const u = d.data();
-                    if(!u || !u.name) return;
-                    const bal = u.balance || 0;
-                    count++;
-                    tbody.innerHTML += `<tr>
-                        <td><b>${u.name}</b></td>
-                        <td style="color:#27ae60;">${Number(bal).toLocaleString()}</td>
-                        <td><button class="btn btn-orange" style="padding:4px 8px;" onclick="editBal('${d.id}', '${u.name}', ${bal})">✏️</button></td>
-                    </tr>`;
-                });
-                document.getElementById('stats-users').innerText = count;
+                allUsers = [];
+                snap.forEach(d => allUsers.push({id: d.id, ...d.data()}));
+                renderUsers(allUsers);
+                document.getElementById('stats-users').innerText = allUsers.length;
             });
 
-            // 🌟 التعديل الجديد: متابعة سجل العمليات وعرضها في الجدول
             onSnapshot(collection(db, "transactions"), (snap) => {
-                const tbody = document.getElementById('transactions-table-body');
-                tbody.innerHTML = "";
+                const tbody = document.getElementById('transactions-table-body'); tbody.innerHTML = "";
                 let logs = [];
                 snap.forEach(d => logs.push(d.data()));
-                
-                // ترتيب السجلات من الأحدث للأقدم
-                logs.sort((a, b) => (b.date?.toMillis() || 0) - (a.date?.toMillis() || 0));
-
+                logs.sort((a,b) => (b.date?.toMillis() || 0) - (a.date?.toMillis() || 0));
                 logs.forEach(l => {
                     const isCredit = l.type === "credit";
-                    tbody.innerHTML += `
-                        <tr>
-                            <td style="font-size:11px; color:#95a5a6;">${l.date ? l.date.toDate().toLocaleString('ar-EG') : '...'}</td>
-                            <td><span style="color:${isCredit ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${isCredit ? 'إيداع +' : 'خصم -'}</span></td>
-                            <td style="font-weight:bold;">${Number(l.amount).toLocaleString()}</td>
-                            <td style="font-size:12px;">${l.source}</td>
-                        </tr>
-                    `;
+                    tbody.innerHTML += `<tr>
+                        <td>${l.date ? l.date.toDate().toLocaleString('ar-EG') : ''}</td>
+                        <td style="color:${isCredit?'#2ecc71':'#e74c3c'}">${isCredit?'إيداع':'خصم'}</td>
+                        <td>${Number(l.amount).toLocaleString()}</td>
+                        <td>${l.source}</td>
+                    </tr>`;
                 });
-                if(logs.length === 0) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>لا توجد عمليات مسجلة.</td></tr>";
             });
         }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('users-table-body'); tbody.innerHTML = "";
+            users.forEach(u => {
+                const isBanned = u.isBanned === true;
+                tbody.innerHTML += `<tr class="${isBanned?'banned-row':''}">
+                    <td><b>${u.name}</b><br><small>${u.email}</small></td>
+                    <td style="color:#27ae60; font-weight:bold;">${(u.balance||0).toLocaleString()}</td>
+                    <td>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn btn-orange" onclick="editBalModal('${u.id}', '${u.name}', ${u.balance||0})">✏️</button>
+                            <button class="btn ${isBanned?'btn-green':'btn-red'}" onclick="toggleBan('${u.id}', ${isBanned})">${isBanned?'🔓':'🚫'}</button>
+                        </div>
+                    </td>
+                </tr>`;
+            });
+        }
+
+        document.getElementById('userSearch').oninput = (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allUsers.filter(u => u.name.toLowerCase().includes(term) || u.email.toLowerCase().includes(term));
+            renderUsers(filtered);
+        };
+
+        window.editBalModal = (id, name, cur) => {
+            document.getElementById('bal-modal-user').innerText = name;
+            document.getElementById('new-bal-input').value = cur;
+            document.getElementById('balance-modal').style.display = 'flex';
+            document.getElementById('btn-save-bal').onclick = () => {
+                const val = Number(document.getElementById('new-bal-input').value);
+                updateDoc(doc(db, "users", id), { balance: val }).then(() => {
+                    showToast("تم تحديث الرصيد ✅");
+                    closeBalModal();
+                });
+            };
+        };
+
+        window.toggleBan = (id, currentlyBanned) => {
+            if(confirm(`هل متأكد من ${currentlyBanned?'فك حظر':'حظر'} هذا المستخدم؟`)) {
+                updateDoc(doc(db, "users", id), { isBanned: !currentlyBanned }).then(() => showToast("تمت العملية بنجاح"));
+            }
+        };
 
         window.openConfirm = (t, m, showInp, f, sType='') => {
             document.getElementById('modal-title-text').innerText = t;
@@ -214,17 +236,7 @@
             const uRef = doc(db, "users", uid); const uSnap = await getDoc(uRef);
             await updateDoc(uRef, { balance: (uSnap.data().balance||0) + Number(amt) });
             await updateDoc(oRef, { status: "مكتمل", adminReply: "تم الإيداع" });
-            
-            // تسجيل الحركة المالية (Credit)
-            await addDoc(collection(db, "transactions"), {
-                userId: uid,
-                type: "credit",
-                amount: Number(amt),
-                source: "bank deposit",
-                orderId: oId,
-                date: serverTimestamp()
-            });
-
+            await addDoc(collection(db, "transactions"), { userId: uid, type: "credit", amount: Number(amt), source: "bank deposit", orderId: oId, date: serverTimestamp() });
             window.showToast("تمت العملية ✅");
         });
 
@@ -235,7 +247,7 @@
             if(window.currentConfirmService === 'بطاقات دفع') {
                 const n=document.getElementById('c-num').value, e=document.getElementById('c-exp').value, c=document.getElementById('c-cvv').value;
                 if(!n||!e||!c) return window.showToast("أكمل البيانات", true);
-                reply = `<div style="text-align:right; font-size:14px;">💳 رقم: ${n}<br>📅 تاريخ: ${e} | 🔒 CVV: ${c}</div>`;
+                reply = `<div style="text-align:right;">💳 رقم: ${n}<br>📅 تاريخ: ${e} | 🔒 CVV: ${c}</div>`;
             } else {
                 reply = document.getElementById('admin-reply-input').value; if(!reply) return window.showToast("ادخل الكود", true);
             }
@@ -244,17 +256,7 @@
             if(bal < amt) return window.showToast("رصيد غير كافٍ", true);
             await updateDoc(uRef, { balance: bal - Number(amt) });
             await updateDoc(oRef, { status: "مكتمل", adminReply: reply });
-
-            // تسجيل الحركة المالية (Debit)
-            await addDoc(collection(db, "transactions"), {
-                userId: uid,
-                type: "debit",
-                amount: Number(amt),
-                source: sType,
-                orderId: oId,
-                date: serverTimestamp()
-            });
-
+            await addDoc(collection(db, "transactions"), { userId: uid, type: "debit", amount: Number(amt), source: sType, orderId: oId, date: serverTimestamp() });
             window.showToast("تم التنفيذ ✅");
         }, sType);
 
@@ -262,11 +264,6 @@
             await updateDoc(doc(db, "orders", oId), { status: "مرفوض", adminReply: "تم الرفض" });
             window.showToast("تم الرفض");
         });
-
-        window.editBal = (uid, name, cur) => {
-            const n = prompt(`تعديل رصيد ${name}:`, cur);
-            if(n !== null) updateDoc(doc(db, "users", uid), { balance: Number(n) }).then(()=>window.showToast("تم التحديث"));
-        };
     </script>
 </body>
 </html>
