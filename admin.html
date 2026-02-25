@@ -150,7 +150,6 @@
             document.getElementById('card-reply').style.display = 'none';
 
             if(showInput) {
-                // إذا كان الطلب بطاقة دفع، أظهر الخانات الخمسة، غير كدا أظهر المربع العادي
                 if(serviceType === 'بطاقات دفع') {
                     document.getElementById('card-reply').style.display = 'flex';
                     document.getElementById('card-reply').style.flexDirection = 'column';
@@ -159,7 +158,7 @@
                 }
             }
             
-            window.currentConfirmService = serviceType; // حفظ نوع الخدمة
+            window.currentConfirmService = serviceType; 
             pending = f; 
             document.getElementById('confirm-modal').style.display = 'flex'; 
         };
@@ -256,20 +255,46 @@
             }
         };
 
+        // ==========================================
+        // 🛡️ 1. دالة إضافة الرصيد (محمية ضد التكرار)
+        // ==========================================
         window.approveR = (orderId, uid, amount) => openConfirm("إضافة رصيد", "تأكيد إضافة "+Number(amount).toLocaleString()+" ج.س لحساب الزبون؟", false, async () => {
             if(!uid) return window.showToast("طلب قديم", true);
+            
+            // 🚨 كود الحماية
+            const orderRef = doc(db, "orders", orderId);
+            const orderSnap = await getDoc(orderRef);
+            if(!orderSnap.exists()) return window.showToast("الطلب غير موجود!", true);
+            
+            const currentStatus = orderSnap.data().status;
+            if(currentStatus !== "قيد المراجعة" && currentStatus !== "قيد التنفيذ") {
+                return window.showToast("⚠️ عذراً، تم معالجة هذا الطلب مسبقاً!", true);
+            }
+
             const userRef = doc(db, "users", uid);
             const userSnap = await getDoc(userRef);
             if(userSnap.exists()) {
                 await updateDoc(userRef, { balance: (Number(userSnap.data().balance)||0) + Number(amount) });
-                await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة بنجاح" });
+                await updateDoc(orderRef, { status: "مكتمل", adminReply: "تم إضافة الرصيد للمحفظة بنجاح" });
                 window.showToast("تم الشحن! 🚀");
             }
         });
 
-        // 🌟 الدالة المطورة لمعالجة الطلبات وإرسال التنسيق الأنيق للزبون
+        // ==========================================
+        // 🛡️ 2. دالة تنفيذ الخدمات والخصم (محمية ضد التكرار)
+        // ==========================================
         window.approveO = (orderId, uid, amount, serviceType) => openConfirm("تنفيذ خدمة", "سيتم خصم "+Number(amount).toLocaleString()+" من الزبون. أدخل بيانات الخدمة:", true, async () => {
             if(!uid) return window.showToast("طلب قديم", true);
+            
+            // 🚨 كود الحماية
+            const orderRef = doc(db, "orders", orderId);
+            const orderSnap = await getDoc(orderRef);
+            if(!orderSnap.exists()) return window.showToast("الطلب غير موجود!", true);
+            
+            const currentStatus = orderSnap.data().status;
+            if(currentStatus !== "قيد المراجعة" && currentStatus !== "قيد التنفيذ") {
+                return window.showToast("⚠️ عذراً، تم معالجة هذا الطلب مسبقاً!", true);
+            }
             
             let finalReplyText = "";
 
@@ -282,22 +307,21 @@
 
                 if(!cNum || !cExp || !cCvv) return window.showToast("يجب إدخال رقم البطاقة والتاريخ والـ CVV على الأقل!", true);
 
-                // بناء كود HTML لعرضه كبطاقة مرتبة في تطبيق الزبون
                 finalReplyText = `<div style="text-align: right; line-height: 1.8; margin-top: 5px;">
                     <div style="background:#f1f2f6; padding:8px; border-radius:5px; margin-bottom:5px;">
                         <span style="color:#7f8c8d; font-size:11px;">💳 رقم البطاقة</span><br>
-                        <span style="font-family:monospace; font-size:15px; color:#2c3e50; letter-spacing:2px;">${cNum}</span>
+                        <span style="font-family:monospace; font-size:15px; color:#2c3e50; letter-spacing:2px; user-select:all;">${cNum}</span>
                     </div>
                     <div style="display:flex; gap:10px; margin-bottom:5px;">
                         <div style="background:#f1f2f6; padding:8px; border-radius:5px; flex:1;">
-                            <span style="color:#7f8c8d; font-size:11px;">📅 التاريخ</span><br><b>${cExp}</b>
+                            <span style="color:#7f8c8d; font-size:11px;">📅 التاريخ</span><br><b style="user-select:all;">${cExp}</b>
                         </div>
                         <div style="background:#f1f2f6; padding:8px; border-radius:5px; flex:1;">
-                            <span style="color:#7f8c8d; font-size:11px;">🔒 CVV</span><br><b>${cCvv}</b>
+                            <span style="color:#7f8c8d; font-size:11px;">🔒 CVV</span><br><b style="user-select:all;">${cCvv}</b>
                         </div>
                     </div>
                     <div style="background:#f1f2f6; padding:8px; border-radius:5px;">
-                        <span style="color:#7f8c8d; font-size:11px;">📍 العنوان:</span> <b>${cAddr}</b> | <span style="color:#7f8c8d; font-size:11px;">الرمز البريدي:</span> <b>${cZip}</b>
+                        <span style="color:#7f8c8d; font-size:11px;">📍 العنوان:</span> <b style="user-select:all;">${cAddr}</b> | <span style="color:#7f8c8d; font-size:11px;">الرمز البريدي:</span> <b style="user-select:all;">${cZip}</b>
                     </div>
                 </div>`;
             } else {
@@ -305,20 +329,40 @@
                 if(!finalReplyText) return window.showToast("يجب إدخال الكود للزبون!", true);
             }
 
-            const userRef = doc(db, "users", uid);
-            const userSnap = await getDoc(userRef);
-            if(userSnap.exists()) {
-                const bal = Number(userSnap.data().balance)||0;
-                if(bal >= Number(amount)) {
-                    await updateDoc(userRef, { balance: bal - Number(amount) });
-                    await updateDoc(doc(db, "orders", orderId), { status: "مكتمل", adminReply: finalReplyText });
-                    window.showToast("تم الخصم وإنهاء الطلب! ✅");
-                } else { window.showToast("رصيد الزبون لا يكفي!", true); }
+            try {
+                const userRef = doc(db, "users", uid);
+                const userSnap = await getDoc(userRef);
+                
+                if(userSnap.exists()) {
+                    const bal = Number(userSnap.data().balance)||0;
+                    if(bal >= Number(amount)) {
+                        await updateDoc(userRef, { balance: bal - Number(amount) });
+                        await updateDoc(orderRef, { status: "مكتمل", adminReply: finalReplyText });
+                        window.showToast("تم الخصم وإنهاء الطلب! ✅");
+                    } else { window.showToast("رصيد الزبون لا يكفي!", true); }
+                } else {
+                    window.showToast("حساب الزبون غير موجود في قاعدة البيانات!", true);
+                }
+            } catch(e) {
+                window.showToast("حدث خطأ في الاتصال بقاعدة البيانات", true);
             }
-        }, serviceType); // تمرير نوع الخدمة هنا
+        }, serviceType);
 
+        // ==========================================
+        // 🛡️ 3. دالة رفض الطلب (محمية ضد التكرار)
+        // ==========================================
         window.reject = (id) => openConfirm("رفض الطلب", "هل أنت متأكد من رفض هذا الطلب نهائياً؟", false, async () => {
-            await updateDoc(doc(db, "orders", id), { status: "مرفوض", adminReply: "تم رفض الطلب، يرجى مراجعة البيانات أو التواصل مع الدعم." });
+            // 🚨 كود الحماية
+            const orderRef = doc(db, "orders", id);
+            const orderSnap = await getDoc(orderRef);
+            if(!orderSnap.exists()) return window.showToast("الطلب غير موجود!", true);
+            
+            const currentStatus = orderSnap.data().status;
+            if(currentStatus !== "قيد المراجعة" && currentStatus !== "قيد التنفيذ") {
+                return window.showToast("⚠️ عذراً، تم معالجة هذا الطلب مسبقاً!", true);
+            }
+
+            await updateDoc(orderRef, { status: "مرفوض", adminReply: "تم رفض الطلب، يرجى مراجعة البيانات أو التواصل مع الدعم." });
             window.showToast("تم رفض الطلب.", true);
         });
     </script>
