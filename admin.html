@@ -104,26 +104,23 @@
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; document.getElementById('normal-reply').style.display='none'; document.getElementById('card-reply').style.display='none'; };
 
         function initListeners() {
-            onSnapshot(collection(db, "orders"), (snap) => {
-                const container = document.getElementById('orders-container'); container.innerHTML = "";
-                let count = 0;
-                snap.forEach(d => {
-                    const o = d.data();
-                    if(o.status !== "مكتمل" && o.status !== "مرفوض") {
-                        count++;
-                        const isR = o.service === "تغذية المحفظة";
-                        container.innerHTML += `<div class="item-row">
-                            <div style="flex:1;">
-                                <h4 style="margin:0; color:#11998e;">${o.service}</h4>
-                                <p style="margin:3px 0; font-size:12px;">${o.user} - ${o.targetInfo}</p>
-                                <b style="color:#e74c3c;">${Number(o.amount).toLocaleString()} ج.س</b>
-                            </div>
-                            <div style="display:flex; flex-direction:column; gap:5px;">
-                                ${isR ? `<button class="btn btn-green" onclick="approveR('${d.id}', '${o.uid}', ${o.amount})">تأكيد</button>` : 
-                                       `<button class="btn btn-blue" onclick="approveO('${d.id}', '${o.uid}', ${o.amount}, '${o.service}')">تنفيذ</button>`}
-                                <button class="btn btn-red" onclick="reject('${d.id}')">رفض</button>
-                            </div>
-                        </div>`;
+            onSnapshot(collection(db, "users"), (snap) => {
+    const tbody = document.getElementById('users-table-body'); 
+    tbody.innerHTML = "";
+    let count = 0;
+    snap.forEach(d => {
+        const u = d.data();
+        if(!u || !u.name) return;  // تجاهل أي مستند ناقص
+        const bal = u.balance || 0; // لو ما عنده رصيد خليها 0
+        count++;
+        tbody.innerHTML += `<tr>
+            <td><b>${u.name}</b></td>
+            <td style="color:#27ae60;">${Number(bal).toLocaleString()}</td>
+            <td><button class="btn btn-orange" style="padding:4px 8px;" onclick="editBal('${d.id}', '${u.name}', ${bal})">✏️</button></td>
+        </tr>`;
+    });
+    document.getElementById('stats-users').innerText = count;
+});
                     }
                 });
                 document.getElementById('stats-orders').innerText = count;
