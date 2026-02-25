@@ -48,11 +48,30 @@
     </div>
 
     <div class="card">
-        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">👥 المستخدمين</h3>
+        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">👥 المستخدمين المسجلين</h3>
         <div style="overflow-x: auto;">
             <table>
-                <thead><tr><th>الاسم</th><th>الرصيد</th><th>إجراء</th></tr></thead>
+                <thead><tr><th>الاسم</th><th>الرصيد الحالي</th><th>إجراء</th></tr></thead>
                 <tbody id="users-table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; color: #f39c12;">📜 دفتر السجلات (آخر العمليات)</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>النوع</th>
+                        <th>المبلغ</th>
+                        <th>الخدمة</th>
+                    </tr>
+                </thead>
+                <tbody id="transactions-table-body">
+                    <tr><td colspan="4" style="text-align:center; color:#7f8c8d;">جاري جلب السجلات... ⏳</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -104,53 +123,77 @@
         window.closeConfirm = () => { document.getElementById('confirm-modal').style.display='none'; document.getElementById('normal-reply').style.display='none'; document.getElementById('card-reply').style.display='none'; };
 
         function initListeners() {
-    // متابعة الطلبات
-    onSnapshot(collection(db, "orders"), (snap) => {
-        const container = document.getElementById('orders-container'); 
-        container.innerHTML = "";
-        let count = 0;
-        snap.forEach(d => {
-            const o = d.data();
-            if(o.status !== "مكتمل" && o.status !== "مرفوض") {
-                count++;
-                const isR = o.service === "تغذية المحفظة";
-                container.innerHTML += `<div class="item-row">
-                    <div style="flex:1;">
-                        <h4 style="margin:0; color:#11998e;">${o.service}</h4>
-                        <p style="margin:3px 0; font-size:12px;">${o.user} - ${o.targetInfo}</p>
-                        <b style="color:#e74c3c;">${Number(o.amount).toLocaleString()} ج.س</b>
-                    </div>
-                    <div style="display:flex; flex-direction:column; gap:5px;">
-                        ${isR ? `<button class="btn btn-green" onclick="approveR('${d.id}', '${o.uid}', ${o.amount})">تأكيد</button>` : 
-                               `<button class="btn btn-blue" onclick="approveO('${d.id}', '${o.uid}', ${o.amount}, '${o.service}')">تنفيذ</button>`}
-                        <button class="btn btn-red" onclick="reject('${d.id}')">رفض</button>
-                    </div>
-                </div>`;
-            }
-        });
-        document.getElementById('stats-orders').innerText = count;
-        if(count === 0) container.innerHTML = "لا توجد طلبات حالياً.";
-    });
+            // متابعة الطلبات
+            onSnapshot(collection(db, "orders"), (snap) => {
+                const container = document.getElementById('orders-container'); 
+                container.innerHTML = "";
+                let count = 0;
+                snap.forEach(d => {
+                    const o = d.data();
+                    if(o.status !== "مكتمل" && o.status !== "مرفوض") {
+                        count++;
+                        const isR = o.service === "تغذية المحفظة";
+                        container.innerHTML += `<div class="item-row">
+                            <div style="flex:1;">
+                                <h4 style="margin:0; color:#11998e;">${o.service}</h4>
+                                <p style="margin:3px 0; font-size:12px;">${o.user} - ${o.targetInfo}</p>
+                                <b style="color:#e74c3c;">${Number(o.amount).toLocaleString()} ج.س</b>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:5px;">
+                                ${isR ? `<button class="btn btn-green" onclick="approveR('${d.id}', '${o.uid}', ${o.amount})">تأكيد</button>` : 
+                                       `<button class="btn btn-blue" onclick="approveO('${d.id}', '${o.uid}', ${o.amount}, '${o.service}')">تنفيذ</button>`}
+                                <button class="btn btn-red" onclick="reject('${d.id}')">رفض</button>
+                            </div>
+                        </div>`;
+                    }
+                });
+                document.getElementById('stats-orders').innerText = count;
+                if(count === 0) container.innerHTML = "لا توجد طلبات حالياً.";
+            });
 
-    // متابعة المستخدمين
-    onSnapshot(collection(db, "users"), (snap) => {
-        const tbody = document.getElementById('users-table-body'); 
-        tbody.innerHTML = "";
-        let count = 0;
-        snap.forEach(d => {
-            const u = d.data();
-            if(!u || !u.name) return;  // تجاهل أي مستند ناقص
-            const bal = u.balance || 0; // لو ما عنده رصيد خليها 0
-            count++;
-            tbody.innerHTML += `<tr>
-                <td><b>${u.name}</b></td>
-                <td style="color:#27ae60;">${Number(bal).toLocaleString()}</td>
-                <td><button class="btn btn-orange" style="padding:4px 8px;" onclick="editBal('${d.id}', '${u.name}', ${bal})">✏️</button></td>
-            </tr>`;
-        });
-        document.getElementById('stats-users').innerText = count;
-    });
-}
+            // متابعة المستخدمين
+            onSnapshot(collection(db, "users"), (snap) => {
+                const tbody = document.getElementById('users-table-body'); 
+                tbody.innerHTML = "";
+                let count = 0;
+                snap.forEach(d => {
+                    const u = d.data();
+                    if(!u || !u.name) return;
+                    const bal = u.balance || 0;
+                    count++;
+                    tbody.innerHTML += `<tr>
+                        <td><b>${u.name}</b></td>
+                        <td style="color:#27ae60;">${Number(bal).toLocaleString()}</td>
+                        <td><button class="btn btn-orange" style="padding:4px 8px;" onclick="editBal('${d.id}', '${u.name}', ${bal})">✏️</button></td>
+                    </tr>`;
+                });
+                document.getElementById('stats-users').innerText = count;
+            });
+
+            // 🌟 التعديل الجديد: متابعة سجل العمليات وعرضها في الجدول
+            onSnapshot(collection(db, "transactions"), (snap) => {
+                const tbody = document.getElementById('transactions-table-body');
+                tbody.innerHTML = "";
+                let logs = [];
+                snap.forEach(d => logs.push(d.data()));
+                
+                // ترتيب السجلات من الأحدث للأقدم
+                logs.sort((a, b) => (b.date?.toMillis() || 0) - (a.date?.toMillis() || 0));
+
+                logs.forEach(l => {
+                    const isCredit = l.type === "credit";
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="font-size:11px; color:#95a5a6;">${l.date ? l.date.toDate().toLocaleString('ar-EG') : '...'}</td>
+                            <td><span style="color:${isCredit ? '#2ecc71' : '#e74c3c'}; font-weight:bold;">${isCredit ? 'إيداع +' : 'خصم -'}</span></td>
+                            <td style="font-weight:bold;">${Number(l.amount).toLocaleString()}</td>
+                            <td style="font-size:12px;">${l.source}</td>
+                        </tr>
+                    `;
+                });
+                if(logs.length === 0) tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>لا توجد عمليات مسجلة.</td></tr>";
+            });
+        }
 
         window.openConfirm = (t, m, showInp, f, sType='') => {
             document.getElementById('modal-title-text').innerText = t;
@@ -171,7 +214,17 @@
             const uRef = doc(db, "users", uid); const uSnap = await getDoc(uRef);
             await updateDoc(uRef, { balance: (uSnap.data().balance||0) + Number(amt) });
             await updateDoc(oRef, { status: "مكتمل", adminReply: "تم الإيداع" });
-            await addDoc(collection(db, "transactions"), { userId: uid, type: "credit", amount: Number(amt), source: "bank deposit", orderId: oId, date: serverTimestamp() });
+            
+            // تسجيل الحركة المالية (Credit)
+            await addDoc(collection(db, "transactions"), {
+                userId: uid,
+                type: "credit",
+                amount: Number(amt),
+                source: "bank deposit",
+                orderId: oId,
+                date: serverTimestamp()
+            });
+
             window.showToast("تمت العملية ✅");
         });
 
@@ -191,7 +244,17 @@
             if(bal < amt) return window.showToast("رصيد غير كافٍ", true);
             await updateDoc(uRef, { balance: bal - Number(amt) });
             await updateDoc(oRef, { status: "مكتمل", adminReply: reply });
-            await addDoc(collection(db, "transactions"), { userId: uid, type: "debit", amount: Number(amt), source: sType, orderId: oId, date: serverTimestamp() });
+
+            // تسجيل الحركة المالية (Debit)
+            await addDoc(collection(db, "transactions"), {
+                userId: uid,
+                type: "debit",
+                amount: Number(amt),
+                source: sType,
+                orderId: oId,
+                date: serverTimestamp()
+            });
+
             window.showToast("تم التنفيذ ✅");
         }, sType);
 
@@ -207,3 +270,4 @@
     </script>
 </body>
 </html>
+ 
