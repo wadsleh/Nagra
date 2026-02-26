@@ -231,23 +231,30 @@
 
         // 🌟 دالة تصدير البيانات لـ Excel
         window.exportToExcel = () => {
-            if(allTransactions.length === 0) return showToast("لا توجد بيانات لتصديرها!", true);
-            
-            const dataToExport = allTransactions.map(t => ({
-                "التاريخ": t.date ? t.date.toDate().toLocaleString('ar-EG') : '',
-                "النوع": t.type === 'credit' ? 'إيداع' : 'خصم',
-                "المبلغ (ج.س)": t.amount,
-                "الخدمة / المصدر": t.source,
-                "رقم الطلب": t.orderId,
-                "معرف المستخدم": t.userId
-            }));
+    if(allTransactions.length === 0) return showToast("لا توجد بيانات لتصديرها!", true);
+    
+    const dataToExport = allTransactions.map(t => {
+        // 🌟 حركة ذكية: البحث عن إسم المستخدم باستخدام المعرف (UID)
+        const userObj = allUsers.find(u => u.id === t.userId);
+        const userName = userObj ? userObj.name : "مستخدم غير معروف";
 
-            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "سجل العمليات");
-            XLSX.writeFile(workbook, `سجل_نكرة_${new Date().toLocaleDateString()}.xlsx`);
-            showToast("تم تصدير الملف بنجاح! 📊");
+        return {
+            "التاريخ": t.date ? t.date.toDate().toLocaleString('ar-EG') : '',
+            "النوع": t.type === 'credit' ? 'إيداع' : 'خصم',
+            "المبلغ (ج.س)": t.amount,
+            "إسم الزبون": userName, // ✅ هسي حيظهر الإسم بدل المعرف المعقد
+            "الخدمة / المصدر": t.source,
+            "رقم الطلب": t.orderId
         };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "سجل العمليات");
+    XLSX.writeFile(workbook, `سجل_نكرة_${new Date().toLocaleDateString()}.xlsx`);
+    showToast("تم تصدير الملف بالأسماء! 📊");
+};
+
 
         window.customEditBal = (id, name, cur) => {
             document.getElementById('action-modal-title').innerText = "تعديل الرصيد ✏️";
