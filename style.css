@@ -206,4 +206,11 @@ body {
 .sidebar-links { padding: 16px 0; flex: 1; }
 .sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #334155; text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; }
 .sidebar-footer { padding: 20px; border-top: 1px solid #e2e8f0; }
- 
+ /* إعطاء وزن وفخامة أكثر للأيقونات */
+.icon-circle i, .cat-icon i {
+    width: 28px !important; /* كبرناها سنة بسيطة */
+    height: 28px !important;
+    stroke-width: 2.5px !important; /* زدنا السماكة عشان تبان أقوى */
+    color: #0f172a !important; /* لون كحلي داكن صريح */
+}
+
