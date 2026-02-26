@@ -15,7 +15,9 @@ const state = {
     currentService: null,
     selectedNetwork: null,
     unsubscribeOrders: null,
-    unsubscribeCards: null
+    unsubscribeCards: null,
+    realBalance: "0",        // 🌟 إضافة لحفظ الرصيد الحقيقي
+    balanceVisible: true     // 🌟 إضافة لمعرفة حالة الرصيد (مخفي/ظاهر)
 };
 
 // 2️⃣ Service Config System
@@ -72,7 +74,6 @@ window.switchAuth = (type) => {
     document.getElementById('tab-signup').className = type === 'signup' ? 'active' : '';
 }
 
-// 🌟 دالة التحكم في القائمة الجانبية (نقلناها هنا) 🌟
 window.toggleSidebar = () => {
     const menu = document.getElementById('sidebar-menu');
     const overlay = document.getElementById('sidebar-overlay');
@@ -143,7 +144,15 @@ onAuthStateChanged(auth, async (user) => {
 
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
-                document.getElementById('user-balance').innerHTML = `<span style="font-size: 18px;">👁️</span> ${(Number(data.balance) || 0).toLocaleString()} ج.س`;
+                
+                // 🌟 التعديل الجديد لمنع تخريب الـ HTML 🌟
+                state.realBalance = (Number(data.balance) || 0).toLocaleString();
+                const balanceAmountEl = document.getElementById('balance-amount');
+                if (balanceAmountEl) {
+                    if (state.balanceVisible) {
+                        balanceAmountEl.innerText = state.realBalance;
+                    }
+                }
                 
                 loadOrders(user.uid);
             }
@@ -439,3 +448,22 @@ window.forceLogout = async () => {
     localStorage.removeItem('nagra_user_email');
     location.reload(); 
 }
+
+// 🌟🌟 إضافة ميزة إخفاء/إظهار الرصيد 🌟🌟
+document.addEventListener("click", function(e) {
+    if (e.target.id === "toggle-balance") {
+        const balanceText = document.getElementById("balance-amount");
+        if (!balanceText) return;
+
+        if (state.balanceVisible) {
+            balanceText.innerText = "••••••";
+            e.target.innerText = "🙈";
+        } else {
+            balanceText.innerText = state.realBalance;
+            e.target.innerText = "👁️";
+        }
+
+        state.balanceVisible = !state.balanceVisible;
+    }
+});
+ 
