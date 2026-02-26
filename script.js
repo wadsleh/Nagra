@@ -8,16 +8,17 @@ const db = getFirestore(app);
 const auth = getAuth(app); 
 const googleProvider = new GoogleAuthProvider();
 
-// 1️⃣ State Management نظيف جداً
+// 1️⃣ State Management
 const state = {
     currentUser: null,
+    currentEmail: null,
     currentService: null,
     selectedNetwork: null,
     unsubscribeOrders: null,
     unsubscribeCards: null
 };
 
-// 2️⃣ Service Config System احترافي
+// 2️⃣ Service Config System
 const servicesConfig = {
     "شحن رصيد": {
         columns: 3,
@@ -71,6 +72,26 @@ window.switchAuth = (type) => {
     document.getElementById('tab-signup').className = type === 'signup' ? 'active' : '';
 }
 
+// 🌟 دالة التحكم في القائمة الجانبية (نقلناها هنا) 🌟
+window.toggleSidebar = () => {
+    const menu = document.getElementById('sidebar-menu');
+    const overlay = document.getElementById('sidebar-overlay');
+    
+    if (menu.classList.contains('active')) {
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+    } else {
+        menu.classList.add('active');
+        overlay.classList.add('active');
+        
+        const uName = localStorage.getItem('nagra_user_name') || 'زبون نَقْرَة';
+        const uEmail = localStorage.getItem('nagra_user_email') || 'جاري التحميل...';
+        
+        document.getElementById('sidebar-user-name').innerText = uName;
+        document.getElementById('sidebar-user-email').innerText = uEmail;
+    }
+};
+
 window.forgotPassword = async () => {
     const email = document.getElementById('login-email').value;
     if(!email) return window.showToast("الرجاء إدخال إيميلك أولاً في حقل البريد أعلاه 📧", true);
@@ -110,8 +131,16 @@ onAuthStateChanged(auth, async (user) => {
                     return; 
                 }
 
-                // حفظ بيانات المستخدم في State
                 state.currentUser = data.name; 
+                state.currentEmail = data.email;
+                localStorage.setItem('nagra_user_name', data.name);
+                localStorage.setItem('nagra_user_email', data.email);
+
+                const sidebarName = document.getElementById('sidebar-user-name');
+                const sidebarEmail = document.getElementById('sidebar-user-email');
+                if(sidebarName) sidebarName.innerText = data.name;
+                if(sidebarEmail) sidebarEmail.innerText = data.email;
+
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
                 document.getElementById('user-balance').innerHTML = `<span style="font-size: 18px;">👁️</span> ${(Number(data.balance) || 0).toLocaleString()} ج.س`;
@@ -145,7 +174,6 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
-// 3️⃣ حل مشكلة Memory Leak وحماية XSS
 function loadOrders(userId) {
     if (state.unsubscribeOrders) {
         state.unsubscribeOrders(); 
@@ -236,7 +264,6 @@ function loadOrders(userId) {
     });
 }
 
-// 4️⃣ الاعتماد الكلي على Config System (بدون تكرار كود)
 window.openOrderModal = (service) => {
     state.currentService = service;
     const config = servicesConfig[service];
@@ -266,7 +293,6 @@ window.openOrderModal = (service) => {
     });
 }
 
-// 5️⃣ Event Delegation: ربط الكروت في HTML بـ الجافاسكريبت
 document.querySelectorAll(".service-item").forEach(item => {
     item.addEventListener("click", () => {
         const serviceName = item.dataset.service;
@@ -312,7 +338,6 @@ window.submitRecharge = async () => {
     window.closeRechargeModal();
 }
 
-// 6️⃣ منع الزبون من ضغط الزرار مرتين
 window.submitOrder = async () => {
     const tar = document.getElementById('order-target').value; 
     const amt = document.getElementById('order-amount').value;
@@ -391,13 +416,16 @@ window.openMyCards = () => {
 
 window.closeCardsModal = () => document.getElementById('cards-modal').style.display = 'none';
 
-// 7️⃣ Auto Logout System
 let logoutTimer;
 function resetTimer() {
     clearTimeout(logoutTimer);
     logoutTimer = setTimeout(() => {
         if (auth.currentUser) {
-            signOut(auth).then(() => location.reload());
+            signOut(auth).then(() => {
+                localStorage.removeItem('nagra_user_name');
+                localStorage.removeItem('nagra_user_email');
+                location.reload();
+            });
         }
     }, 10 * 60 * 1000); 
 }
@@ -405,5 +433,9 @@ function resetTimer() {
 ['click', 'mousemove', 'keydown', 'touchstart'].forEach(evt => document.addEventListener(evt, resetTimer));
 resetTimer();
 
-window.forceLogout = async () => { await signOut(auth); location.reload(); }
- 
+window.forceLogout = async () => { 
+    await signOut(auth); 
+    localStorage.removeItem('nagra_user_name');
+    localStorage.removeItem('nagra_user_email');
+    location.reload(); 
+}
