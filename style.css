@@ -3,11 +3,11 @@
    ========================================= */
 body {
     font-family: 'Tajawal', sans-serif;
-    background-color: #f8fafc !important; /* لون رمادي فاتح جداً مريح للعين */
+    background-color: #f8fafc !important;
     margin: 0;
-    padding: 0; /* تم إزالة الـ padding لضبط الواجهة مع الشاشة */
+    padding: 0;
     direction: rtl;
-    color: #0f172a; /* لون نصوص أساسي داكن وأنيق */
+    color: #0f172a;
 }
 
 /* =========================================
@@ -18,557 +18,192 @@ body {
     height: 80px; 
     background: transparent; 
     margin: 0 auto 20px; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: flex; justify-content: center; align-items: center; 
     overflow: hidden; 
 }
+.app-logo-large img { width: 100%; height: 100%; object-fit: contain; }
 
-.app-logo-large img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; 
+.overlay, .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
 }
 
-.overlay,
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(15, 23, 42, 0.6); /* شفافية بلون داكن */
-    backdrop-filter: blur(4px); /* تم تقليل الضبابية لشكل أنظف */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-/* بطاقات المودال وتسجيل الدخول (Shadcn Card) */
+/* =========================================
+   3. البطاقات والمودال (Shadcn Card)
+   ========================================= */
 .shadcn-card, .shadcn-dialog {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+    border: 1px solid #e2e8f0; border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
-
-.login-box {
-    padding: 30px 20px;
-    width: 90%;
-    max-width: 350px;
-    text-align: center;
-}
-
-.modal-box {
-    padding: 24px;
-    width: 90%;
-    max-width: 350px;
-    text-align: right; /* ترتيب النصوص لليمين في النوافذ المنبثقة */
-}
-
+.login-box { padding: 30px 20px; width: 90%; max-width: 350px; text-align: center; }
+.modal-box { padding: 24px; width: 90%; max-width: 350px; text-align: right; }
 .dialog-md { max-width: 400px; }
 .dialog-lg { max-width: 500px; }
 
 /* =========================================
-   3. أزرار وحقول الإدخال (Shadcn Inputs & Buttons)
+   4. اسم التطبيق (العربي والإنجليزي) متناسق
    ========================================= */
-.auth-tabs {
-    display: flex;
-    background: #f1f5f9; /* خلفية هادئة للتابس */
-    border-radius: 8px;
-    padding: 4px;
-    margin-bottom: 24px;
+.brand-container { display: flex; align-items: center; gap: 12px; }
+.brand-title { 
+    display: flex !important; align-items: center !important; 
+    font-size: 24px !important; font-weight: 900 !important; line-height: 1 !important;
 }
-
-.auth-tabs button {
-    flex: 1;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-family: 'Tajawal';
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    background: transparent;
-    color: #64748b;
-    transition: all 0.2s ease;
+.brand-subtitle { 
+    font-size: 18px !important; font-weight: 700 !important; 
+    font-family: 'Segoe UI', Tahoma, sans-serif !important; 
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-right: 6px !important; letter-spacing: 0.5px !important; padding-top: 3px !important;
 }
-
-.auth-tabs button.active {
-    background: #ffffff;
-    color: #0f172a;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.auth-title { margin-top: 0; margin-bottom: 20px; color: #0f172a; font-size: 20px; font-weight: 700; }
-
-.input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-
-/* حقول الإدخال الجديدة */
-.shadcn-input {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px; /* حواف عصرية */
-    background-color: #ffffff;
-    font-family: 'Tajawal', sans-serif;
-    font-size: 14px;
-    color: #0f172a;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-}
-
-.shadcn-input:focus {
-    outline: none;
-    border-color: #0f172a;
-    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1); /* Focus Ring مميز */
-}
-
-/* الأزرار الأساسية والمتنوعة */
-.shadcn-btn {
-    width: 100%;
-    padding: 10px 16px;
-    background-color: #0f172a; /* أسود/كحلي أنيق */
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    font-family: 'Tajawal';
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.shadcn-btn:hover { background-color: #1e293b; }
-
-.shadcn-btn-outline {
-    background-color: transparent;
-    border: 1px solid #e2e8f0;
-    color: #0f172a;
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-family: 'Tajawal';
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.shadcn-btn-outline:hover { background-color: #f8fafc; }
-
-.shadcn-btn-secondary {
-    background-color: #f1f5f9;
-    color: #0f172a;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-family: 'Tajawal';
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.shadcn-btn-secondary:hover { background-color: #e2e8f0; }
-
-.shadcn-btn-ghost {
-    background-color: transparent;
-    color: #0f172a;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-family: 'Tajawal';
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.shadcn-btn-ghost:hover { background-color: #f1f5f9; }
-
-.shadcn-btn-destructive {
-    background-color: #ef4444;
-    color: #ffffff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-family: 'Tajawal';
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.shadcn-btn-destructive:hover { background-color: #dc2626; }
-
-.modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
 
 /* =========================================
-   4. المحفظة والرصيد (القسم العلوي)
+   5. أزرار وحقول الإدخال
    ========================================= */
-.top-hero-section {
-    background-color: #020817; /* لون ليلي عميق جدًا وأنيق */
-    padding: 20px 20px 60px 20px;
-    color: #f8fafc;
-    position: relative;
+.auth-tabs { display: flex; background: #f1f5f9; border-radius: 8px; padding: 4px; margin-bottom: 24px; }
+.auth-tabs button { flex: 1; border: none; padding: 8px 12px; border-radius: 6px; font-family: 'Tajawal'; font-weight: 600; font-size: 14px; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s ease; }
+.auth-tabs button.active { background: #ffffff; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.auth-title { margin-top: 0; margin-bottom: 20px; color: #0f172a; font-size: 20px; font-weight: 700; }
+.input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
+.shadcn-input {
+    width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 6px;
+    background-color: #ffffff; font-family: 'Tajawal'; font-size: 14px; color: #0f172a;
+    transition: border-color 0.2s, box-shadow 0.2s; box-sizing: border-box;
 }
+.shadcn-input:focus { outline: none; border-color: #0f172a; box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1); }
 
+.shadcn-btn { width: 100%; padding: 10px 16px; background-color: #0f172a; color: #ffffff; border: none; border-radius: 6px; font-family: 'Tajawal'; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; }
+.shadcn-btn:hover { background-color: #1e293b; }
+.shadcn-btn-outline { background-color: transparent; border: 1px solid #e2e8f0; color: #0f172a; width: 100%; padding: 10px 16px; border-radius: 6px; font-family: 'Tajawal'; font-weight: 600; font-size: 14px; cursor: pointer; }
+.shadcn-btn-secondary { background-color: #f1f5f9; color: #0f172a; border: none; padding: 8px 14px; border-radius: 6px; font-family: 'Tajawal'; font-weight: 600; font-size: 13px; cursor: pointer; }
+.shadcn-btn-ghost { background-color: transparent; color: #0f172a; border: none; padding: 10px 16px; border-radius: 6px; font-family: 'Tajawal'; font-weight: 600; font-size: 14px; cursor: pointer; }
+.shadcn-btn-destructive { background-color: #ef4444; color: #ffffff; border: none; padding: 10px 16px; border-radius: 6px; font-family: 'Tajawal'; font-weight: 600; font-size: 14px; cursor: pointer; }
+
+/* =========================================
+   6. المحفظة والرصيد (القسم العلوي)
+   ========================================= */
+.top-hero-section { background-color: #020817; padding: 20px 20px 60px 20px; color: #f8fafc; position: relative; }
 .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.brand-container { display: flex; align-items: center; gap: 12px; }
-.menu-btn { background: transparent; border: none; color: #f8fafc; cursor: pointer; font-size: 24px; padding: 0; }
-.brand-title { font-size: 20px; font-weight: 800; }
-.brand-subtitle { font-size: 12px; font-weight: 400; opacity: 0.7; }
-.notification-btn { background: transparent; border: 1px solid #1e293b; color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
-.notification-btn:hover { background: #1e293b; }
-
+.menu-btn { background: transparent; border: none; color: #f8fafc; cursor: pointer; padding: 0; }
+.notification-btn { background: transparent; border: 1px solid #1e293b; color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 .balance-section { display: flex; justify-content: space-between; align-items: flex-end; }
 .balance-info { text-align: right; }
 .balance-label { margin: 0; font-size: 13px; color: #94a3b8; font-weight: 500; }
 .balance-box { font-size: 32px; font-weight: 800; margin-top: 4px; display: flex; align-items: center; gap: 8px; color: #ffffff; }
 .currency { font-size: 16px; color: #94a3b8; font-weight: 500; }
-.eye-btn { cursor: pointer; font-size: 20px; opacity: 0.7; transition: 0.2s; }
-.eye-btn:hover { opacity: 1; }
+.eye-btn { cursor: pointer; font-size: 20px; opacity: 0.7; }
 
 /* =========================================
-   5. الكارت الرئيسي (الإجراءات)
+   🌟 7. ستايل أيقونات Lucide (أهم جزء) 🌟
+   ========================================= */
+.icon-circle, .cat-icon {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: #f1f5f9 !important; /* خلفية هادية لكل الأيقونات */
+    color: #0f172a !important; /* لون كحلي موحد للأيقونة */
+    border: none !important; /* إخفاء الإطارات تماماً */
+    box-shadow: none !important;
+}
+
+/* مقاس خلفية الأيقونات */
+.icon-circle { width: 54px !important; height: 54px !important; border-radius: 14px !important; }
+.cat-icon { width: 48px !important; height: 48px !important; border-radius: 12px !important; }
+
+/* مقاس وسماكة الأيقونة نفسها (Lucide) */
+.icon-circle i, .cat-icon i {
+    width: 26px !important;
+    height: 26px !important;
+    stroke-width: 2.5px !important; /* سماكة الخط */
+}
+
+/* =========================================
+   8. الكارت الرئيسي وبطاقات الفئات (بدون إطارات)
    ========================================= */
 .main-actions-card {
-    margin: -30px 20px 0;
-    padding: 20px;
-    position: relative;
-    z-index: 10;
+    margin: -30px 20px 0; padding: 20px; position: relative; z-index: 10;
+    border: none !important; box-shadow: 0 4px 12px -1px rgba(0,0,0,0.05) !important;
 }
-
 .actions-row { display: flex; justify-content: space-between; align-items: center; }
 .actions-row.row-2 { justify-content: space-around; }
-
 .actions-divider { border: 0; height: 1px; background: #f1f5f9; margin: 16px 0; }
-
-.action-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; width: 30%; transition: transform 0.2s ease; }
+.action-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; width: 30%; transition: transform 0.2s; outline: none; }
 .action-btn:active { transform: scale(0.96); }
-.action-btn p { margin: 0; font-size: 13px; font-weight: 600; color: #334155; }
+.action-btn p { margin: 4px 0 0 !important; font-size: 14px !important; font-weight: 600; color: #334155; }
 
-.icon-circle {
-    width: 44px; height: 44px; border-radius: 10px; /* حواف مربعة دائرية */
-    display: flex; justify-content: center; align-items: center; font-size: 20px;
-    background: #f8fafc; border: 1px solid #e2e8f0; transition: 0.2s;
-}
-
-/* =========================================
-   6. الفئات (الخدمات)
-   ========================================= */
 .categories-section { padding: 0 20px; margin-top: 24px; }
 .section-title { color: #0f172a; font-size: 16px; font-weight: 700; margin-bottom: 16px; margin-top: 0; }
-
 .categories-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
 .shadcn-card-interactive {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 16px 8px;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: all 0.2s ease;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    background: #ffffff !important; border: none !important; border-radius: 10px;
+    padding: 16px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease; outline: none !important;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.02) !important;
 }
-
-.shadcn-card-interactive:hover { border-color: #cbd5e1; background-color: #f8fafc; }
+.shadcn-card-interactive:hover { background-color: #f8fafc !important; }
 .shadcn-card-interactive:active { transform: scale(0.97); }
-
-.shadcn-card-interactive p { margin: 10px 0 0; font-size: 13px; font-weight: 600; color: #334155; }
-
-.cat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
-.cat-icon img { width: 100%; height: 100%; object-fit: contain; }
-
-/* ستايل مخصص لأيقونات ستارلينك وبطاقاتي */
-.starlink-icon { background: #0f172a; color: white; font-size: 20px; }
-.my-cards-icon { background: #f1f5f9; font-size: 20px; border: 1px solid #e2e8f0; }
+.shadcn-card-interactive p { margin: 10px 0 0; font-size: 14px !important; font-weight: 700 !important; color: #334155; }
 
 /* =========================================
-   7. القائمة الجانبية (Sidebar)
-   ========================================= */
-.shadcn-sidebar {
-    position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-    background: #ffffff; z-index: 5000;
-    border-left: 1px solid #e2e8f0;
-    box-shadow: -4px 0 15px rgba(0,0,0,0.05);
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex; flex-direction: column; overflow-y: auto;
-}
-.shadcn-sidebar.active { right: 0; }
-
-.sidebar-header {
-    background: #f8fafc; border-bottom: 1px solid #e2e8f0;
-    padding: 40px 20px 20px; color: #0f172a; text-align: right; position: relative;
-}
-.close-sidebar-btn { position: absolute; top: 15px; left: 15px; background: transparent; border: none; color: #64748b; font-size: 20px; cursor: pointer; }
-.user-avatar { width: 50px; height: 50px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px; }
-.sidebar-header h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
-.sidebar-header p { margin: 0; font-size: 13px; color: #64748b; }
-
-.sidebar-links { padding: 16px 0; flex: 1; }
-.sidebar-link {
-    display: flex; align-items: center; gap: 12px; padding: 12px 20px;
-    color: #334155; text-decoration: none; font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: background 0.2s;
-}
-.sidebar-link:hover { background: #f1f5f9; }
-.sidebar-link .icon { font-size: 18px; width: 24px; text-align: center; }
-.support-link { color: #0f172a; } /* توحيد الألوان */
-
-.sidebar-footer { padding: 20px; border-top: 1px solid #e2e8f0; }
-.logout-sidebar-btn { width: 100%; justify-content: center; color: #ef4444; }
-.logout-sidebar-btn:hover { background-color: #fef2f2; color: #dc2626; }
-
-/* =========================================
-   8. شريط التنقل السفلي (Bottom Navigation)
+   9. شريط التنقل السفلي (Bottom Navigation)
    ========================================= */
 .bottom-spacer { height: 90px; }
-
 .shadcn-nav {
     position: fixed; bottom: 0; left: 0; width: 100%;
     background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px);
-    display: flex; justify-content: space-around; align-items: center;
-    padding: 12px 0 20px 0;
-    border-top: 1px solid #e2e8f0;
-    z-index: 1000;
+    display: flex; justify-content: space-around; align-items: center; padding: 12px 0 20px 0;
+    border-top: 1px solid #e2e8f0; z-index: 1000;
 }
-
 .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 60px; }
-.nav-icon { font-size: 22px; color: #94a3b8; transition: all 0.2s ease; filter: grayscale(100%); opacity: 0.7; }
+.nav-icon { color: #94a3b8; transition: all 0.2s ease; opacity: 0.7; }
 .nav-text { font-size: 11px; font-weight: 600; color: #94a3b8; transition: color 0.2s ease; }
-
-.nav-item.active .nav-icon { color: #0f172a; filter: grayscale(0%); opacity: 1; transform: translateY(-2px); }
+.nav-item.active .nav-icon { color: #0f172a; opacity: 1; transform: translateY(-2px); }
 .nav-item.active .nav-text { color: #0f172a; font-weight: 700; }
 
 /* =========================================
-   9. المودال والنوافذ المنبثقة التفصيلية
+   10. النوافذ المنبثقة، الشبكات، والتنبيهات
    ========================================= */
+.network-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
+.network-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
+.network-card:hover { border-color: #cbd5e1; background-color: #f8fafc; }
+.pro-logo { width: 50px; height: 50px; margin: 0 auto 12px; display: flex; justify-content: center; align-items: center; border: none; box-shadow: none; background: transparent;}
+.pro-logo img { width: 100%; height: 100%; object-fit: contain; }
+
 .dialog-title { font-size: 18px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; }
 .with-border { border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
 .modal-title-green { font-size: 18px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 8px; }
 .modal-subtitle { font-size: 13px; color: #64748b; margin-bottom: 16px; line-height: 1.5; }
+.bank-details-box { background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 16px; text-align: center; }
 
-.bank-details-box {
-    background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px dashed #cbd5e1;
-    margin-bottom: 16px; text-align: center;
-}
-.account-number { font-size: 24px; color: #0f172a; letter-spacing: 2px; }
-.account-name { font-size: 13px; color: #475569; font-weight: 600; }
-
-.full-width { width: 100%; }
-.mt-10 { margin-top: 10px; }
-.mt-15 { margin-top: 15px; }
-
-.orders-history-container { max-height: 350px; overflow-y: auto; padding-right: 5px; }
-.cards-list-container { margin-top: 16px; }
-.loading-text { color: #64748b; font-size: 14px; text-align: center; }
-
-/* =========================================
-   10. التنبيهات وغيرها
-   ========================================= */
 .shadcn-toast {
-    visibility: hidden; min-width: 250px;
-    background: #0f172a; color: #ffffff;
+    visibility: hidden; min-width: 250px; background: #0f172a; color: #ffffff;
     text-align: center; border-radius: 6px; padding: 12px 16px;
     position: fixed; z-index: 3000; left: 50%; bottom: 30px;
-    transform: translateX(-50%); transition: 0.3s ease;
-    font-size: 14px; font-weight: 500;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateX(-50%); transition: 0.3s ease; font-size: 14px; font-weight: 500;
 }
 .shadcn-toast.show { visibility: visible; bottom: 100px; }
 
+/* إصلاحات عامة */
+.btn-google { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.btn-google img { width: 24px !important; height: 24px !important; object-fit: contain; }
 .divider { position: relative; margin: 24px 0; text-align: center; border-top: 1px solid #e2e8f0; }
 .divider span { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 0 10px; color: #64748b; font-size: 12px; }
 .forgot-pass-container { text-align: right; margin-bottom: 16px; }
 .forgot-pass-link { color: #0f172a; font-size: 13px; text-decoration: none; font-weight: 600; }
-.forgot-pass-link:hover { text-decoration: underline; }
 
-/* إخفاء العناصر غير المستخدمة حالياً أو القديمة */
-.network-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-.card-info-alert { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px; font-size: 13px; color: #334155; line-height: 1.6; }
- /* =========================================
-   إصلاحات حجم الصور (Google + النوافذ المنبثقة)
-   ========================================= */
-
-/* 1. إصلاح زر تسجيل الدخول بجوجل */
-.btn-google {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
+/* القائمة الجانبية (Sidebar) */
+.shadcn-sidebar {
+    position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
+    background: #ffffff; z-index: 5000; border-left: 1px solid #e2e8f0;
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column;
 }
-
-.btn-google img {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain;
-}
-
-/* 2. إصلاح حجم الصور داخل النوافذ (الاشتراكات، العملات، الألعاب) */
-.network-grid {
-    display: grid;
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.network-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 16px 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.network-card:hover {
-    border-color: #cbd5e1;
-    background-color: #f8fafc;
-}
-
-.pro-logo {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.pro-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-/* =========================================
-   تعديل حجم الأيقونات والنصوص لتكون أوضح ومريحة للعين
-   ========================================= */
-
-/* 1. أيقونات الإجراءات السريعة (تحويل، تغذية، سحب) */
-.icon-circle {
-    width: 54px !important;     /* كانت 44 */
-    height: 54px !important;    /* كانت 44 */
-    font-size: 26px !important; /* كانت 20 */
-    border-radius: 14px !important; 
-}
-
-.action-btn p {
-    font-size: 14px !important; /* تكبير الخط شوية ليتناسب مع الأيقونة */
-    margin-top: 4px !important;
-}
-
-/* 2. أيقونات الفئات (ألعاب، ستارلينك، اشتراكات) */
-.cat-icon {
-    width: 48px !important;     /* كانت 40 */
-    height: 48px !important;    /* كانت 40 */
-    border-radius: 12px !important;
-}
-
-/* تكبير الرموز المكتوبة (زي أيقونة ستارلينك والبطاقات) */
-.starlink-icon, 
-.my-cards-icon {
-    font-size: 26px !important; /* كانت 20 */
-}
-
-.shadcn-card-interactive p {
-    font-size: 14px !important; /* كانت 13 */
-    font-weight: 700 !important;
-}
-
-/* =========================================
-   إخفاء البوردر تماماً من البطاقات (لفخامة وبساطة أكثر)
-   ========================================= */
-
-/* 1. إزالة البوردر من كارت الإجراءات الرئيسي (تحويل، تغذية) */
-.main-actions-card {
-    border: none !important;
-    /* للحفاظ على الفصل، يمكن زيادة الـ Shadow قليلاً (اختياري) */
-    box-shadow: 0 4px 12px -1px rgba(0,0,0,0.05) !important;
-}
-
-/* 2. إزالة البوردر من بطاقات الفئات (ألعاب، ستارلينك، الخ) */
-.cat-item,
-.shadcn-card-interactive {
-    border: none !important;
-    /* جعل الخلفية بيضاء صريحة للتمييز */
-    background: #ffffff !important;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.02) !important;
-}
-
-/* 3. إزالة الآوت لاين الذي يظهر عند الضغط (Focus Outline) للمتصفح */
-.action-btn,
-.cat-item,
-.shadcn-card-interactive {
-    outline: none !important;
-}
-
-/* 4. تعديل حالة Hover لتكون ناعمة وبدون بوردر حاد */
-.shadcn-card-interactive:hover {
-    background-color: #f8fafc !important; /* تغيير الخلفية يكفي للتمييز */
-}
-/* =========================================
-   توحيد شكل الأيقونات وإزالة الإطارات (Borders)
-   ========================================= */
-
-/* إزالة الإطار من أيقونات (سحب، تغذية، تحويل) */
-.icon-circle {
-    border: none !important;
-    background: #ffffff !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; /* ظل ناعم جداً بديل للإطار */
-}
-
-/* إزالة الإطار من أيقونة "بطاقاتي" */
-.my-cards-icon {
-    border: none !important;
-    background: #f8fafc !important; /* لون خلفية هادئ للتمييز */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
-}
-
-/* التأكد من عدم وجود إطار في أيقونة ستارلينك */
-.starlink-icon {
-    border: none !important;
-}
-/* =========================================
-   ضبط تناسق حجم اسم التطبيق (العربي والإنجليزي)
-   ========================================= */
-
-/* =========================================
-   الوزنة النهائية لاسم التطبيق (العربي والإنجليزي)
-   ========================================= */
-
-.brand-container {
-    display: flex;
-    align-items: center; /* ضبط المحاذاة مع زر القائمة */
-    gap: 12px;
-}
-
-.brand-title { 
-    display: flex !important;
-    align-items: center !important; /* بيخلي الكلمتين في نفس خط المنتصف */
-    font-size: 24px !important; /* حجم الكلمة العربية */
-    font-weight: 900 !important; 
-    line-height: 1 !important;
-}
-
-.brand-subtitle { 
-    font-size: 18px !important; /* كبرنا الإنجليزي والفاصل بشكل ملحوظ */
-    font-weight: 700 !important; /* زدنا السماكة */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; /* خط إنجليزي فخم */
-    color: rgba(255, 255, 255, 0.85) !important;
-    margin-right: 6px !important; /* مسافة بين العربي والفاصل */
-    letter-spacing: 0.5px !important;
-    padding-top: 3px !important; /* وزنة دقيقة جداً عشان يكونوا على نفس السطر البصري */
-}
-/* ضبط وتكبير صورة ستارلينك الجديدة */
-.starlink-img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important; /* أو جرب cover لو حاببها تملأ المربع كله */
-    transform: scale(1.4); /* الرقم دا بيعمل زوم 40%.. لو لسة صغيرة خليه 1.5 أو 1.6 */
-}
+.shadcn-sidebar.active { right: 0; }
+.sidebar-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 40px 20px 20px; color: #0f172a; text-align: right; position: relative; }
+.close-sidebar-btn { position: absolute; top: 15px; left: 15px; background: transparent; border: none; color: #64748b; cursor: pointer; }
+.user-avatar { width: 50px; height: 50px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.sidebar-links { padding: 16px 0; flex: 1; }
+.sidebar-link { display: flex; align-items: center; gap: 12px; padding: 12px 20px; color: #334155; text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; }
+.sidebar-footer { padding: 20px; border-top: 1px solid #e2e8f0; }
+ 
