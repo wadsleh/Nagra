@@ -4,86 +4,274 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>لوحة الإدارة | نَقْرَة</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background: #0f2027; color: white; padding: 20px; direction: rtl; margin: 0; }
-        .card { background: white; color: #2c3e50; padding: 20px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .item-row { background: #f8f9fa; padding: 15px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #11998e; border: 1px solid #eee; flex-wrap: wrap; gap: 10px; }
-        .btn { padding: 10px 15px; border: none; border-radius: 10px; cursor: pointer; color: white; font-weight: bold; font-family: 'Tajawal'; transition: 0.3s; font-size: 14px; }
-        .btn-green { background: #2ecc71; } .btn-blue { background: #3498db; } .btn-red { background: #e74c3c; } .btn-orange { background: #f39c12; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-box { background: white; color: #2c3e50; padding: 25px; border-radius: 25px; text-align: center; width: 90%; max-width: 350px; }
-        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; }
-        .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; }
-        .toast.show { visibility: visible; bottom: 50px; }
-        .toast.error { background: #e74c3c; }
+        /* =========================================
+           Shadcn Admin Theme (Dark/Slate)
+           ========================================= */
+        body { 
+            font-family: 'Tajawal', sans-serif; 
+            background: #020817; /* لون خلفية داكن وأنيق جدًا */
+            color: #f8fafc; 
+            padding: 24px; 
+            direction: rtl; 
+            margin: 0; 
+            line-height: 1.5;
+        }
+
+        /* 1. Cards (Shadcn Style) */
+        .card { 
+            background: #0f172a; /* لون كروت أفتح درجة من الخلفية */
+            color: #f8fafc; 
+            padding: 24px; 
+            border-radius: 12px; 
+            margin-bottom: 24px; 
+            border: 1px solid #1e293b; /* حدود خفيفة جدًا للعمق */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            margin-top: 0;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 2. Order Items (الطلبات الواردة) */
+        .item-row { 
+            background: #020817; 
+            padding: 16px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid #1e293b; 
+            border-right: 4px solid #3b82f6; /* لون أزرق هادئ للتمييز */
+            flex-wrap: wrap; 
+            gap: 16px; 
+            transition: all 0.2s ease;
+        }
+        .item-row:hover {
+            border-color: #334155;
+            background: #0b1120;
+        }
+
+        .item-title { margin:0; color:#f8fafc; font-size: 16px; font-weight: 700; }
+        .item-subtitle { margin:4px 0 8px; font-size:13px; color:#94a3b8; }
+        .item-price { color:#10b981; font-weight: 700; font-size: 15px; } /* أخضر هادئ للمبالغ */
+
+        /* 3. Buttons (Shadcn Buttons) */
+        .btn { 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-family: 'Tajawal'; 
+            font-weight: 600; 
+            font-size: 13px; 
+            transition: all 0.2s ease; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary { background: #f8fafc; color: #0f172a; }
+        .btn-primary:hover { background: #e2e8f0; }
+        
+        .btn-blue { background: #3b82f6; color: white; }
+        .btn-blue:hover { background: #2563eb; }
+        
+        .btn-green { background: #10b981; color: white; }
+        .btn-green:hover { background: #059669; }
+        
+        .btn-destructive { background: #ef4444; color: white; }
+        .btn-destructive:hover { background: #dc2626; }
+        
+        .btn-outline { background: transparent; color: #f8fafc; border: 1px solid #334155; }
+        .btn-outline:hover { background: #1e293b; color: #f8fafc; }
+
+        .btn-ghost { background: transparent; color: #94a3b8; }
+        .btn-ghost:hover { background: #1e293b; color: #f8fafc; }
+
+        .btn-icon-only { padding: 8px; font-size: 16px; }
+
+        /* 4. Modals (النوافذ المنبثقة) */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(2, 8, 23, 0.8); 
+            backdrop-filter: blur(4px); 
+            display: none; justify-content: center; align-items: center; z-index: 2000; 
+        }
+        
+        .modal-box { 
+            background: #0f172a; 
+            color: #f8fafc; 
+            padding: 24px; 
+            border-radius: 12px; 
+            border: 1px solid #1e293b;
+            text-align: right; 
+            width: 90%; 
+            max-width: 400px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-title { font-size: 18px; font-weight: 700; margin-top: 0; margin-bottom: 12px; }
+        .modal-desc { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+
+        .admin-input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            border: 1px solid #1e293b; 
+            border-radius: 6px; 
+            font-family: 'Tajawal'; 
+            box-sizing: border-box;
+            background: #020817;
+            color: #f8fafc;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .admin-input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+
+        /* 5. Tables (الجداول) */
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid #1e293b; }
         table { width: 100%; border-collapse: collapse; text-align: right; font-size: 13px; }
-        th { background: #f1f2f6; padding: 10px; border-bottom: 2px solid #ddd; }
-        td { padding: 10px; border-bottom: 1px solid #eee; }
-        .banned-row { opacity: 0.5; background: #ffebee !important; }
-        .search-container { position: relative; margin-bottom: 15px; }
-        .search-box { width: 100%; padding: 12px 40px 12px 12px; border-radius: 15px; border: 1px solid #eee; font-family: 'Tajawal'; box-sizing: border-box; background: #f8f9fa; }
-        .search-icon { position: absolute; right: 12px; top: 12px; color: #95a5a6; }
+        th { 
+            background: #020817; 
+            padding: 12px 16px; 
+            border-bottom: 1px solid #1e293b; 
+            color: #94a3b8;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        td { 
+            padding: 12px 16px; 
+            border-bottom: 1px solid #1e293b; 
+            color: #e2e8f0;
+        }
+        tr:hover td { background-color: rgba(30, 41, 59, 0.5); } /* تأثير Hover خفيف */
+        tr:last-child td { border-bottom: none; }
+        
+        .banned-row td { opacity: 0.6; background: rgba(239, 68, 68, 0.05); }
+
+        /* 6. Search & Utilities */
+        .search-container { position: relative; margin-bottom: 20px; }
+        .search-box { 
+            width: 100%; padding: 12px 40px 12px 16px; 
+            border-radius: 8px; border: 1px solid #1e293b; 
+            font-family: 'Tajawal'; box-sizing: border-box; 
+            background: #020817; color: #f8fafc; font-size: 14px;
+        }
+        .search-box:focus { outline: none; border-color: #3b82f6; }
+        .search-icon { position: absolute; right: 14px; top: 14px; color: #64748b; font-size: 16px;}
+
+        /* Stats Blocks */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+        .stat-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+        .stat-label { font-size: 13px; color: #94a3b8; font-weight: 600; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 800; color: #f8fafc; margin: 0; line-height: 1; }
+        .text-green { color: #10b981; }
+        .text-blue { color: #3b82f6; }
+        .text-red { color: #ef4444; }
+
+        /* Toasts */
+        .toast { 
+            visibility: hidden; min-width: 250px; 
+            background: #f8fafc; color: #0f172a; 
+            text-align: center; border-radius: 8px; 
+            padding: 12px 20px; position: fixed; z-index: 3000; 
+            left: 50%; bottom: 30px; transform: translateX(-50%); 
+            transition: 0.3s; font-weight: 600; font-size: 14px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2); border: 1px solid #e2e8f0;
+        }
+        .toast.show { visibility: visible; bottom: 40px; }
+        .toast.error { background: #ef4444; color: white; border-color: #ef4444; }
+
+        /* Header */
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #1e293b; }
+        .admin-title { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+
     </style>
 </head>
 <body id="admin-body" style="display: none;">
-    <h1 style="text-align:center; color:#11998e; margin: 10px 0;">غرفة تحكم نَقْرَة ⚙️</h1>
     
-    <div style="text-align: left; margin-bottom: 15px;">
-        <button onclick="logoutAdmin()" class="btn btn-red">خروج</button>
+    <div class="admin-header">
+        <h1 class="admin-title">غرفة التحكم <span style="color:#64748b; font-weight: 400; font-size: 20px;">| Nagra</span></h1>
+        <button onclick="logoutAdmin()" class="btn btn-outline btn-sm">تسجيل الخروج</button>
     </div>
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
-        <div class="card" style="margin-bottom: 0; padding: 15px; text-align: center;">
-            <p style="margin:0; font-size:11px; color:#7f8c8d;">إجمالي الأرصدة</p>
-            <h3 id="total-users-balance" style="margin:5px 0; color:#27ae60;">0</h3>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">إجمالي أرصدة المستخدمين</span>
+            <h3 id="total-users-balance" class="stat-value text-green">0</h3>
         </div>
-        <div class="card" style="margin-bottom: 0; padding: 15px; text-align: center;">
-            <p style="margin:0; font-size:11px; color:#7f8c8d;">إجمالي العمليات</p>
-            <h3 id="total-tx-count" style="margin:5px 0; color:#3498db;">0</h3>
+        <div class="stat-card">
+            <span class="stat-label">إجمالي العمليات المنجزة</span>
+            <h3 id="total-tx-count" class="stat-value text-blue">0</h3>
         </div>
-    </div>
-
-    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <div class="card" style="flex: 1; text-align: center; padding: 10px;">
-            <h5 style="margin:0; color:#7f8c8d;">المستخدمين</h5>
-            <h2 id="stats-users" style="margin:5px 0; color:#3498db;">0</h2>
+        <div class="stat-card">
+            <span class="stat-label">إجمالي المستخدمين</span>
+            <h2 id="stats-users" class="stat-value">0</h2>
         </div>
-        <div class="card" style="flex: 1; text-align: center; padding: 10px;">
-            <h5 style="margin:0; color:#7f8c8d;">طلبات معلقة</h5>
-            <h2 id="stats-orders" style="margin:5px 0; color:#e74c3c;">0</h2>
+        <div class="stat-card">
+            <span class="stat-label">الطلبات المعلقة</span>
+            <h2 id="stats-orders" class="stat-value text-red">0</h2>
         </div>
     </div>
 
     <div class="card">
-        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">📦 الطلبات الواردة</h3>
-        <div id="orders-container">جاري التحميل...</div>
+        <h3 class="card-header">📦 الطلبات الواردة (تحتاج إجراء)</h3>
+        <div id="orders-container">
+            <p style="color: #64748b; font-size: 14px; text-align: center; padding: 20px;">جاري جلب الطلبات...</p>
+        </div>
     </div>
 
     <div class="card">
-        <h3 style="margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">👥 المستخدمين</h3>
+        <h3 class="card-header">👥 إدارة المستخدمين</h3>
         <div class="search-container">
             <span class="search-icon">🔍</span>
-            <input type="text" id="userSearch" class="search-box" placeholder="ابحث بالاسم أو البريد...">
+            <input type="text" id="userSearch" class="search-box" placeholder="ابحث بالاسم أو البريد الإلكتروني...">
         </div>
-        <div style="overflow-x: auto;">
+        <div class="table-container">
             <table>
-                <thead><tr><th>الاسم</th><th>الرصيد</th><th>إجراء</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>معلومات الحساب</th>
+                        <th>الرصيد المتاح (ج.س)</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
                 <tbody id="users-table-body"></tbody>
             </table>
         </div>
     </div>
 
     <div class="card">
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">
-            <h3 style="margin: 0; color: #f39c12;">📜 دفتر السجلات</h3>
-            <button onclick="exportToExcel()" class="btn btn-blue" style="padding: 8px 12px; font-size: 12px;">📊 تصدير Excel</button>
+        <div class="card-header" style="border-bottom: none; margin-bottom: 0;">
+            <h3 style="margin: 0; font-size: 18px;">📜 دفتر السجلات (Transactions)</h3>
+            <button onclick="exportToExcel()" class="btn btn-primary">
+                <span style="font-size: 16px;">📊</span> تصدير Excel
+            </button>
         </div>
-        <div style="overflow-x: auto;">
+        <div class="table-container" style="margin-top: 16px;">
             <table>
-                <thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>الخدمة</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th>التاريخ والوقت</th>
+                        <th>نوع العملية</th>
+                        <th>المبلغ</th>
+                        <th>الخدمة / المصدر</th>
+                    </tr>
+                </thead>
                 <tbody id="transactions-table-body"></tbody>
             </table>
         </div>
@@ -91,33 +279,41 @@
 
     <div id="action-modal" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="action-modal-title">تنبيه</h3>
-            <p id="action-modal-msg" style="color: #7f8c8d;"></p>
+            <h3 id="action-modal-title" class="modal-title">تنبيه</h3>
+            <p id="action-modal-msg" class="modal-desc"></p>
             <div id="action-input-container" style="display:none;">
+                <label style="display:block; margin-bottom:8px; font-size:13px; color:#94a3b8;">القيمة الجديدة</label>
                 <input type="number" id="action-value-input" class="admin-input" placeholder="أدخل القيمة...">
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button id="btn-action-confirm" class="btn btn-green" style="flex:1;">تأكيد</button>
-                <button onclick="closeActionModal()" class="btn" style="flex:1; background: #eee; color: #555;">إلغاء</button>
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button id="btn-action-confirm" class="btn btn-primary" style="flex:1;">تأكيد الإجراء</button>
+                <button onclick="closeActionModal()" class="btn btn-outline" style="flex:1;">إلغاء</button>
             </div>
         </div>
     </div>
 
     <div id="confirm-modal" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="modal-title-text">تأكيد</h3>
-            <p id="modal-msg" style="color: #7f8c8d; font-size: 13px;"></p>
-            <div id="normal-reply" style="display:none;"><input type="text" id="admin-reply-input" class="admin-input" placeholder="أدخل الكود هنا..."></div>
-            <div id="card-reply" style="display:none; text-align:right;">
-                <input type="text" id="c-num" class="admin-input" placeholder="رقم البطاقة">
-                <div style="display:flex; gap:10px;">
-                    <input type="text" id="c-exp" class="admin-input" style="flex:1;" placeholder="MM/YY">
-                    <input type="text" id="c-cvv" class="admin-input" style="flex:1;" placeholder="CVV">
+            <h3 id="modal-title-text" class="modal-title">تأكيد الإجراء</h3>
+            <p id="modal-msg" class="modal-desc"></p>
+            
+            <div id="normal-reply" style="display:none;">
+                <label style="display:block; margin-bottom:8px; font-size:13px; color:#94a3b8;">إرفاق كود أو ملاحظة للزبون</label>
+                <input type="text" id="admin-reply-input" class="admin-input" placeholder="أدخل الكود هنا...">
+            </div>
+            
+            <div id="card-reply" style="display:none;">
+                <label style="display:block; margin-bottom:8px; font-size:13px; color:#94a3b8;">بيانات البطاقة المصدرة</label>
+                <input type="text" id="c-num" class="admin-input" placeholder="رقم البطاقة (16 رقم)">
+                <div style="display:flex; gap:12px;">
+                    <input type="text" id="c-exp" class="admin-input" style="flex:1;" placeholder="تاريخ الانتهاء (MM/YY)">
+                    <input type="text" id="c-cvv" class="admin-input" style="flex:1;" placeholder="رمز الأمان (CVV)">
                 </div>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-                <button id="btn-confirm" class="btn btn-green" style="flex:1;">تأكيد</button>
-                <button onclick="closeConfirm()" class="btn" style="flex:1; background: #eee; color: #555;">إلغاء</button>
+
+            <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button id="btn-confirm" class="btn btn-primary" style="flex:1;">تنفيذ</button>
+                <button onclick="closeConfirm()" class="btn btn-outline" style="flex:1;">إلغاء</button>
             </div>
         </div>
     </div>
@@ -131,7 +327,10 @@
         
         const firebaseConfig = { apiKey: "AIzaSyB_8sjnJNMpUi0LAQv7U5lFmMvRlh5x0nU", authDomain: "nagra-app.firebaseapp.com", projectId: "nagra-app", storageBucket: "nagra-app.firebasestorage.app", messagingSenderId: "29893867141", appId: "1:29893867141:web:e8b4e0a15d80898575dbec" };
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
+        
+        // 🚨 غيّر الإيميل دا لإيميل الإدمن بتاعك
         const ADMIN_EMAIL = "wadsalihhamed@gmail.com"; 
+        
         let pending = null;
         let actionPending = null;
         let allUsers = [];
@@ -160,18 +359,19 @@
                         const isR = o.service === "تغذية المحفظة";
                         container.innerHTML += `<div class="item-row">
                             <div style="flex:1;">
-                                <h4 style="margin:0; color:#11998e;">${o.service}</h4>
-                                <p style="margin:3px 0; font-size:12px;">${o.user} - ${o.targetInfo}</p>
-                                <b style="color:#e74c3c;">${Number(o.amount).toLocaleString()} ج.س</b>
+                                <h4 class="item-title">${o.service} <span style="font-size:12px; font-weight:normal; color:#64748b; margin-right:8px;">(${o.user})</span></h4>
+                                <p class="item-subtitle">${o.targetInfo}</p>
+                                <b class="item-price">${Number(o.amount).toLocaleString()} ج.س</b>
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:5px;">
-                                ${isR ? `<button class="btn btn-green" onclick="approveR('${d.id}', '${o.uid}', ${o.amount})">تأكيد</button>` : 
-                                       `<button class="btn btn-blue" onclick="approveO('${d.id}', '${o.uid}', ${o.amount}, '${o.service}')">تنفيذ</button>`}
-                                <button class="btn btn-red" onclick="reject('${d.id}')">رفض</button>
+                            <div style="display:flex; flex-direction:row; gap:8px;">
+                                ${isR ? `<button class="btn btn-green" onclick="approveR('${d.id}', '${o.uid}', ${o.amount})">تأكيد الإيداع</button>` : 
+                                       `<button class="btn btn-blue" onclick="approveO('${d.id}', '${o.uid}', ${o.amount}, '${o.service}')">تنفيذ الطلب</button>`}
+                                <button class="btn btn-outline" style="color:#ef4444; border-color:#ef4444;" onclick="reject('${d.id}')">رفض</button>
                             </div>
                         </div>`;
                     }
                 });
+                if(count === 0) container.innerHTML = `<p style="color: #64748b; font-size: 14px; text-align: center; padding: 20px;">لا توجد طلبات معلقة حالياً 🎉</p>`;
                 document.getElementById('stats-orders').innerText = count;
             });
 
@@ -185,7 +385,7 @@
                 });
                 renderUsers(allUsers);
                 document.getElementById('stats-users').innerText = allUsers.length;
-                document.getElementById('total-users-balance').innerText = totalBal.toLocaleString() + " ج.س";
+                document.getElementById('total-users-balance').innerText = totalBal.toLocaleString();
             });
 
             onSnapshot(collection(db, "transactions"), (snap) => {
@@ -197,10 +397,10 @@
                 allTransactions.forEach(l => {
                     const isCredit = l.type === "credit";
                     tbody.innerHTML += `<tr>
-                        <td>${l.date ? l.date.toDate().toLocaleString('ar-EG') : ''}</td>
-                        <td style="color:${isCredit?'#2ecc71':'#e74c3c'}">${isCredit?'إيداع':'خصم'}</td>
-                        <td>${Number(l.amount).toLocaleString()}</td>
-                        <td>${l.source}</td>
+                        <td style="font-size:12px;">${l.date ? l.date.toDate().toLocaleString('ar-EG') : ''}</td>
+                        <td><span style="background:${isCredit?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)'}; color:${isCredit?'#10b981':'#ef4444'}; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:700;">${isCredit?'إيداع 📥':'خصم 📤'}</span></td>
+                        <td style="font-weight:700; color:#f8fafc;">${Number(l.amount).toLocaleString()}</td>
+                        <td style="color:#94a3b8;">${l.source}</td>
                     </tr>`;
                 });
             });
@@ -211,12 +411,12 @@
             users.forEach(u => {
                 const isBanned = u.isBanned === true;
                 tbody.innerHTML += `<tr class="${isBanned?'banned-row':''}">
-                    <td><b>${u.name}</b><br><small>${u.email}</small></td>
-                    <td style="color:#27ae60; font-weight:bold;">${(u.balance||0).toLocaleString()}</td>
+                    <td><b style="color:#f8fafc; font-size:14px;">${u.name}</b><br><span style="color:#64748b; font-size:12px;">${u.email}</span></td>
+                    <td style="color:#10b981; font-weight:700; font-size:15px;">${(u.balance||0).toLocaleString()}</td>
                     <td>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn btn-orange" onclick="customEditBal('${u.id}', '${u.name}', ${u.balance||0})">✏️</button>
-                            <button class="btn ${isBanned?'btn-green':'btn-red'}" onclick="customToggleBan('${u.id}', '${u.name}', ${isBanned})">${isBanned?'🔓':'🚫'}</button>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-outline btn-icon-only" title="تعديل الرصيد" onclick="customEditBal('${u.id}', '${u.name}', ${u.balance||0})">✏️</button>
+                            <button class="btn ${isBanned?'btn-outline':'btn-destructive'} btn-icon-only" title="${isBanned?'فك الحظر':'حظر المستخدم'}" onclick="customToggleBan('${u.id}', '${u.name}', ${isBanned})">${isBanned?'🔓':'🚫'}</button>
                         </div>
                     </td>
                 </tr>`;
@@ -229,22 +429,20 @@
             renderUsers(filtered);
         };
 
-        // 🌟 الدالة الجديدة المحدثة لتصدير الإسم بدل المعرف 🌟
         window.exportToExcel = () => {
             if(allTransactions.length === 0) return showToast("لا توجد بيانات لتصديرها!", true);
             
             const dataToExport = allTransactions.map(t => {
-                // البحث عن بيانات المستخدم من المصفوفة
                 const userObj = allUsers.find(u => u.id === t.userId);
                 const userName = userObj ? (userObj.name || userObj.email) : "مستخدم غير معروف";
 
                 return {
-                    "التاريخ": t.date ? t.date.toDate().toLocaleString('ar-EG') : '',
+                    "التاريخ والوقت": t.date ? t.date.toDate().toLocaleString('ar-EG') : '',
                     "النوع": t.type === 'credit' ? 'إيداع' : 'خصم',
                     "المبلغ (ج.س)": t.amount,
-                    "إسم الزبون": userName, // 👈 هنا حيظهر الإسم بدل الـ UID المزعج
+                    "إسم الزبون": userName,
                     "الخدمة / المصدر": t.source,
-                    "رقم الطلب": t.orderId
+                    "رقم الطلب المرجعي": t.orderId
                 };
             });
 
@@ -252,33 +450,33 @@
             const workbook = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(workbook, worksheet, "سجل العمليات");
             XLSX.writeFile(workbook, `سجل_نكرة_${new Date().toLocaleDateString()}.xlsx`);
-            showToast("تم تصدير الملف بالأسماء! 📊");
+            showToast("تم تصدير ملف Excel بنجاح! 📊");
         };
 
         window.customEditBal = (id, name, cur) => {
-            document.getElementById('action-modal-title').innerText = "تعديل الرصيد ✏️";
-            document.getElementById('action-modal-msg').innerText = "تعديل رصيد الزبون: " + name;
+            document.getElementById('action-modal-title').innerText = "تعديل رصيد المحفظة";
+            document.getElementById('action-modal-msg').innerText = "أنت تقوم بتعديل رصيد الزبون: " + name;
             document.getElementById('action-input-container').style.display = 'block';
             document.getElementById('action-value-input').value = cur;
             document.getElementById('action-modal').style.display = 'flex';
             actionPending = () => {
                 const val = Number(document.getElementById('action-value-input').value);
                 updateDoc(doc(db, "users", id), { balance: val }).then(() => {
-                    showToast("تم تحديث الرصيد ✅");
+                    showToast("تم تحديث الرصيد بنجاح ✅");
                     closeActionModal();
                 });
             };
         };
 
         window.customToggleBan = (id, name, currentlyBanned) => {
-            const action = currentlyBanned ? "فك حظر" : "حظر";
-            document.getElementById('action-modal-title').innerText = "تأكيد " + action + " 🚫";
-            document.getElementById('action-modal-msg').innerText = "هل أنت متأكد من " + action + " الزبون: " + name + "؟";
+            const action = currentlyBanned ? "فك الحظر عن" : "حظر";
+            document.getElementById('action-modal-title').innerText = "تأكيد الإجراء الأمني";
+            document.getElementById('action-modal-msg').innerText = `هل أنت متأكد من ${action} الزبون: ${name}؟`;
             document.getElementById('action-input-container').style.display = 'none';
             document.getElementById('action-modal').style.display = 'flex';
             actionPending = () => {
                 updateDoc(doc(db, "users", id), { isBanned: !currentlyBanned }).then(() => {
-                    showToast("تمت العملية بنجاح ✅");
+                    showToast("تم تطبيق الإجراء بنجاح ✅");
                     closeActionModal();
                 });
             };
@@ -299,41 +497,40 @@
 
         document.getElementById('btn-confirm').onclick = async () => { if(pending) await pending(); closeConfirm(); };
 
-        window.approveR = (oId, uid, amt) => openConfirm("إيداع رصيد", `تأكيد إضافة ${amt} ج.س؟`, false, async () => {
+        window.approveR = (oId, uid, amt) => openConfirm("تأكيد إيداع رصيد", `هل تأكدت من وصول مبلغ التحويل (${amt} ج.س) إلى حسابك البنكي؟`, false, async () => {
             const oRef = doc(db, "orders", oId); const oSnap = await getDoc(oRef);
-            if(oSnap.data().status !== "قيد المراجعة") return window.showToast("تمت معالجته مسبقاً", true);
+            if(oSnap.data().status !== "قيد المراجعة") return window.showToast("تمت معالجة هذا الطلب مسبقاً", true);
             const uRef = doc(db, "users", uid); const uSnap = await getDoc(uRef);
             await updateDoc(uRef, { balance: (uSnap.data().balance||0) + Number(amt) });
-            await updateDoc(oRef, { status: "مكتمل", adminReply: "تم الإيداع" });
-            await addDoc(collection(db, "transactions"), { userId: uid, type: "credit", amount: Number(amt), source: "bank deposit", orderId: oId, date: serverTimestamp() });
-            window.showToast("تمت العملية ✅");
+            await updateDoc(oRef, { status: "مكتمل", adminReply: "تم تأكيد الإيداع وإضافة الرصيد لمحفظتك." });
+            await addDoc(collection(db, "transactions"), { userId: uid, type: "credit", amount: Number(amt), source: "تغذية محفظة (بنكك)", orderId: oId, date: serverTimestamp() });
+            window.showToast("تم إضافة الرصيد للزبون بنجاح ✅");
         });
 
-        window.approveO = (oId, uid, amt, sType) => openConfirm("تنفيذ طلب", `خصم ${amt} ج.س وتنفيذ؟`, true, async () => {
+        window.approveO = (oId, uid, amt, sType) => openConfirm("تنفيذ طلب خدمة", `سيتم خصم مبلغ (${amt} ج.س) من محفظة الزبون. هل تم تنفيذ الخدمة؟`, true, async () => {
             const oRef = doc(db, "orders", oId); const oSnap = await getDoc(oRef);
-            if(oSnap.data().status !== "قيد التنفيذ") return window.showToast("تمت معالجته مسبقاً", true);
+            if(oSnap.data().status !== "قيد التنفيذ") return window.showToast("تمت معالجة هذا الطلب مسبقاً", true);
             let reply = "";
             if(window.currentConfirmService === 'بطاقات دفع') {
                 const n=document.getElementById('c-num').value, e=document.getElementById('c-exp').value, c=document.getElementById('c-cvv').value;
-                if(!n||!e||!c) return window.showToast("أكمل البيانات", true);
-                reply = `<div style="text-align:right;">💳 رقم: ${n}<br>📅 تاريخ: ${e} | 🔒 CVV: ${c}</div>`;
+                if(!n||!e||!c) return window.showToast("الرجاء إكمال بيانات البطاقة أولاً", true);
+                reply = `<div style="text-align:right; font-family: monospace; letter-spacing: 1px;"><span style="color:#64748b; font-size:12px;">رقم البطاقة:</span><br><b>${n}</b><br><br><div style="display:flex; justify-content:space-between;"><span style="color:#64748b; font-size:12px;">التاريخ: <b>${e}</b></span><span style="color:#64748b; font-size:12px;">CVV: <b>${c}</b></span></div></div>`;
             } else {
-                reply = document.getElementById('admin-reply-input').value; if(!reply) return window.showToast("ادخل الكود", true);
+                reply = document.getElementById('admin-reply-input').value; if(!reply) return window.showToast("يجب إدخال الكود أو الملاحظة للزبون", true);
             }
             const uRef = doc(db, "users", uid); const uSnap = await getDoc(uRef);
             const bal = uSnap.data().balance||0;
-            if(bal < amt) return window.showToast("رصيد غير كافٍ", true);
+            if(bal < amt) return window.showToast("عذراً، رصيد الزبون الحالي غير كافٍ لإتمام العملية", true);
             await updateDoc(uRef, { balance: bal - Number(amt) });
             await updateDoc(oRef, { status: "مكتمل", adminReply: reply });
             await addDoc(collection(db, "transactions"), { userId: uid, type: "debit", amount: Number(amt), source: sType, orderId: oId, date: serverTimestamp() });
-            window.showToast("تم التنفيذ ✅");
+            window.showToast("تم خصم الرصيد وتنفيذ الطلب بنجاح ✅");
         }, sType);
 
-        window.reject = (oId) => openConfirm("رفض", "هل أنت متأكد؟", false, async () => {
-            await updateDoc(doc(db, "orders", oId), { status: "مرفوض", adminReply: "تم الرفض" });
-            window.showToast("تم الرفض");
+        window.reject = (oId) => openConfirm("رفض الطلب", "سيتم إلغاء هذا الطلب ولن يتم خصم أي مبلغ من الزبون. هل أنت متأكد؟", false, async () => {
+            await updateDoc(doc(db, "orders", oId), { status: "مرفوض", adminReply: "تم رفض الطلب من قبل الإدارة، الرجاء مراجعة الدعم الفني." });
+            window.showToast("تم رفض الطلب بنجاح");
         });
     </script>
 </body>
 </html>
- 
