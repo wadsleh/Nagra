@@ -20,8 +20,19 @@ const state = {
     balanceVisible: true     
 };
 
-// 2️⃣ Service Config System
+// 2️⃣ Service Config System (تمت إضافة ستارلينك والأسعار الثابتة 🌟)
 const servicesConfig = {
+    "ستارلينك": {
+        columns: 2,
+        options: [
+            // السعر = قيمة الصرف + 40,000 عمولة
+            { name: "فرنسا 🇫🇷", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 450000 },
+            { name: "الدومينيكان 🇩🇴", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 390000 },
+            // يمكنك إضافة المزيد من الدول هنا بنفس الطريقة
+            { name: "نيجيريا 🇳🇬", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 250000 }, 
+            { name: "رواندا 🇷🇼", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 260000 }
+        ]
+    },
     "شحن رصيد": {
         columns: 3,
         options: [
@@ -81,17 +92,13 @@ window.toggleSidebar = () => {
     if (menu.classList.contains('active')) {
         menu.classList.remove('active');
         overlay.classList.remove('active');
-        
-        // إعادة تفعيل زر "الرئيسية" في الشريط السفلي عند إغلاق القائمة الجانبية
         const homeNav = document.getElementById('nav-home');
         if(homeNav) window.switchNavTab(homeNav, 'home');
     } else {
         menu.classList.add('active');
         overlay.classList.add('active');
-        
         const uName = localStorage.getItem('nagra_user_name') || 'زبون نَقْرَة';
         const uEmail = localStorage.getItem('nagra_user_email') || 'جاري التحميل...';
-        
         document.getElementById('sidebar-user-name').innerText = uName;
         document.getElementById('sidebar-user-email').innerText = uEmail;
     }
@@ -129,7 +136,6 @@ onAuthStateChanged(auth, async (user) => {
         onSnapshot(userRef, (s) => {
             if (s.exists()) {
                 const data = s.data(); 
-                
                 if(data.isBanned === true) {
                     window.showToast("⛔ تم إيقاف حسابك من قبل الإدارة", true);
                     signOut(auth).then(() => setTimeout(() => location.reload(), 2000));
@@ -156,7 +162,6 @@ onAuthStateChanged(auth, async (user) => {
                         balanceAmountEl.innerText = state.realBalance;
                     }
                 }
-                
                 loadOrders(user.uid);
             }
         });
@@ -167,9 +172,7 @@ document.getElementById('btn-signup-execute').onclick = async () => {
     const name = document.getElementById('reg-name').value; 
     const email = document.getElementById('reg-email').value; 
     const pass = document.getElementById('reg-pass').value;
-    
     if(!name || !email || !pass) return window.showToast("املأ البيانات", true);
-    
     try {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(doc(db, "users", res.user.uid), { name, email, balance: 0 });
@@ -187,46 +190,32 @@ document.getElementById('btn-login-execute').onclick = async () => {
 }
 
 function loadOrders(userId) {
-    if (state.unsubscribeOrders) {
-        state.unsubscribeOrders(); 
-    }
-
+    if (state.unsubscribeOrders) state.unsubscribeOrders(); 
     const q = query(collection(db, "orders"), where("uid", "==", userId));
-
     state.unsubscribeOrders = onSnapshot(q, (snap) => {
         const container = document.getElementById('user-orders-list'); 
         container.innerHTML = ""; 
         let orders = [];
-        
         snap.forEach(d => orders.push({id: d.id, ...d.data()})); 
         orders.sort((a,b) => b.date.toMillis() - a.date.toMillis());
         
         orders.forEach(o => {
             const div = document.createElement("div");
             div.className = `order-card-pro ${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
-            div.style.display = "flex";
-            div.style.flexDirection = "column";
-            div.style.gap = "5px";
+            div.style.display = "flex"; div.style.flexDirection = "column"; div.style.gap = "5px";
 
             const topDiv = document.createElement("div");
-            topDiv.style.display = "flex";
-            topDiv.style.justifyContent = "space-between";
-            topDiv.style.alignItems = "center";
-            topDiv.style.width = "100%";
+            topDiv.style.display = "flex"; topDiv.style.justifyContent = "space-between"; topDiv.style.alignItems = "center"; topDiv.style.width = "100%";
 
             const infoDiv = document.createElement("div");
             const title = document.createElement("h4");
-            title.style.margin = "0";
-            title.textContent = `${o.service} ${o.network ? '('+o.network+')' : ''}`;
+            title.style.margin = "0"; title.textContent = `${o.service} ${o.network ? '('+o.network+')' : ''}`;
             
             const targetInfo = document.createElement("p");
-            targetInfo.style.margin = "3px 0 0";
-            targetInfo.style.fontSize = "12px";
-            targetInfo.style.color = "#7f8c8d";
+            targetInfo.style.margin = "3px 0 0"; targetInfo.style.fontSize = "12px"; targetInfo.style.color = "#7f8c8d";
             targetInfo.textContent = o.targetInfo;
 
-            infoDiv.appendChild(title);
-            infoDiv.appendChild(targetInfo);
+            infoDiv.appendChild(title); infoDiv.appendChild(targetInfo);
 
             const amountDiv = document.createElement("div");
             amountDiv.style.textAlign = "left";
@@ -235,39 +224,21 @@ function loadOrders(userId) {
             
             const statusPill = document.createElement("span");
             statusPill.className = `status-pill status-${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
-            statusPill.style.display = "inline-block";
-            statusPill.style.marginTop = "5px";
-            statusPill.textContent = o.status;
+            statusPill.style.display = "inline-block"; statusPill.style.marginTop = "5px"; statusPill.textContent = o.status;
 
-            amountDiv.appendChild(amountBold);
-            amountDiv.appendChild(document.createElement("br"));
-            amountDiv.appendChild(statusPill);
-
-            topDiv.appendChild(infoDiv);
-            topDiv.appendChild(amountDiv);
-            div.appendChild(topDiv);
+            amountDiv.appendChild(amountBold); amountDiv.appendChild(document.createElement("br")); amountDiv.appendChild(statusPill);
+            topDiv.appendChild(infoDiv); topDiv.appendChild(amountDiv); div.appendChild(topDiv);
 
             if (o.adminReply) {
                 const replyDiv = document.createElement("div");
-                replyDiv.style.marginTop = "10px";
-                replyDiv.style.padding = "10px";
-                replyDiv.style.background = "#e3f2fd";
-                replyDiv.style.borderRadius = "10px";
-                replyDiv.style.fontSize = "13px";
-                replyDiv.style.color = "#0984e3";
-                replyDiv.style.border = "1px dashed #74b9ff";
-                replyDiv.style.fontWeight = "bold";
-                
+                replyDiv.style.marginTop = "10px"; replyDiv.style.padding = "10px"; replyDiv.style.background = "#e3f2fd"; replyDiv.style.borderRadius = "10px"; replyDiv.style.fontSize = "13px"; replyDiv.style.color = "#0984e3"; replyDiv.style.border = "1px dashed #74b9ff"; replyDiv.style.fontWeight = "bold";
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
                     replyDiv.innerHTML = `<div style="text-align: center; color: #27ae60;">💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي)</div>`; 
                 } else {
                     const replyLabel = document.createTextNode("رد الإدارة: ");
                     const replySpan = document.createElement("span");
-                    replySpan.style.color = "#2d3436";
-                    replySpan.style.userSelect = "all";
-                    replySpan.textContent = o.adminReply;
-                    replyDiv.appendChild(replyLabel);
-                    replyDiv.appendChild(replySpan);
+                    replySpan.style.color = "#2d3436"; replySpan.style.userSelect = "all"; replySpan.textContent = o.adminReply;
+                    replyDiv.appendChild(replyLabel); replyDiv.appendChild(replySpan);
                 }
                 div.appendChild(replyDiv);
             }
@@ -280,7 +251,6 @@ window.openOrderModal = (service) => {
     state.currentService = service;
     const config = servicesConfig[service];
     const grid = document.getElementById('dynamic-options-grid');
-    
     if(!config) return window.showToast("الخدمة غير متوفرة حالياً", true);
 
     document.getElementById('order-modal').style.display = 'flex';
@@ -294,12 +264,14 @@ window.openOrderModal = (service) => {
     config.options.forEach(opt => {
         const item = document.createElement("div");
         item.className = "network-card";
+        // إظهار السعر داخل المربع إذا كان متوفراً (مثل ستارلينك)
         item.innerHTML = `
             <div class="pro-logo"><img src="${opt.img}" alt="${opt.name}"></div>
             <p>${opt.name}</p>
+            ${opt.price ? `<p style="color: #27ae60; font-size: 11px; margin-top: 5px; font-weight: 900;">${opt.price.toLocaleString()} ج.س</p>` : ''}
         `;
         item.addEventListener("click", () => {
-            window.proceedToStep2(opt.name);
+            window.proceedToStep2(opt.name, opt.price); // إرسال السعر إذا وجد
         });
         grid.appendChild(item);
     });
@@ -312,31 +284,50 @@ document.querySelectorAll(".service-item").forEach(item => {
     });
 });
 
-// فتح نافذة السجل وتفعيل الأيقونة في الشريط السفلي
 document.getElementById('btn-history')?.addEventListener("click", () => {
     document.getElementById('history-modal').style.display = 'flex';
     const historyNav = document.getElementById('nav-history');
     if(historyNav) window.switchNavTab(historyNav, 'history');
 });
 
-window.proceedToStep2 = (subService) => {
+// 🌟 تعديل الدالة لاستقبال السعر وتجميد حقل الإدخال 🌟
+window.proceedToStep2 = (subService, price = null) => {
     state.selectedNetwork = subService;
     document.getElementById('step-1-options').style.display = 'none';
     document.getElementById('step-2-details').style.display = 'block';
     document.getElementById('modal-title').textContent = "طلب " + subService;
-    document.getElementById('order-target').placeholder = "البيانات المطلوبة";
-    document.getElementById('order-amount').value = '';
+    
+    const targetInput = document.getElementById('order-target');
+    const amountInput = document.getElementById('order-amount');
+
+    // تغيير الرسالة الإرشادية لستارلينك
+    if (state.currentService === "ستارلينك") {
+        targetInput.placeholder = "رقم الحساب (Account ID) أو الإيميل المرتبط";
+    } else {
+        targetInput.placeholder = "البيانات المطلوبة";
+    }
+
+    // إذا كان هناك سعر محدد مسبقاً (مثل ستارلينك)
+    if (price) {
+        amountInput.value = price;
+        amountInput.disabled = true; // منع التعديل
+        amountInput.style.background = "#f1f2f6"; // تمييزه بلون مختلف
+        amountInput.style.color = "#27ae60";
+        amountInput.style.fontWeight = "bold";
+    } else {
+        amountInput.value = '';
+        amountInput.disabled = false;
+        amountInput.style.background = "";
+        amountInput.style.color = "";
+        amountInput.style.fontWeight = "";
+    }
 }
 
 window.closeModal = () => document.getElementById('order-modal').style.display = 'none'; 
 
-window.openHistoryModal = () => {
-    document.getElementById('history-modal').style.display = 'flex';
-};
-
+window.openHistoryModal = () => document.getElementById('history-modal').style.display = 'flex';
 window.closeHistoryModal = () => {
     document.getElementById('history-modal').style.display = 'none';
-    // إعادة تفعيل زر "الرئيسية" في الشريط السفلي
     const homeNav = document.getElementById('nav-home');
     if(homeNav) window.switchNavTab(homeNav, 'home');
 };
@@ -351,13 +342,8 @@ window.submitRecharge = async () => {
     if(Number(amt) <= 0) return window.showToast("المبلغ غير صحيح! 🚫", true);
     
     await addDoc(collection(db, "orders"), { 
-        uid: auth.currentUser.uid, 
-        user: state.currentUser, 
-        service: "تغذية المحفظة", 
-        targetInfo: "إشعار رقم: " + rec, 
-        amount: Number(amt), 
-        status: "قيد المراجعة", 
-        date: new Date() 
+        uid: auth.currentUser.uid, user: state.currentUser, service: "تغذية المحفظة", 
+        targetInfo: "إشعار رقم: " + rec, amount: Number(amt), status: "قيد المراجعة", date: new Date() 
     });
     window.showToast("تم الإرسال 🚀"); 
     window.closeRechargeModal();
@@ -371,38 +357,25 @@ window.submitOrder = async () => {
     if(!tar || !amt) return window.showToast("أكمل البيانات", true);
     if(Number(amt) <= 0) return window.showToast("المبلغ غير صحيح! 🚫", true);
     
-    if(btn) {
-        btn.disabled = true;
-        btn.innerText = "جاري الإرسال...";
-    }
+    if(btn) { btn.disabled = true; btn.innerText = "جاري الإرسال..."; }
 
     try {
         await addDoc(collection(db, "orders"), { 
-            uid: auth.currentUser.uid, 
-            user: state.currentUser, 
-            service: state.currentService, 
-            network: state.selectedNetwork, 
-            targetInfo: tar, 
-            amount: Number(amt), 
-            status: "قيد التنفيذ", 
-            date: new Date() 
+            uid: auth.currentUser.uid, user: state.currentUser, service: state.currentService, 
+            network: state.selectedNetwork, targetInfo: tar, amount: Number(amt), 
+            status: "قيد التنفيذ", date: new Date() 
         });
         window.showToast("تم إرسال طلبك 📦"); 
         window.closeModal();
     } catch(e) {
         window.showToast("حدث خطأ أثناء الطلب", true);
     } finally {
-        if(btn) {
-            btn.disabled = false;
-            btn.innerText = "تأكيد الطلب";
-        }
+        if(btn) { btn.disabled = false; btn.innerText = "تأكيد الطلب"; }
     }
 }
 
 window.openMyCards = () => {
     document.getElementById('cards-modal').style.display = 'flex';
-    
-    // تفعيل أيقونة "بطاقاتي" في الشريط السفلي
     const cardsNav = document.getElementById('nav-cards');
     if(cardsNav) window.switchNavTab(cardsNav, 'cards');
 
@@ -410,9 +383,7 @@ window.openMyCards = () => {
     list.innerHTML = "<p style='text-align:center; color: #7f8c8d;'>جاري جلب البطاقات... ⏳</p>";
 
     onSnapshot(query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid)), (snap) => {
-        list.innerHTML = ""; 
-        let cards = [];
-        
+        list.innerHTML = ""; let cards = [];
         snap.forEach(d => {
             let o = d.data();
             if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') cards.push(o);
@@ -446,7 +417,6 @@ window.openMyCards = () => {
 
 window.closeCardsModal = () => {
     document.getElementById('cards-modal').style.display = 'none';
-    // إعادة تفعيل زر "الرئيسية" في الشريط السفلي
     const homeNav = document.getElementById('nav-home');
     if(homeNav) window.switchNavTab(homeNav, 'home');
 };
@@ -475,55 +445,37 @@ window.forceLogout = async () => {
     location.reload(); 
 }
 
-// ميزة إخفاء/إظهار الرصيد
 document.addEventListener("click", function(e) {
     if (e.target.id === "toggle-balance") {
         const balanceText = document.getElementById("balance-amount");
         if (!balanceText) return;
-
         if (state.balanceVisible) {
-            balanceText.innerText = "••••••";
-            e.target.innerText = "🙈";
+            balanceText.innerText = "••••••"; e.target.innerText = "🙈";
         } else {
-            balanceText.innerText = state.realBalance;
-            e.target.innerText = "👁️";
+            balanceText.innerText = state.realBalance; e.target.innerText = "👁️";
         }
-
         state.balanceVisible = !state.balanceVisible;
     }
 });
 
-// 🌟🌟 دالة التحكم في الشريط السفلي 🌟🌟
 window.switchNavTab = (element, tabName) => {
-    // إزالة كلاس active من كل الأزرار
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    
-    // إضافة كلاس active للزر المضغوط
     element.classList.add('active');
-
-    // تنفيذ الإجراء المناسب بناءً على الزر
     if (tabName === 'cards') {
-        if(document.getElementById('cards-modal').style.display !== 'flex') {
-            window.openMyCards();
-        }
+        if(document.getElementById('cards-modal').style.display !== 'flex') window.openMyCards();
     } else if (tabName === 'history') {
-        if(document.getElementById('history-modal').style.display !== 'flex') {
-             window.openHistoryModal();
-        }
+        if(document.getElementById('history-modal').style.display !== 'flex') window.openHistoryModal();
     } else if (tabName === 'profile') {
         const menu = document.getElementById('sidebar-menu');
-        if (!menu.classList.contains('active')) {
-            window.toggleSidebar();
-        }
+        if (!menu.classList.contains('active')) window.toggleSidebar();
     } else if (tabName === 'home') {
-        // إغلاق أي نوافذ مفتوحة للعودة للرئيسية
         document.getElementById('cards-modal').style.display = 'none';
         document.getElementById('history-modal').style.display = 'none';
         const menu = document.getElementById('sidebar-menu');
         const overlay = document.getElementById('sidebar-overlay');
         if (menu.classList.contains('active')) {
-            menu.classList.remove('active');
-            overlay.classList.remove('active');
+            menu.classList.remove('active'); overlay.classList.remove('active');
         }
     }
 };
+ 
