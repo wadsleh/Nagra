@@ -25,10 +25,8 @@ const servicesConfig = {
     "ستارلينك": {
         columns: 2,
         options: [
-            // السعر = قيمة الصرف + 40,000 عمولة
             { name: "فرنسا 🇫🇷", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 450000 },
             { name: "الدومينيكان 🇩🇴", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 390000 },
-            // يمكنك إضافة المزيد من الدول هنا بنفس الطريقة
             { name: "نيجيريا 🇳🇬", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 250000 }, 
             { name: "رواندا 🇷🇼", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 260000 }
         ]
@@ -74,8 +72,9 @@ const servicesConfig = {
 window.showToast = (msg, isError = false) => {
     const t = document.getElementById('toast-message'); 
     t.innerText = msg;
-    t.className = isError ? "toast error show" : "toast show"; 
-    setTimeout(() => t.className = "toast", 3000);
+    // تعديل الكلاس ليتوافق مع shadcn
+    t.className = isError ? "toast shadcn-toast error show" : "toast shadcn-toast show"; 
+    setTimeout(() => t.className = "toast shadcn-toast", 3000);
 }
 
 window.switchAuth = (type) => {
@@ -201,18 +200,20 @@ function loadOrders(userId) {
         
         orders.forEach(o => {
             const div = document.createElement("div");
-            div.className = `order-card-pro ${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
-            div.style.display = "flex"; div.style.flexDirection = "column"; div.style.gap = "5px";
+            // إضافة ستايل shadcn للسجل
+            div.className = `order-card-pro shadcn-card ${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
+            div.style.display = "flex"; div.style.flexDirection = "column"; div.style.gap = "8px";
+            div.style.padding = "16px"; div.style.marginBottom = "12px"; div.style.borderRightWidth = "4px";
 
             const topDiv = document.createElement("div");
             topDiv.style.display = "flex"; topDiv.style.justifyContent = "space-between"; topDiv.style.alignItems = "center"; topDiv.style.width = "100%";
 
             const infoDiv = document.createElement("div");
             const title = document.createElement("h4");
-            title.style.margin = "0"; title.textContent = `${o.service} ${o.network ? '('+o.network+')' : ''}`;
+            title.style.margin = "0"; title.style.color = "#0f172a"; title.textContent = `${o.service} ${o.network ? '('+o.network+')' : ''}`;
             
             const targetInfo = document.createElement("p");
-            targetInfo.style.margin = "3px 0 0"; targetInfo.style.fontSize = "12px"; targetInfo.style.color = "#7f8c8d";
+            targetInfo.style.margin = "4px 0 0"; targetInfo.style.fontSize = "12px"; targetInfo.style.color = "#64748b";
             targetInfo.textContent = o.targetInfo;
 
             infoDiv.appendChild(title); infoDiv.appendChild(targetInfo);
@@ -220,24 +221,27 @@ function loadOrders(userId) {
             const amountDiv = document.createElement("div");
             amountDiv.style.textAlign = "left";
             const amountBold = document.createElement("b");
+            amountBold.style.color = "#0f172a";
             amountBold.textContent = `${Number(o.amount).toLocaleString()} ج.س`;
             
             const statusPill = document.createElement("span");
             statusPill.className = `status-pill status-${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
-            statusPill.style.display = "inline-block"; statusPill.style.marginTop = "5px"; statusPill.textContent = o.status;
+            statusPill.style.display = "inline-block"; statusPill.style.marginTop = "6px"; statusPill.textContent = o.status;
 
             amountDiv.appendChild(amountBold); amountDiv.appendChild(document.createElement("br")); amountDiv.appendChild(statusPill);
             topDiv.appendChild(infoDiv); topDiv.appendChild(amountDiv); div.appendChild(topDiv);
 
             if (o.adminReply) {
                 const replyDiv = document.createElement("div");
-                replyDiv.style.marginTop = "10px"; replyDiv.style.padding = "10px"; replyDiv.style.background = "#e3f2fd"; replyDiv.style.borderRadius = "10px"; replyDiv.style.fontSize = "13px"; replyDiv.style.color = "#0984e3"; replyDiv.style.border = "1px dashed #74b9ff"; replyDiv.style.fontWeight = "bold";
+                // تعديل مظهر الرد ليتوافق مع shadcn
+                replyDiv.style.marginTop = "10px"; replyDiv.style.padding = "12px"; replyDiv.style.background = "#f8fafc"; replyDiv.style.borderRadius = "8px"; replyDiv.style.fontSize = "13px"; replyDiv.style.color = "#334155"; replyDiv.style.border = "1px solid #e2e8f0"; replyDiv.style.fontWeight = "600";
+                
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
-                    replyDiv.innerHTML = `<div style="text-align: center; color: #27ae60;">💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي)</div>`; 
+                    replyDiv.innerHTML = `<div style="text-align: center; color: #0f172a;">💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي)</div>`; 
                 } else {
-                    const replyLabel = document.createTextNode("رد الإدارة: ");
+                    const replyLabel = document.createTextNode("الرد: ");
                     const replySpan = document.createElement("span");
-                    replySpan.style.color = "#2d3436"; replySpan.style.userSelect = "all"; replySpan.textContent = o.adminReply;
+                    replySpan.style.color = "#0f172a"; replySpan.style.userSelect = "all"; replySpan.textContent = o.adminReply;
                     replyDiv.appendChild(replyLabel); replyDiv.appendChild(replySpan);
                 }
                 div.appendChild(replyDiv);
@@ -264,14 +268,16 @@ window.openOrderModal = (service) => {
     config.options.forEach(opt => {
         const item = document.createElement("div");
         item.className = "network-card";
-        // إظهار السعر داخل المربع إذا كان متوفراً (مثل ستارلينك)
+        // تعديل ألوان وتصميم شبكة الخيارات لـ shadcn
+        item.style.border = "1px solid #e2e8f0";
+        item.style.borderRadius = "8px";
         item.innerHTML = `
-            <div class="pro-logo"><img src="${opt.img}" alt="${opt.name}"></div>
-            <p>${opt.name}</p>
-            ${opt.price ? `<p style="color: #27ae60; font-size: 11px; margin-top: 5px; font-weight: 900;">${opt.price.toLocaleString()} ج.س</p>` : ''}
+            <div class="pro-logo" style="border:none; box-shadow:none; background:transparent;"><img src="${opt.img}" alt="${opt.name}"></div>
+            <p style="color: #0f172a; font-weight: 600;">${opt.name}</p>
+            ${opt.price ? `<p style="color: #0f172a; font-size: 12px; margin-top: 5px; font-weight: 700;">${opt.price.toLocaleString()} ج.س</p>` : ''}
         `;
         item.addEventListener("click", () => {
-            window.proceedToStep2(opt.name, opt.price); // إرسال السعر إذا وجد
+            window.proceedToStep2(opt.name, opt.price); 
         });
         grid.appendChild(item);
     });
@@ -300,19 +306,17 @@ window.proceedToStep2 = (subService, price = null) => {
     const targetInput = document.getElementById('order-target');
     const amountInput = document.getElementById('order-amount');
 
-    // تغيير الرسالة الإرشادية لستارلينك
     if (state.currentService === "ستارلينك") {
         targetInput.placeholder = "رقم الحساب (Account ID) أو الإيميل المرتبط";
     } else {
         targetInput.placeholder = "البيانات المطلوبة";
     }
 
-    // إذا كان هناك سعر محدد مسبقاً (مثل ستارلينك)
     if (price) {
         amountInput.value = price;
-        amountInput.disabled = true; // منع التعديل
-        amountInput.style.background = "#f1f2f6"; // تمييزه بلون مختلف
-        amountInput.style.color = "#27ae60";
+        amountInput.disabled = true; 
+        amountInput.style.background = "#f1f5f9"; // لون shadcn للعناصر المعطلة
+        amountInput.style.color = "#0f172a";
         amountInput.style.fontWeight = "bold";
     } else {
         amountInput.value = '';
@@ -380,7 +384,7 @@ window.openMyCards = () => {
     if(cardsNav) window.switchNavTab(cardsNav, 'cards');
 
     const list = document.getElementById('my-cards-list');
-    list.innerHTML = "<p style='text-align:center; color: #7f8c8d;'>جاري جلب البطاقات... ⏳</p>";
+    list.innerHTML = "<p class='loading-text'>جاري جلب البطاقات... ⏳</p>";
 
     onSnapshot(query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid)), (snap) => {
         list.innerHTML = ""; let cards = [];
@@ -391,22 +395,23 @@ window.openMyCards = () => {
         cards.sort((a,b) => b.date.toMillis() - a.date.toMillis());
 
         if(cards.length === 0) {
-            list.innerHTML = "<div style='text-align:center; padding: 20px;'><div style='font-size: 40px; margin-bottom: 10px;'>📭</div><p style='color: #e74c3c; font-weight: bold;'>لا توجد بطاقات محفوظة حالياً</p></div>";
+            list.innerHTML = "<div style='text-align:center; padding: 20px;'><div style='font-size: 40px; margin-bottom: 10px;'>📭</div><p style='color: #64748b; font-weight: bold;'>لا توجد بطاقات محفوظة حالياً</p></div>";
             return;
         }
 
         cards.forEach(c => {
-            let cardGradient = c.network === 'Visa' ? 'linear-gradient(135deg, #1e3c72, #2a5298)' : 'linear-gradient(135deg, #2c3e50, #bdc3c7)';
-            if (c.network === 'Mastercard') cardGradient = 'linear-gradient(135deg, #eb3349, #f45c43)';
+            // تصميم بطاقة أنيق ورسمي (Minimalist) متوافق مع shadcn بدلاً من التدرجات القوية
+            let cardBg = c.network === 'Visa' ? '#0f172a' : '#1e293b'; 
+            if (c.network === 'Mastercard') cardBg = '#020817'; 
 
             list.innerHTML += `
-                <div style="background: ${cardGradient}; padding: 20px; border-radius: 15px; margin-bottom: 15px; text-align: right; box-shadow: 0 10px 20px rgba(0,0,0,0.25); color: white; position: relative; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);">
-                    <div style="width: 45px; height: 35px; background: linear-gradient(135deg, #ffd700, #daa520); border-radius: 6px; margin-bottom: 15px; opacity: 0.9; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3); border: 1px solid #b8860b;"></div>
-                    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 15px; padding-bottom: 5px;">
-                        <span style="font-weight: 900; font-size: 22px; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); font-family: monospace; letter-spacing: 2px;">${c.network}</span>
-                        <span style="background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.3);">🟢 فعالة</span>
+                <div style="background: ${cardBg}; padding: 24px; border-radius: 12px; margin-bottom: 16px; text-align: right; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); color: white; position: relative; border: 1px solid #334155;">
+                    <div style="width: 40px; height: 30px; background: #e2e8f0; border-radius: 6px; margin-bottom: 20px; opacity: 0.8;"></div>
+                    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 16px;">
+                        <span style="font-weight: 700; font-size: 20px; font-family: monospace; letter-spacing: 2px;">${c.network}</span>
+                        <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2);">🟢 فعالة</span>
                     </div>
-                    <div style="background: white; border-radius: 10px; padding: 12px; color: #333; margin-top: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);">
+                    <div style="background: #ffffff; border-radius: 8px; padding: 12px; color: #0f172a; margin-top: 10px; font-size: 14px; border: 1px solid #e2e8f0; font-family: 'Tajawal', sans-serif;">
                         ${c.adminReply}
                     </div>
                 </div>
