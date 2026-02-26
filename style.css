@@ -446,4 +446,38 @@ body {
     height: 100%;
     object-fit: contain;
 }
+/* =========================================
+   تعديل حجم الأيقونات والنصوص لتكون أوضح ومريحة للعين
+   ========================================= */
+
+/* 1. أيقونات الإجراءات السريعة (تحويل، تغذية، سحب) */
+.icon-circle {
+    width: 54px !important;     /* كانت 44 */
+    height: 54px !important;    /* كانت 44 */
+    font-size: 26px !important; /* كانت 20 */
+    border-radius: 14px !important; 
+}
+
+.action-btn p {
+    font-size: 14px !important; /* تكبير الخط شوية ليتناسب مع الأيقونة */
+    margin-top: 4px !important;
+}
+
+/* 2. أيقونات الفئات (ألعاب، ستارلينك، اشتراكات) */
+.cat-icon {
+    width: 48px !important;     /* كانت 40 */
+    height: 48px !important;    /* كانت 40 */
+    border-radius: 12px !important;
+}
+
+/* تكبير الرموز المكتوبة (زي أيقونة ستارلينك والبطاقات) */
+.starlink-icon, 
+.my-cards-icon {
+    font-size: 26px !important; /* كانت 20 */
+}
+
+.shadcn-card-interactive p {
+    font-size: 14px !important; /* كانت 13 */
+    font-weight: 700 !important;
+}
 
