@@ -534,3 +534,23 @@ body {
 .starlink-icon {
     border: none !important;
 }
+/* =========================================
+   ضبط تناسق حجم اسم التطبيق (العربي والإنجليزي)
+   ========================================= */
+
+.brand-title { 
+    font-size: 22px !important; 
+    font-weight: 900 !important; 
+    display: flex;
+    align-items: center; /* عشان الكلمتين يكونوا في نفس المستوى */
+    gap: 6px; /* مسافة بسيطة وأنيقة بين الكلمتين والفاصل */
+}
+
+.brand-subtitle { 
+    font-size: 16px !important; /* كبرنا الإنجليزي عشان يوازي العربي */
+    font-weight: 600 !important; /* خليناه أسمك شوية */
+    opacity: 0.8 !important; 
+    letter-spacing: 0.5px !important;
+    font-family: monospace; /* بيدي الإنجليزي طابع تقني فخم */
+    margin-top: 2px; /* لضبط المحاذاة البصرية مع الكلمة العربية */
+}
