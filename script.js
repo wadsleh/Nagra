@@ -1,3 +1,4 @@
+
 import { firebaseConfig } from './config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -72,7 +73,6 @@ const servicesConfig = {
 window.showToast = (msg, isError = false) => {
     const t = document.getElementById('toast-message'); 
     t.innerText = msg;
-    // تعديل الكلاس ليتوافق مع shadcn
     t.className = isError ? "toast shadcn-toast error show" : "toast shadcn-toast show"; 
     setTimeout(() => t.className = "toast shadcn-toast", 3000);
 }
@@ -188,6 +188,7 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
+// 🌟 تعديل طباعة السجل بستايل shadcn
 function loadOrders(userId) {
     if (state.unsubscribeOrders) state.unsubscribeOrders(); 
     const q = query(collection(db, "orders"), where("uid", "==", userId));
@@ -198,55 +199,38 @@ function loadOrders(userId) {
         snap.forEach(d => orders.push({id: d.id, ...d.data()})); 
         orders.sort((a,b) => b.date.toMillis() - a.date.toMillis());
         
+        if(orders.length === 0) {
+            container.innerHTML = "<p class='loading-text'>لا توجد طلبات سابقة 📭</p>";
+            return;
+        }
+
         orders.forEach(o => {
-            const div = document.createElement("div");
-            // إضافة ستايل shadcn للسجل
-            div.className = `order-card-pro shadcn-card ${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
-            div.style.display = "flex"; div.style.flexDirection = "column"; div.style.gap = "8px";
-            div.style.padding = "16px"; div.style.marginBottom = "12px"; div.style.borderRightWidth = "4px";
-
-            const topDiv = document.createElement("div");
-            topDiv.style.display = "flex"; topDiv.style.justifyContent = "space-between"; topDiv.style.alignItems = "center"; topDiv.style.width = "100%";
-
-            const infoDiv = document.createElement("div");
-            const title = document.createElement("h4");
-            title.style.margin = "0"; title.style.color = "#0f172a"; title.textContent = `${o.service} ${o.network ? '('+o.network+')' : ''}`;
+            // تحديد كلاس الحالة
+            let statusClass = o.status === 'مكتمل' ? 'status-completed' : (o.status === 'مرفوض' ? 'status-rejected' : 'status-pending');
             
-            const targetInfo = document.createElement("p");
-            targetInfo.style.margin = "4px 0 0"; targetInfo.style.fontSize = "12px"; targetInfo.style.color = "#64748b";
-            targetInfo.textContent = o.targetInfo;
-
-            infoDiv.appendChild(title); infoDiv.appendChild(targetInfo);
-
-            const amountDiv = document.createElement("div");
-            amountDiv.style.textAlign = "left";
-            const amountBold = document.createElement("b");
-            amountBold.style.color = "#0f172a";
-            amountBold.textContent = `${Number(o.amount).toLocaleString()} ج.س`;
-            
-            const statusPill = document.createElement("span");
-            statusPill.className = `status-pill status-${o.status === 'مكتمل' ? 'completed' : (o.status === 'مرفوض' ? 'rejected' : 'pending')}`;
-            statusPill.style.display = "inline-block"; statusPill.style.marginTop = "6px"; statusPill.textContent = o.status;
-
-            amountDiv.appendChild(amountBold); amountDiv.appendChild(document.createElement("br")); amountDiv.appendChild(statusPill);
-            topDiv.appendChild(infoDiv); topDiv.appendChild(amountDiv); div.appendChild(topDiv);
-
+            // معالجة رد الإدارة
+            let adminReplyHtml = "";
             if (o.adminReply) {
-                const replyDiv = document.createElement("div");
-                // تعديل مظهر الرد ليتوافق مع shadcn
-                replyDiv.style.marginTop = "10px"; replyDiv.style.padding = "12px"; replyDiv.style.background = "#f8fafc"; replyDiv.style.borderRadius = "8px"; replyDiv.style.fontSize = "13px"; replyDiv.style.color = "#334155"; replyDiv.style.border = "1px solid #e2e8f0"; replyDiv.style.fontWeight = "600";
-                
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
-                    replyDiv.innerHTML = `<div style="text-align: center; color: #0f172a;">💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي)</div>`; 
+                    adminReplyHtml = `<div style="margin-top: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; font-size: 13px; color: #0f172a; border: 1px solid #e2e8f0; font-weight: 700; text-align: center;">💳 تم إصدار البطاقة! تجدها في قسم (بطاقاتي)</div>`; 
                 } else {
-                    const replyLabel = document.createTextNode("الرد: ");
-                    const replySpan = document.createElement("span");
-                    replySpan.style.color = "#0f172a"; replySpan.style.userSelect = "all"; replySpan.textContent = o.adminReply;
-                    replyDiv.appendChild(replyLabel); replyDiv.appendChild(replySpan);
+                    adminReplyHtml = `<div style="margin-top: 12px; padding: 12px; background: #f8fafc; border-radius: 8px; font-size: 13px; color: #334155; border: 1px solid #e2e8f0; font-weight: 600; text-align: right;">الرد: <span style="color: #0f172a; user-select: all;">${o.adminReply}</span></div>`;
                 }
-                div.appendChild(replyDiv);
             }
-            container.appendChild(div);
+
+            container.innerHTML += `
+                <div class="history-card">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+                        <div class="history-info" style="flex: 1;">
+                            <h4>${o.service} ${o.network ? '('+o.network+')' : ''}</h4>
+                            <p>${o.targetInfo}</p>
+                            <span class="status-badge ${statusClass}">${o.status}</span>
+                        </div>
+                        <div class="history-price">${Number(o.amount).toLocaleString()} ج.س</div>
+                    </div>
+                    ${adminReplyHtml}
+                </div>
+            `;
         });
     });
 }
@@ -268,7 +252,6 @@ window.openOrderModal = (service) => {
     config.options.forEach(opt => {
         const item = document.createElement("div");
         item.className = "network-card";
-        // تعديل ألوان وتصميم شبكة الخيارات لـ shadcn
         item.style.border = "1px solid #e2e8f0";
         item.style.borderRadius = "8px";
         item.innerHTML = `
@@ -296,7 +279,6 @@ document.getElementById('btn-history')?.addEventListener("click", () => {
     if(historyNav) window.switchNavTab(historyNav, 'history');
 });
 
-// 🌟 تعديل الدالة لاستقبال السعر وتجميد حقل الإدخال 🌟
 window.proceedToStep2 = (subService, price = null) => {
     state.selectedNetwork = subService;
     document.getElementById('step-1-options').style.display = 'none';
@@ -315,7 +297,7 @@ window.proceedToStep2 = (subService, price = null) => {
     if (price) {
         amountInput.value = price;
         amountInput.disabled = true; 
-        amountInput.style.background = "#f1f5f9"; // لون shadcn للعناصر المعطلة
+        amountInput.style.background = "#f1f5f9"; 
         amountInput.style.color = "#0f172a";
         amountInput.style.fontWeight = "bold";
     } else {
@@ -378,6 +360,7 @@ window.submitOrder = async () => {
     }
 }
 
+// 🌟 تعديل طباعة البطاقات بستايل shadcn Premium
 window.openMyCards = () => {
     document.getElementById('cards-modal').style.display = 'flex';
     const cardsNav = document.getElementById('nav-cards');
@@ -395,23 +378,22 @@ window.openMyCards = () => {
         cards.sort((a,b) => b.date.toMillis() - a.date.toMillis());
 
         if(cards.length === 0) {
-            list.innerHTML = "<div style='text-align:center; padding: 20px;'><div style='font-size: 40px; margin-bottom: 10px;'>📭</div><p style='color: #64748b; font-weight: bold;'>لا توجد بطاقات محفوظة حالياً</p></div>";
+            list.innerHTML = "<div style='text-align:center; padding: 20px;'><div style='font-size: 40px; margin-bottom: 10px;'>💳</div><p style='color: #64748b; font-weight: bold;'>لا توجد بطاقات محفوظة حالياً</p></div>";
             return;
         }
 
         cards.forEach(c => {
-            // تصميم بطاقة أنيق ورسمي (Minimalist) متوافق مع shadcn بدلاً من التدرجات القوية
-            let cardBg = c.network === 'Visa' ? '#0f172a' : '#1e293b'; 
-            if (c.network === 'Mastercard') cardBg = '#020817'; 
+            // اختيار لون البطاقة بناءً على نوعها لتعطي إحساس حقيقي
+            let cardBg = c.network === 'Visa' ? '#0f172a' : (c.network === 'Mastercard' ? '#020817' : '#1e293b'); 
 
             list.innerHTML += `
-                <div style="background: ${cardBg}; padding: 24px; border-radius: 12px; margin-bottom: 16px; text-align: right; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); color: white; position: relative; border: 1px solid #334155;">
-                    <div style="width: 40px; height: 30px; background: #e2e8f0; border-radius: 6px; margin-bottom: 20px; opacity: 0.8;"></div>
-                    <div style="display:flex; justify-content:space-between; align-items: center; margin-bottom: 16px;">
-                        <span style="font-weight: 700; font-size: 20px; font-family: monospace; letter-spacing: 2px;">${c.network}</span>
-                        <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2);">🟢 فعالة</span>
+                <div class="virtual-card" style="background: ${cardBg};">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                        <div class="v-card-type">${c.network || 'Nagra Virtual'}</div>
+                        <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.3);">🟢 فعالة</span>
                     </div>
-                    <div style="background: #ffffff; border-radius: 8px; padding: 12px; color: #0f172a; margin-top: 10px; font-size: 14px; border: 1px solid #e2e8f0; font-family: 'Tajawal', sans-serif;">
+                    
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); color: #f8fafc;">
                         ${c.adminReply}
                     </div>
                 </div>
@@ -483,4 +465,3 @@ window.switchNavTab = (element, tabName) => {
         }
     }
 };
- 
