@@ -1,35 +1,33 @@
 /* =========================================
-   1. الإعدادات العامة والخلفية
+   1. الإعدادات العامة والخلفية (Shadcn Style)
    ========================================= */
 body {
     font-family: 'Tajawal', sans-serif;
-    background-color: #f4f7f6 !important; 
+    background-color: #f8fafc !important; /* لون رمادي فاتح جداً مريح للعين */
     margin: 0;
-    padding: 20px;
+    padding: 0; /* تم إزالة الـ padding لضبط الواجهة مع الشاشة */
     direction: rtl;
-    color: #333;
+    color: #0f172a; /* لون نصوص أساسي داكن وأنيق */
 }
 
 /* =========================================
    2. اللوجو والـ Overlays (الخلفيات الشفافة)
    ========================================= */
 .app-logo-large { 
-    width: 100px; 
-    height: 100px; 
-    background: white; 
-    border-radius: 50%; 
+    width: 80px; 
+    height: 80px; 
+    background: transparent; 
     margin: 0 auto 20px; 
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.08);
     overflow: hidden; 
 }
 
 .app-logo-large img {
     width: 100%;
     height: 100%;
-    object-fit: cover; 
+    object-fit: contain; 
 }
 
 .overlay,
@@ -39,665 +37,359 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(8px);
+    background: rgba(15, 23, 42, 0.6); /* شفافية بلون داكن */
+    backdrop-filter: blur(4px); /* تم تقليل الضبابية لشكل أنظف */
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-.login-box,
-.modal-box {
-    background: white;
-    padding: 25px;
-    border-radius: 25px;
-    text-align: center;
-    width: 85%;
-    max-width: 320px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+/* بطاقات المودال وتسجيل الدخول (Shadcn Card) */
+.shadcn-card, .shadcn-dialog {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
 }
 
+.login-box {
+    padding: 30px 20px;
+    width: 90%;
+    max-width: 350px;
+    text-align: center;
+}
+
+.modal-box {
+    padding: 24px;
+    width: 90%;
+    max-width: 350px;
+    text-align: right; /* ترتيب النصوص لليمين في النوافذ المنبثقة */
+}
+
+.dialog-md { max-width: 400px; }
+.dialog-lg { max-width: 500px; }
+
 /* =========================================
-   3. أزرار وحقول الإدخال (Inputs & Buttons)
+   3. أزرار وحقول الإدخال (Shadcn Inputs & Buttons)
    ========================================= */
 .auth-tabs {
     display: flex;
-    background: #f1f2f6;
-    border-radius: 12px;
-    padding: 5px;
-    margin-bottom: 25px;
+    background: #f1f5f9; /* خلفية هادئة للتابس */
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 24px;
 }
 
 .auth-tabs button {
     flex: 1;
     border: none;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
     font-family: 'Tajawal';
-    font-weight: 700;
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
     background: transparent;
-    color: #7f8c8d;
-    transition: 0.3s;
+    color: #64748b;
+    transition: all 0.2s ease;
 }
 
 .auth-tabs button.active {
-    background: white;
-    color: #11998e;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.input-group input,
-.modern-input {
+.auth-title { margin-top: 0; margin-bottom: 20px; color: #0f172a; font-size: 20px; font-weight: 700; }
+
+.input-group { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+
+/* حقول الإدخال الجديدة */
+.shadcn-input {
     width: 100%;
-    padding: 15px;
-    margin-bottom: 12px;
-    border: 2px solid #f1f2f6;
-    border-radius: 15px;
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px; /* حواف عصرية */
+    background-color: #ffffff;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    color: #0f172a;
+    transition: border-color 0.2s, box-shadow 0.2s;
     box-sizing: border-box;
-    font-family: 'Tajawal';
-    font-size: 14px;
+}
+
+.shadcn-input:focus {
     outline: none;
+    border-color: #0f172a;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.1); /* Focus Ring مميز */
 }
 
-.input-group input:focus {
-    border-color: #11998e;
-}
-
-.btn-primary,
-.confirm-btn {
+/* الأزرار الأساسية والمتنوعة */
+.shadcn-btn {
     width: 100%;
-    padding: 15px;
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
+    padding: 10px 16px;
+    background-color: #0f172a; /* أسود/كحلي أنيق */
+    color: #ffffff;
     border: none;
-    border-radius: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.cancel-btn {
-    padding: 15px;
-    background: #f1f2f6;
-    color: #576574;
-    border: none;
-    border-radius: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    flex: 1;
-}
-
-.modal-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* =========================================
-   4. المحفظة والرصيد (تمت إضافة التعديلات الجديدة)
-   ========================================= */
-.header {
-    background: white;
-    padding: 20px 20px 50px;
-    border-radius: 0 0 35px 35px;
-}
-
-.wallet-card {
-    background: linear-gradient(135deg, #2b5876, #4e4376);
-    margin: -35px 20px 20px;
-    padding: 25px;
-    border-radius: 25px;
-    color: white;
-    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-    position: relative;
-    overflow: hidden;
-}
-
-.balance-title {
+    border-radius: 6px;
+    font-family: 'Tajawal';
+    font-weight: 600;
     font-size: 14px;
-    opacity: 0.8;
-    margin-bottom: 5px;
-}
-
-/* التنسيق الجديد لمنطقة الرصيد */
-.balance-box {
-    font-size: 34px;
-    font-weight: 900;
-    margin-top: 5px;
-    display: flex;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 }
 
-.currency {
-    font-size: 16px;
-    opacity: 0.8;
-}
+.shadcn-btn:hover { background-color: #1e293b; }
 
-.eye-btn {
+.shadcn-btn-outline {
+    background-color: transparent;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-family: 'Tajawal';
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
-    font-size: 18px;
-    transition: 0.2s;
+    transition: background-color 0.2s;
 }
 
-.eye-btn:active {
-    transform: scale(0.9);
+.shadcn-btn-outline:hover { background-color: #f8fafc; }
+
+.shadcn-btn-secondary {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-family: 'Tajawal';
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
+
+.shadcn-btn-secondary:hover { background-color: #e2e8f0; }
+
+.shadcn-btn-ghost {
+    background-color: transparent;
+    color: #0f172a;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-family: 'Tajawal';
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.shadcn-btn-ghost:hover { background-color: #f1f5f9; }
+
+.shadcn-btn-destructive {
+    background-color: #ef4444;
+    color: #ffffff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-family: 'Tajawal';
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.shadcn-btn-destructive:hover { background-color: #dc2626; }
+
+.modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
 
 /* =========================================
-   5. التصميم المتداخل والخدمات (Overlap Layout)
+   4. المحفظة والرصيد (القسم العلوي)
    ========================================= */
 .top-hero-section {
-    background: linear-gradient(135deg, #192a56, #273c75);
-    padding: 20px 20px 80px 20px;
-    border-radius: 0 0 25px 25px;
-    color: white;
+    background-color: #020817; /* لون ليلي عميق جدًا وأنيق */
+    padding: 20px 20px 60px 20px;
+    color: #f8fafc;
     position: relative;
 }
 
-.bottom-content-section {
-    background: #f8f9fa;
-    border-radius: 35px 35px 0 0;
-    margin-top: -40px; 
-    padding: 25px 20px;
-    position: relative;
-    z-index: 10;
-}
+.top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.brand-container { display: flex; align-items: center; gap: 12px; }
+.menu-btn { background: transparent; border: none; color: #f8fafc; cursor: pointer; font-size: 24px; padding: 0; }
+.brand-title { font-size: 20px; font-weight: 800; }
+.brand-subtitle { font-size: 12px; font-weight: 400; opacity: 0.7; }
+.notification-btn { background: transparent; border: 1px solid #1e293b; color: white; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+.notification-btn:hover { background: #1e293b; }
 
-/* التنسيق الجديد لزر السجل (Glassmorphism) */
-.history-btn-top {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.4);
-    color: white;
-    padding: 8px 14px;
-    border-radius: 12px;
-    font-family: 'Tajawal';
-    cursor: pointer;
-    transition: 0.2s;
-}
+.balance-section { display: flex; justify-content: space-between; align-items: flex-end; }
+.balance-info { text-align: right; }
+.balance-label { margin: 0; font-size: 13px; color: #94a3b8; font-weight: 500; }
+.balance-box { font-size: 32px; font-weight: 800; margin-top: 4px; display: flex; align-items: center; gap: 8px; color: #ffffff; }
+.currency { font-size: 16px; color: #94a3b8; font-weight: 500; }
+.eye-btn { cursor: pointer; font-size: 20px; opacity: 0.7; transition: 0.2s; }
+.eye-btn:hover { opacity: 1; }
 
-.history-btn-top:active {
-    transform: scale(0.95);
-}
-
-/* الكارت الأبيض الرئيسي */
+/* =========================================
+   5. الكارت الرئيسي (الإجراءات)
+   ========================================= */
 .main-actions-card {
-    background: white;
-    border-radius: 20px;
-    margin: -50px 20px 0;
+    margin: -30px 20px 0;
     padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     position: relative;
     z-index: 10;
 }
 
-.actions-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+.actions-row { display: flex; justify-content: space-between; align-items: center; }
+.actions-row.row-2 { justify-content: space-around; }
 
-.actions-row.row-2 {
-    justify-content: space-around;
-}
+.actions-divider { border: 0; height: 1px; background: #f1f5f9; margin: 16px 0; }
 
-.actions-divider {
-    border: 0;
-    height: 1px;
-    background: #f1f2f6;
-    margin: 15px 0;
-}
-
-/* الأنيميشن الاحترافي للأزرار */
-.action-btn,
-.cat-item {
-    transition: 0.2s ease;
-}
-
-.action-btn:active,
-.cat-item:active {
-    transform: scale(0.96);
-}
-
-.action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    width: 30%;
-}
-
-.action-btn p {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 700;
-    color: #2c3e50;
-}
+.action-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; width: 30%; transition: transform 0.2s ease; }
+.action-btn:active { transform: scale(0.96); }
+.action-btn p { margin: 0; font-size: 13px; font-weight: 600; color: #334155; }
 
 .icon-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    background: white;
-    border: 1.5px solid;
-    transition: 0.3s;
+    width: 44px; height: 44px; border-radius: 10px; /* حواف مربعة دائرية */
+    display: flex; justify-content: center; align-items: center; font-size: 20px;
+    background: #f8fafc; border: 1px solid #e2e8f0; transition: 0.2s;
 }
 
-.text-blue { border-color: #3498db; color: #3498db; }
-.text-green { border-color: #2ecc71; color: #2ecc71; }
-.text-red { border-color: #e74c3c; color: #e74c3c; }
-.text-orange { border-color: #f39c12; color: #f39c12; }
-.text-purple { border-color: #9b59b6; color: #9b59b6; }
+/* =========================================
+   6. الفئات (الخدمات)
+   ========================================= */
+.categories-section { padding: 0 20px; margin-top: 24px; }
+.section-title { color: #0f172a; font-size: 16px; font-weight: 700; margin-bottom: 16px; margin-top: 0; }
 
-/* شبكة الفئات (3 مربعات) */
-.categories-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
+.categories-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
-.cat-item {
-    background: white;
-    border-radius: 15px;
-    padding: 15px 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    border: 1px solid #f8f9fa;
-    cursor: pointer;
-}
-
-.cat-item p { margin: 8px 0 0; font-size: 12px; font-weight: 800; color: #2c3e50; }
-
-.cat-icon {
-    width: 40px;
-    height: 40px;
+.shadcn-card-interactive {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    padding: 16px 8px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
 }
 
+.shadcn-card-interactive:hover { border-color: #cbd5e1; background-color: #f8fafc; }
+.shadcn-card-interactive:active { transform: scale(0.97); }
+
+.shadcn-card-interactive p { margin: 10px 0 0; font-size: 13px; font-weight: 600; color: #334155; }
+
+.cat-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 .cat-icon img { width: 100%; height: 100%; object-fit: contain; }
 
-/* =========================================
-   6. شبكات الخدمات القديمة (إن كنت لا تزال تستخدمها)
-   ========================================= */
-.services-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 15px !important;
-    padding: 0 20px !important;
-    align-items: start !important; 
-}
-
-.service-item {
-    background: white !important;
-    border-radius: 20px !important;
-    padding: 20px 10px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.04) !important;
-    border: 1px solid #f1f2f6 !important;
-    aspect-ratio: 1 / 1 !important; 
-    transition: 0.3s !important;
-    cursor: pointer;
-}
-
-.service-item:active {
-    transform: scale(0.95);
-}
-
-.service-item.full-width {
-    grid-column: span 2;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 20px;
-    text-align: right;
-    aspect-ratio: auto !important;
-}
-
-.service-item .icon-wrapper {
-    width: 55px !important;
-    height: 55px !important;
-    margin-bottom: 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: transparent !important;
-    border: none !important;
-}
-
-.service-item p {
-    margin: 0 !important;
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    color: #2c3e50 !important;
-}
-
-.icon-wrapper {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    margin: 0 auto 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-}
-
-.network-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-}
-
-.network-card {
-    background: #fff;
-    border: 2px solid #f4f7f6;
-    border-radius: 18px;
-    padding: 15px 5px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.network-card p {
-    margin: 0;
-    font-weight: 800;
-    font-size: 13px;
-    color: #2c3e50;
-}
-
-.network-card:hover {
-    border-color: #11998e;
-    transform: translateY(-3px);
-}
-
-.pro-logo {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    margin: 0 auto 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    background: white;
-    border: 1px solid #ecf0f1;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    font-weight: 900;
-    font-size: 12px;
-    color: white;
-}
-
-.pro-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
+/* ستايل مخصص لأيقونات ستارلينك وبطاقاتي */
+.starlink-icon { background: #0f172a; color: white; font-size: 20px; }
+.my-cards-icon { background: #f1f5f9; font-size: 20px; border: 1px solid #e2e8f0; }
 
 /* =========================================
-   7. ألوان لوجوهات الشركات 
+   7. القائمة الجانبية (Sidebar)
    ========================================= */
-.pubg-logo { background: #2c3e50; color: #f1c40f; font-size: 16px; border: 2px solid #f1c40f;}
-.ff-logo { background: #e74c3c; color: white; font-size: 16px; border: 2px solid #c0392b;}
-.visa-logo { background: #192a56; color: white; font-size: 16px; font-family: sans-serif; border: 2px solid #e1b12c;}
-.master-logo { background: #eb4d4b; color: #f0932b; font-size: 16px; border: 2px solid #f0932b;}
-.netflix-logo { background: #e50914; color: white; font-size: 18px; border: 2px solid #b81d24;}
-.spotify-logo { background: #1db954; color: white; font-size: 18px; border: 2px solid #191414;}
-
-.blue-bg { background: #e3f2fd; }
-.purple-bg { background: #f3e5f5; }
-.orange-bg { background: #fff3e0; }
-.green-bg { background: #e8f5e9; }
-.teal-bg { background: #e0f2f1; }
-
-/* =========================================
-   8. السجل والتنبيهات (Toast & History)
-   ========================================= */
-.orders-history-container {
-    max-height: 350px;
-    overflow-y: auto;
-    padding-right: 5px;
-}
-
-.order-card-pro {
-    background: #fafafa;
-    border-radius: 15px;
-    padding: 15px;
-    margin-bottom: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #eee;
-    border-right: 5px solid #11998e;
-}
-
-.status-pill {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 800;
-    color: white;
-}
-
-.completed { border-right-color: #2ecc71; }
-.status-completed { background: #2ecc71; }
-.pending { border-right-color: #f1c40f; }
-.status-pending { background: #f1c40f; color: #2c3e50; }
-.rejected { border-right-color: #e74c3c; }
-.status-rejected { background: #e74c3c; }
-
-.toast {
-    visibility: hidden;
-    min-width: 250px;
-    background: #11998e;
-    color: white;
-    text-align: center;
-    border-radius: 50px;
-    padding: 15px;
-    position: fixed;
-    z-index: 3000;
-    left: 50%;
-    bottom: 30px;
-    transform: translateX(-50%);
-    transition: 0.3s;
-    font-weight: bold;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.toast.show {
-    visibility: visible;
-    bottom: 80px; /* تم رفعها قليلاً لكي لا يغطي عليها شريط التنقل السفلي */
-}
-
-.divider {
-    position: relative;
-    margin: 25px 0;
-    text-align: center;
-    border-top: 1px solid #eee;
-}
-
-.divider span {
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: white;
-    padding: 0 15px;
-    color: #a4b0be;
-    font-size: 12px;
-}
-
-/* =========================================
-   9. الدخول بواسطة جوجل وواتساب
-   ========================================= */
-.btn-google {
-    width: 100%;
-    padding: 12px;
-    background: white;
-    border: 2px solid #f1f2f6;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-family: 'Tajawal';
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.btn-google img {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain;
-}
-
-.modern-input-login {
-    width: 100%; padding: 15px; margin-bottom: 12px; border: 2px solid #e1e8ed; border-radius: 12px;
-    font-family: 'Tajawal', sans-serif; background: #f8f9fa; transition: 0.3s; box-sizing: border-box; font-size: 14px;
-}
-
-.modern-input-login:focus {
-    border-color: #11998e; background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(17, 153, 142, 0.1);
-}
-
-.whatsapp-btn {
-    position: fixed; bottom: 85px; /* تم رفعها قليلاً لكي لا يغطي عليها شريط التنقل السفلي */
-    left: 25px; background: #25D366; color: white; padding: 12px 20px;
-    border-radius: 50px; text-decoration: none; font-family: 'Tajawal'; font-weight: bold;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); display: flex; align-items: center; gap: 8px; z-index: 1000; transition: 0.3s;
-}
-
-.whatsapp-btn:hover { transform: translateY(-3px); }
-
-/* =========================================
-   10. القائمة الجانبية (Sidebar)
-   ========================================= */
-#sidebar-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px);
-    z-index: 4000; display: none; opacity: 0; transition: opacity 0.3s ease;
-}
-
-#sidebar-menu {
+.shadcn-sidebar {
     position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
-    background: #ffffff; z-index: 5000; box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    background: #ffffff; z-index: 5000;
+    border-left: 1px solid #e2e8f0;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.05);
     transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex; flex-direction: column; overflow-y: auto;
 }
-
-#sidebar-overlay.active { display: block; opacity: 1; }
-#sidebar-menu.active { right: 0; }
+.shadcn-sidebar.active { right: 0; }
 
 .sidebar-header {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    padding: 40px 20px 20px; color: white; text-align: right; position: relative;
+    background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+    padding: 40px 20px 20px; color: #0f172a; text-align: right; position: relative;
 }
+.close-sidebar-btn { position: absolute; top: 15px; left: 15px; background: transparent; border: none; color: #64748b; font-size: 20px; cursor: pointer; }
+.user-avatar { width: 50px; height: 50px; background: #e2e8f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px; }
+.sidebar-header h3 { margin: 0 0 4px; font-size: 16px; font-weight: 700; }
+.sidebar-header p { margin: 0; font-size: 13px; color: #64748b; }
 
-.close-sidebar-btn {
-    position: absolute; top: 15px; left: 15px;
-    background: rgba(255,255,255,0.2); border: none; color: white;
-    font-size: 20px; width: 35px; height: 35px; border-radius: 50%;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-}
-
-.user-avatar {
-    width: 60px; height: 60px; background: rgba(255,255,255,0.3);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 28px; margin-bottom: 10px; border: 2px solid white;
-}
-
-.sidebar-links { padding: 20px 0; flex: 1; }
-
+.sidebar-links { padding: 16px 0; flex: 1; }
 .sidebar-link {
-    display: flex; align-items: center; gap: 15px; padding: 15px 25px;
-    color: #2c3e50; text-decoration: none; font-size: 16px; font-weight: bold;
-    transition: background 0.2s; cursor: pointer;
+    display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+    color: #334155; text-decoration: none; font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s;
 }
+.sidebar-link:hover { background: #f1f5f9; }
+.sidebar-link .icon { font-size: 18px; width: 24px; text-align: center; }
+.support-link { color: #0f172a; } /* توحيد الألوان */
 
-.sidebar-link:hover { background: #f1f2f6; }
-.sidebar-link .icon { font-size: 20px; width: 25px; text-align: center; }
-
-.sidebar-footer { padding: 20px; border-top: 1px solid #eee; }
-
-.logout-sidebar-btn {
-    width: 100%; padding: 12px; background: #ffebee; color: #e74c3c;
-    border: 1px dashed #e74c3c; border-radius: 12px; font-weight: bold;
-    font-family: 'Tajawal'; cursor: pointer; display: flex;
-    align-items: center; justify-content: center; gap: 10px;
-}
+.sidebar-footer { padding: 20px; border-top: 1px solid #e2e8f0; }
+.logout-sidebar-btn { width: 100%; justify-content: center; color: #ef4444; }
+.logout-sidebar-btn:hover { background-color: #fef2f2; color: #dc2626; }
 
 /* =========================================
-   🌟 11. شريط التنقل السفلي (Bottom Navigation) 🌟
+   8. شريط التنقل السفلي (Bottom Navigation)
    ========================================= */
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px); /* تأثير زجاجي خفيف */
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px 0 15px 0; /* مساحة للآيفون من الأسفل */
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-    border-radius: 25px 25px 0 0;
+.bottom-spacer { height: 90px; }
+
+.shadcn-nav {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px);
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 12px 0 20px 0;
+    border-top: 1px solid #e2e8f0;
     z-index: 1000;
 }
 
-.nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    width: 60px;
-}
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; width: 60px; }
+.nav-icon { font-size: 22px; color: #94a3b8; transition: all 0.2s ease; filter: grayscale(100%); opacity: 0.7; }
+.nav-text { font-size: 11px; font-weight: 600; color: #94a3b8; transition: color 0.2s ease; }
 
-.nav-icon {
-    font-size: 24px;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0.6;
-    filter: grayscale(100%);
-}
+.nav-item.active .nav-icon { color: #0f172a; filter: grayscale(0%); opacity: 1; transform: translateY(-2px); }
+.nav-item.active .nav-text { color: #0f172a; font-weight: 700; }
 
-.nav-text {
-    font-size: 11px;
-    font-weight: 700;
-    color: #7f8c8d;
-    transition: color 0.3s ease;
-}
+/* =========================================
+   9. المودال والنوافذ المنبثقة التفصيلية
+   ========================================= */
+.dialog-title { font-size: 18px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 16px; }
+.with-border { border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
+.modal-title-green { font-size: 18px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 8px; }
+.modal-subtitle { font-size: 13px; color: #64748b; margin-bottom: 16px; line-height: 1.5; }
 
-/* حالة الزر المفعل (Active) */
-.nav-item.active .nav-icon {
-    transform: translateY(-5px) scale(1.1);
-    opacity: 1;
-    filter: grayscale(0%);
-    text-shadow: 0 5px 10px rgba(17, 153, 142, 0.3); /* ظل خفيف بلون التطبيق الأساسي */
+.bank-details-box {
+    background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px dashed #cbd5e1;
+    margin-bottom: 16px; text-align: center;
 }
+.account-number { font-size: 24px; color: #0f172a; letter-spacing: 2px; }
+.account-name { font-size: 13px; color: #475569; font-weight: 600; }
 
-.nav-item.active .nav-text {
-    color: #11998e; /* لون التطبيق الأساسي */
-}
+.full-width { width: 100%; }
+.mt-10 { margin-top: 10px; }
+.mt-15 { margin-top: 15px; }
 
-/* تأثير الضغط (Ripple Effect) */
-.nav-item:active {
-    transform: scale(0.9);
+.orders-history-container { max-height: 350px; overflow-y: auto; padding-right: 5px; }
+.cards-list-container { margin-top: 16px; }
+.loading-text { color: #64748b; font-size: 14px; text-align: center; }
+
+/* =========================================
+   10. التنبيهات وغيرها
+   ========================================= */
+.shadcn-toast {
+    visibility: hidden; min-width: 250px;
+    background: #0f172a; color: #ffffff;
+    text-align: center; border-radius: 6px; padding: 12px 16px;
+    position: fixed; z-index: 3000; left: 50%; bottom: 30px;
+    transform: translateX(-50%); transition: 0.3s ease;
+    font-size: 14px; font-weight: 500;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
+.shadcn-toast.show { visibility: visible; bottom: 100px; }
+
+.divider { position: relative; margin: 24px 0; text-align: center; border-top: 1px solid #e2e8f0; }
+.divider span { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 0 10px; color: #64748b; font-size: 12px; }
+.forgot-pass-container { text-align: right; margin-bottom: 16px; }
+.forgot-pass-link { color: #0f172a; font-size: 13px; text-decoration: none; font-weight: 600; }
+.forgot-pass-link:hover { text-decoration: underline; }
+
+/* إخفاء العناصر غير المستخدمة حالياً أو القديمة */
+.network-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.card-info-alert { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px; font-size: 13px; color: #334155; line-height: 1.6; }
  
