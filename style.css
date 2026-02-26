@@ -1,4 +1,6 @@
-/* تثبيت لون الخلفية عشان ما يخرب مع الـ Dark Mode */
+/* =========================================
+   1. الإعدادات العامة والخلفية
+   ========================================= */
 body {
     font-family: 'Tajawal', sans-serif;
     background-color: #f4f7f6 !important; 
@@ -8,7 +10,9 @@ body {
     color: #333;
 }
 
-/* تنسيق اللوجو الجديد عشان يكون فخم ومندمج */
+/* =========================================
+   2. اللوجو والـ Overlays (الخلفيات الشفافة)
+   ========================================= */
 .app-logo-large { 
     width: 100px; 
     height: 100px; 
@@ -54,6 +58,9 @@ body {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
 }
 
+/* =========================================
+   3. أزرار وحقول الإدخال (Inputs & Buttons)
+   ========================================= */
 .auth-tabs {
     display: flex;
     background: #f1f2f6;
@@ -81,7 +88,6 @@ body {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* المدخلات والأزرار */
 .input-group input,
 .modern-input {
     width: 100%;
@@ -129,7 +135,9 @@ body {
     margin-top: 10px;
 }
 
-/* المحفظة والخدمات */
+/* =========================================
+   4. المحفظة والرصيد (تمت إضافة التعديلات الجديدة)
+   ========================================= */
 .header {
     background: white;
     padding: 20px 20px 50px;
@@ -153,12 +161,178 @@ body {
     margin-bottom: 5px;
 }
 
-.balance-amount {
-    font-size: 32px;
+/* التنسيق الجديد لمنطقة الرصيد */
+.balance-box {
+    font-size: 34px;
     font-weight: 900;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* إصلاح شكل مربعات الخدمات */
+.currency {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+.eye-btn {
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+.eye-btn:active {
+    transform: scale(0.9);
+}
+
+/* =========================================
+   5. التصميم المتداخل والخدمات (Overlap Layout)
+   ========================================= */
+.top-hero-section {
+    background: linear-gradient(135deg, #192a56, #273c75);
+    padding: 20px 20px 80px 20px;
+    border-radius: 0 0 25px 25px;
+    color: white;
+    position: relative;
+}
+
+.bottom-content-section {
+    background: #f8f9fa;
+    border-radius: 35px 35px 0 0;
+    margin-top: -40px; 
+    padding: 25px 20px;
+    position: relative;
+    z-index: 10;
+}
+
+/* التنسيق الجديد لزر السجل (Glassmorphism) */
+.history-btn-top {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-family: 'Tajawal';
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.history-btn-top:active {
+    transform: scale(0.95);
+}
+
+/* الكارت الأبيض الرئيسي */
+.main-actions-card {
+    background: white;
+    border-radius: 20px;
+    margin: -50px 20px 0;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 10;
+}
+
+.actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.actions-row.row-2 {
+    justify-content: space-around;
+}
+
+.actions-divider {
+    border: 0;
+    height: 1px;
+    background: #f1f2f6;
+    margin: 15px 0;
+}
+
+/* الأنيميشن الاحترافي للأزرار */
+.action-btn,
+.cat-item {
+    transition: 0.2s ease;
+}
+
+.action-btn:active,
+.cat-item:active {
+    transform: scale(0.96);
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    width: 30%;
+}
+
+.action-btn p {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.icon-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    background: white;
+    border: 1.5px solid;
+    transition: 0.3s;
+}
+
+.text-blue { border-color: #3498db; color: #3498db; }
+.text-green { border-color: #2ecc71; color: #2ecc71; }
+.text-red { border-color: #e74c3c; color: #e74c3c; }
+.text-orange { border-color: #f39c12; color: #f39c12; }
+.text-purple { border-color: #9b59b6; color: #9b59b6; }
+
+/* شبكة الفئات (3 مربعات) */
+.categories-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.cat-item {
+    background: white;
+    border-radius: 15px;
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+    border: 1px solid #f8f9fa;
+    cursor: pointer;
+}
+
+.cat-item p { margin: 8px 0 0; font-size: 12px; font-weight: 800; color: #2c3e50; }
+
+.cat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.cat-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+/* =========================================
+   6. شبكات الخدمات القديمة (إن كنت لا تزال تستخدمها)
+   ========================================= */
 .services-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
@@ -225,7 +399,6 @@ body {
     font-size: 24px;
 }
 
-/* كروت الشبكات، الألعاب، والفيزا */
 .network-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -276,7 +449,9 @@ body {
     object-fit: contain;
 }
 
-/* ألوان الشركات (للالعاب والاشتراكات) */
+/* =========================================
+   7. ألوان لوجوهات الشركات 
+   ========================================= */
 .pubg-logo { background: #2c3e50; color: #f1c40f; font-size: 16px; border: 2px solid #f1c40f;}
 .ff-logo { background: #e74c3c; color: white; font-size: 16px; border: 2px solid #c0392b;}
 .visa-logo { background: #192a56; color: white; font-size: 16px; font-family: sans-serif; border: 2px solid #e1b12c;}
@@ -284,7 +459,15 @@ body {
 .netflix-logo { background: #e50914; color: white; font-size: 18px; border: 2px solid #b81d24;}
 .spotify-logo { background: #1db954; color: white; font-size: 18px; border: 2px solid #191414;}
 
-/* السجل والتنبيهات */
+.blue-bg { background: #e3f2fd; }
+.purple-bg { background: #f3e5f5; }
+.orange-bg { background: #fff3e0; }
+.green-bg { background: #e8f5e9; }
+.teal-bg { background: #e0f2f1; }
+
+/* =========================================
+   8. السجل والتنبيهات (Toast & History)
+   ========================================= */
 .orders-history-container {
     max-height: 350px;
     overflow-y: auto;
@@ -359,7 +542,9 @@ body {
     font-size: 12px;
 }
 
-/* زرار جوجل */
+/* =========================================
+   9. الدخول بواسطة جوجل وواتساب
+   ========================================= */
 .btn-google {
     width: 100%;
     padding: 12px;
@@ -381,159 +566,25 @@ body {
     object-fit: contain;
 }
 
-.blue-bg { background: #e3f2fd; }
-.purple-bg { background: #f3e5f5; }
-.orange-bg { background: #fff3e0; }
-.green-bg { background: #e8f5e9; }
-.teal-bg { background: #e0f2f1; }
-
-/* تنسيقات صفحة الدخول */
-.login-box {
-    background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-    border-radius: 25px; padding: 40px 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-    width: 90%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.8);
-}
 .modern-input-login {
     width: 100%; padding: 15px; margin-bottom: 12px; border: 2px solid #e1e8ed; border-radius: 12px;
     font-family: 'Tajawal', sans-serif; background: #f8f9fa; transition: 0.3s; box-sizing: border-box; font-size: 14px;
 }
+
 .modern-input-login:focus {
     border-color: #11998e; background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(17, 153, 142, 0.1);
 }
 
-/* زر الواتساب العائم (تم نقله للقائمة الجانبية في الـ HTML لكن تركنا التنسيق احتياطياً) */
 .whatsapp-btn {
     position: fixed; bottom: 25px; left: 25px; background: #25D366; color: white; padding: 12px 20px;
     border-radius: 50px; text-decoration: none; font-family: 'Tajawal'; font-weight: bold;
     box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); display: flex; align-items: center; gap: 8px; z-index: 1000; transition: 0.3s;
 }
+
 .whatsapp-btn:hover { transform: translateY(-3px); }
 
-/* التصميم الجديد للتداخل (Overlap Layout) */
-.top-hero-section {
-    background: linear-gradient(135deg, #192a56, #273c75);
-    padding: 20px 20px 80px 20px;
-    border-radius: 0 0 25px 25px;
-    color: white;
-    position: relative;
-}
-.bottom-content-section {
-    background: #f8f9fa;
-    border-radius: 35px 35px 0 0;
-    margin-top: -40px; 
-    padding: 25px 20px;
-    position: relative;
-    z-index: 10;
-}
-
-/* زر السجل الأبيض */
-.history-btn-top {
-    background: white;
-    color: #192a56;
-    border: none;
-    padding: 6px 15px;
-    border-radius: 20px;
-    font-family: 'Tajawal';
-    font-weight: 800;
-    font-size: 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* الكارت الأبيض الرئيسي (المتداخل) */
-.main-actions-card {
-    background: white;
-    border-radius: 20px;
-    margin: -50px 20px 0;
-    padding: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    position: relative;
-    z-index: 10;
-}
-
-.actions-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.actions-row.row-2 {
-    justify-content: space-around;
-}
-
-.actions-divider {
-    border: 0;
-    height: 1px;
-    background: #f1f2f6;
-    margin: 15px 0;
-}
-
-.action-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    width: 30%;
-}
-.action-btn p {
-    margin: 0;
-    font-size: 13px;
-    font-weight: 700;
-    color: #2c3e50;
-}
-.icon-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    background: white;
-    border: 1.5px solid;
-    transition: 0.3s;
-}
-.text-blue { border-color: #3498db; color: #3498db; }
-.text-green { border-color: #2ecc71; color: #2ecc71; }
-.text-red { border-color: #e74c3c; color: #e74c3c; }
-.text-orange { border-color: #f39c12; color: #f39c12; }
-.text-purple { border-color: #9b59b6; color: #9b59b6; }
-.action-btn:active .icon-circle { transform: scale(0.9); background: #f8f9fa; }
-
-/* 🌟 شبكة الفئات (3 مربعات صغيرة في الصف) */
-.categories-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-.cat-item {
-    background: white;
-    border-radius: 15px;
-    padding: 15px 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-    border: 1px solid #f8f9fa;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.cat-item:active { transform: scale(0.95); }
-.cat-item p { margin: 8px 0 0; font-size: 12px; font-weight: 800; color: #2c3e50; }
-.cat-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-.cat-icon img { width: 100%; height: 100%; object-fit: contain; }
-
 /* =========================================
-   🌟 تنسيقات القائمة الجانبية (Sidebar) الجديدة
+   10. القائمة الجانبية (Sidebar)
    ========================================= */
 #sidebar-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -570,15 +621,18 @@ body {
 }
 
 .sidebar-links { padding: 20px 0; flex: 1; }
+
 .sidebar-link {
     display: flex; align-items: center; gap: 15px; padding: 15px 25px;
     color: #2c3e50; text-decoration: none; font-size: 16px; font-weight: bold;
     transition: background 0.2s; cursor: pointer;
 }
+
 .sidebar-link:hover { background: #f1f2f6; }
 .sidebar-link .icon { font-size: 20px; width: 25px; text-align: center; }
 
 .sidebar-footer { padding: 20px; border-top: 1px solid #eee; }
+
 .logout-sidebar-btn {
     width: 100%; padding: 12px; background: #ffebee; color: #e74c3c;
     border: 1px dashed #e74c3c; border-radius: 12px; font-weight: bold;
