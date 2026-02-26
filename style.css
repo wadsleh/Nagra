@@ -213,4 +213,61 @@ body {
     stroke-width: 2.5px !important; /* زدنا السماكة عشان تبان أقوى */
     color: #0f172a !important; /* لون كحلي داكن صريح */
 }
+/* =========================================
+   11. تصميم سجل الطلبات (Order History)
+   ========================================= */
+.history-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+}
+
+.history-card:hover { border-color: #cbd5e1; }
+
+.history-info { text-align: right; }
+.history-info h4 { margin: 0 0 4px; font-size: 15px; color: #0f172a; font-weight: 700; }
+.history-info p { margin: 0; font-size: 13px; color: #64748b; }
+.history-price { font-weight: 800; color: #0f172a; font-size: 15px; direction: ltr; }
+
+/* حالات الطلب (مكتمل، قيد المراجعة، مرفوض) */
+.status-badge {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-top: 8px; display: inline-block;
+}
+.status-pending { background: #fef08a; color: #854d0e; } /* أصفر */
+.status-completed { background: #dcfce7; color: #166534; } /* أخضر */
+.status-rejected { background: #fee2e2; color: #991b1b; } /* أحمر */
+
+/* =========================================
+   12. تصميم البطاقات الافتراضية (Virtual Cards)
+   ========================================= */
+.virtual-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); /* شكل بطاقة كحلية فخمة */
+    color: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    text-align: left; 
+    direction: ltr; /* الأرقام من اليسار لليمين */
+}
+
+.virtual-card::after {
+    content: ''; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px;
+    background: rgba(255,255,255,0.05); border-radius: 50%;
+}
+
+.v-card-type { font-size: 18px; font-weight: 900; font-style: italic; margin-bottom: 24px; color: #f8fafc; }
+.v-card-num { font-size: 20px; letter-spacing: 3px; font-family: monospace; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+
+.v-card-footer { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; text-transform: uppercase; }
+.v-card-footer span b { color: white; font-size: 14px; margin-left: 6px; font-family: monospace; }
 
