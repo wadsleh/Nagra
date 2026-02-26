@@ -392,4 +392,58 @@ body {
 /* إخفاء العناصر غير المستخدمة حالياً أو القديمة */
 .network-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 .card-info-alert { background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 16px; font-size: 13px; color: #334155; line-height: 1.6; }
- 
+ /* =========================================
+   إصلاحات حجم الصور (Google + النوافذ المنبثقة)
+   ========================================= */
+
+/* 1. إصلاح زر تسجيل الدخول بجوجل */
+.btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.btn-google img {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain;
+}
+
+/* 2. إصلاح حجم الصور داخل النوافذ (الاشتراكات، العملات، الألعاب) */
+.network-grid {
+    display: grid;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.network-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.network-card:hover {
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+}
+
+.pro-logo {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pro-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
