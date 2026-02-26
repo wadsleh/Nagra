@@ -565,3 +565,10 @@ body {
     letter-spacing: 0.5px !important;
     padding-top: 3px !important; /* وزنة دقيقة جداً عشان يكونوا على نفس السطر البصري */
 }
+/* ضبط وتكبير صورة ستارلينك الجديدة */
+.starlink-img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important; /* أو جرب cover لو حاببها تملأ المربع كله */
+    transform: scale(1.4); /* الرقم دا بيعمل زوم 40%.. لو لسة صغيرة خليه 1.5 أو 1.6 */
+}
