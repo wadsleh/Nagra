@@ -538,19 +538,30 @@ body {
    ضبط تناسق حجم اسم التطبيق (العربي والإنجليزي)
    ========================================= */
 
-.brand-title { 
-    font-size: 22px !important; 
-    font-weight: 900 !important; 
+/* =========================================
+   الوزنة النهائية لاسم التطبيق (العربي والإنجليزي)
+   ========================================= */
+
+.brand-container {
     display: flex;
-    align-items: center; /* عشان الكلمتين يكونوا في نفس المستوى */
-    gap: 6px; /* مسافة بسيطة وأنيقة بين الكلمتين والفاصل */
+    align-items: center; /* ضبط المحاذاة مع زر القائمة */
+    gap: 12px;
+}
+
+.brand-title { 
+    display: flex !important;
+    align-items: center !important; /* بيخلي الكلمتين في نفس خط المنتصف */
+    font-size: 24px !important; /* حجم الكلمة العربية */
+    font-weight: 900 !important; 
+    line-height: 1 !important;
 }
 
 .brand-subtitle { 
-    font-size: 16px !important; /* كبرنا الإنجليزي عشان يوازي العربي */
-    font-weight: 600 !important; /* خليناه أسمك شوية */
-    opacity: 0.8 !important; 
+    font-size: 18px !important; /* كبرنا الإنجليزي والفاصل بشكل ملحوظ */
+    font-weight: 700 !important; /* زدنا السماكة */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; /* خط إنجليزي فخم */
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-right: 6px !important; /* مسافة بين العربي والفاصل */
     letter-spacing: 0.5px !important;
-    font-family: monospace; /* بيدي الإنجليزي طابع تقني فخم */
-    margin-top: 2px; /* لضبط المحاذاة البصرية مع الكلمة العربية */
+    padding-top: 3px !important; /* وزنة دقيقة جداً عشان يكونوا على نفس السطر البصري */
 }
