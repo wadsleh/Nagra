@@ -173,21 +173,20 @@
         
         <div style="height: 100px;"></div>
 
-        [attachment_0](attachment)
         <nav class="bottom-nav">
-            <div class="nav-item active" onclick="switchTab(this, 'home')">
+            <div class="nav-item active" id="nav-home" onclick="switchNavTab(this, 'home')">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-text">الرئيسية</span>
             </div>
-            <div class="nav-item" onclick="switchTab(this, 'cards'); openMyCards();">
+            <div class="nav-item" id="nav-cards" onclick="switchNavTab(this, 'cards')">
                 <span class="nav-icon">💳</span>
                 <span class="nav-text">بطاقاتي</span>
             </div>
-            <div class="nav-item" onclick="switchTab(this, 'history'); document.getElementById('btn-history').click();">
+            <div class="nav-item" id="nav-history" onclick="switchNavTab(this, 'history')">
                 <span class="nav-icon">📜</span>
                 <span class="nav-text">السجل</span>
             </div>
-            <div class="nav-item" onclick="switchTab(this, 'profile'); toggleSidebar();">
+            <div class="nav-item" id="nav-profile" onclick="switchNavTab(this, 'profile')">
                 <span class="nav-icon">👤</span>
                 <span class="nav-text">حسابي</span>
             </div>
