@@ -512,3 +512,25 @@ body {
 .shadcn-card-interactive:hover {
     background-color: #f8fafc !important; /* تغيير الخلفية يكفي للتمييز */
 }
+/* =========================================
+   توحيد شكل الأيقونات وإزالة الإطارات (Borders)
+   ========================================= */
+
+/* إزالة الإطار من أيقونات (سحب، تغذية، تحويل) */
+.icon-circle {
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important; /* ظل ناعم جداً بديل للإطار */
+}
+
+/* إزالة الإطار من أيقونة "بطاقاتي" */
+.my-cards-icon {
+    border: none !important;
+    background: #f8fafc !important; /* لون خلفية هادئ للتمييز */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02) !important;
+}
+
+/* التأكد من عدم وجود إطار في أيقونة ستارلينك */
+.starlink-icon {
+    border: none !important;
+}
