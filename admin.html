@@ -15,7 +15,7 @@
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 2000; }
         .modal-box { background: white; color: #2c3e50; padding: 25px; border-radius: 25px; text-align: center; width: 90%; max-width: 350px; }
-        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; } /* 🌟 تم حل بروز صندوق البحث */
+        .admin-input { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 10px; font-family: 'Tajawal'; box-sizing: border-box; }
         .toast { visibility: hidden; min-width: 250px; background: #11998e; color: white; text-align: center; border-radius: 50px; padding: 15px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; transform: translateX(-50%); transition: 0.3s; font-weight: bold; }
         .toast.show { visibility: visible; bottom: 50px; }
         .toast.error { background: #e74c3c; }
@@ -229,32 +229,31 @@
             renderUsers(filtered);
         };
 
-        // 🌟 دالة تصدير البيانات لـ Excel
+        // 🌟 الدالة الجديدة المحدثة لتصدير الإسم بدل المعرف 🌟
         window.exportToExcel = () => {
-    if(allTransactions.length === 0) return showToast("لا توجد بيانات لتصديرها!", true);
-    
-    const dataToExport = allTransactions.map(t => {
-        // 🌟 حركة ذكية: البحث عن إسم المستخدم باستخدام المعرف (UID)
-        const userObj = allUsers.find(u => u.id === t.userId);
-        const userName = userObj ? userObj.name : "مستخدم غير معروف";
+            if(allTransactions.length === 0) return showToast("لا توجد بيانات لتصديرها!", true);
+            
+            const dataToExport = allTransactions.map(t => {
+                // البحث عن بيانات المستخدم من المصفوفة
+                const userObj = allUsers.find(u => u.id === t.userId);
+                const userName = userObj ? (userObj.name || userObj.email) : "مستخدم غير معروف";
 
-        return {
-            "التاريخ": t.date ? t.date.toDate().toLocaleString('ar-EG') : '',
-            "النوع": t.type === 'credit' ? 'إيداع' : 'خصم',
-            "المبلغ (ج.س)": t.amount,
-            "إسم الزبون": userName, // ✅ هسي حيظهر الإسم بدل المعرف المعقد
-            "الخدمة / المصدر": t.source,
-            "رقم الطلب": t.orderId
+                return {
+                    "التاريخ": t.date ? t.date.toDate().toLocaleString('ar-EG') : '',
+                    "النوع": t.type === 'credit' ? 'إيداع' : 'خصم',
+                    "المبلغ (ج.س)": t.amount,
+                    "إسم الزبون": userName, // 👈 هنا حيظهر الإسم بدل الـ UID المزعج
+                    "الخدمة / المصدر": t.source,
+                    "رقم الطلب": t.orderId
+                };
+            });
+
+            const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "سجل العمليات");
+            XLSX.writeFile(workbook, `سجل_نكرة_${new Date().toLocaleDateString()}.xlsx`);
+            showToast("تم تصدير الملف بالأسماء! 📊");
         };
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "سجل العمليات");
-    XLSX.writeFile(workbook, `سجل_نكرة_${new Date().toLocaleDateString()}.xlsx`);
-    showToast("تم تصدير الملف بالأسماء! 📊");
-};
-
 
         window.customEditBal = (id, name, cur) => {
             document.getElementById('action-modal-title').innerText = "تعديل الرصيد ✏️";
