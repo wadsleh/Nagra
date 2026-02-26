@@ -521,7 +521,7 @@ body {
 
 .toast.show {
     visibility: visible;
-    bottom: 50px;
+    bottom: 80px; /* تم رفعها قليلاً لكي لا يغطي عليها شريط التنقل السفلي */
 }
 
 .divider {
@@ -576,7 +576,8 @@ body {
 }
 
 .whatsapp-btn {
-    position: fixed; bottom: 25px; left: 25px; background: #25D366; color: white; padding: 12px 20px;
+    position: fixed; bottom: 85px; /* تم رفعها قليلاً لكي لا يغطي عليها شريط التنقل السفلي */
+    left: 25px; background: #25D366; color: white; padding: 12px 20px;
     border-radius: 50px; text-decoration: none; font-family: 'Tajawal'; font-weight: bold;
     box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4); display: flex; align-items: center; gap: 8px; z-index: 1000; transition: 0.3s;
 }
@@ -638,5 +639,65 @@ body {
     border: 1px dashed #e74c3c; border-radius: 12px; font-weight: bold;
     font-family: 'Tajawal'; cursor: pointer; display: flex;
     align-items: center; justify-content: center; gap: 10px;
+}
+
+/* =========================================
+   🌟 11. شريط التنقل السفلي (Bottom Navigation) 🌟
+   ========================================= */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px); /* تأثير زجاجي خفيف */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0 15px 0; /* مساحة للآيفون من الأسفل */
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 25px 25px 0 0;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 60px;
+}
+
+.nav-icon {
+    font-size: 24px;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0.6;
+    filter: grayscale(100%);
+}
+
+.nav-text {
+    font-size: 11px;
+    font-weight: 700;
+    color: #7f8c8d;
+    transition: color 0.3s ease;
+}
+
+/* حالة الزر المفعل (Active) */
+.nav-item.active .nav-icon {
+    transform: translateY(-5px) scale(1.1);
+    opacity: 1;
+    filter: grayscale(0%);
+    text-shadow: 0 5px 10px rgba(17, 153, 142, 0.3); /* ظل خفيف بلون التطبيق الأساسي */
+}
+
+.nav-item.active .nav-text {
+    color: #11998e; /* لون التطبيق الأساسي */
+}
+
+/* تأثير الضغط (Ripple Effect) */
+.nav-item:active {
+    transform: scale(0.9);
 }
  
