@@ -158,22 +158,28 @@ body {
     font-weight: 900;
 }
 
+/* إصلاح شكل مربعات الخدمات */
 .services-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    padding: 0 20px 30px;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+    padding: 0 20px !important;
+    align-items: start !important; 
 }
 
 .service-item {
-    background: white;
-    padding: 20px 10px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    background: white !important;
+    border-radius: 20px !important;
+    padding: 20px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04) !important;
+    border: 1px solid #f1f2f6 !important;
+    aspect-ratio: 1 / 1 !important; 
+    transition: 0.3s !important;
     cursor: pointer;
-    border: 1px solid #f1f2f6;
-    transition: 0.2s;
 }
 
 .service-item:active {
@@ -187,6 +193,25 @@ body {
     gap: 15px;
     padding: 15px 20px;
     text-align: right;
+    aspect-ratio: auto !important;
+}
+
+.service-item .icon-wrapper {
+    width: 55px !important;
+    height: 55px !important;
+    margin-bottom: 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+.service-item p {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    color: #2c3e50 !important;
 }
 
 .icon-wrapper {
@@ -228,7 +253,6 @@ body {
     transform: translateY(-3px);
 }
 
-/* التعديل الجديد عشان يقبل الشعارات الحقيقية (زين، سوداني، MTN) */
 .pro-logo {
     width: 55px;
     height: 55px;
@@ -246,7 +270,6 @@ body {
     color: white;
 }
 
-/* ضبط حجم الصور داخل الشعارات */
 .pro-logo img {
     width: 100%;
     height: 100%;
@@ -352,7 +375,6 @@ body {
     cursor: pointer;
 }
 
-/* ضبط مقاس أيقونة جوجل (تم حل المشكلة هنا) */
 .btn-google img {
     width: 24px !important;
     height: 24px !important;
@@ -364,11 +386,8 @@ body {
 .orange-bg { background: #fff3e0; }
 .green-bg { background: #e8f5e9; }
 .teal-bg { background: #e0f2f1; }
-/* =========================================
-   🌟 التنسيقات الحديثة (Modern UI Final)
-   ========================================= */
 
-/* تنسيقات صفحة الدخول (Login Redesign) */
+/* تنسيقات صفحة الدخول */
 .login-box {
     background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
     border-radius: 25px; padding: 40px 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.15);
@@ -381,14 +400,8 @@ body {
 .modern-input-login:focus {
     border-color: #11998e; background: #fff; outline: none; box-shadow: 0 0 0 4px rgba(17, 153, 142, 0.1);
 }
-.auth-tabs { display: flex; background: #f1f2f6; border-radius: 15px; padding: 5px; margin-bottom: 25px; }
-.auth-tabs button {
-    flex: 1; padding: 12px; border: none; background: transparent; border-radius: 10px; font-family: 'Tajawal';
-    font-weight: bold; color: #7f8c8d; cursor: pointer; transition: 0.3s; font-size: 15px;
-}
-.auth-tabs button.active { background: white; color: #11998e; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
-/* زر الواتساب العائم */
+/* زر الواتساب العائم (تم نقله للقائمة الجانبية في الـ HTML لكن تركنا التنسيق احتياطياً) */
 .whatsapp-btn {
     position: fixed; bottom: 25px; left: 25px; background: #25D366; color: white; padding: 12px 20px;
     border-radius: 50px; text-decoration: none; font-family: 'Tajawal'; font-weight: bold;
@@ -399,8 +412,8 @@ body {
 /* التصميم الجديد للتداخل (Overlap Layout) */
 .top-hero-section {
     background: linear-gradient(135deg, #192a56, #273c75);
-    padding: 20px 20px 70px 20px;
-    border-radius: 0 0 35px 35px;
+    padding: 20px 20px 80px 20px;
+    border-radius: 0 0 25px 25px;
     color: white;
     position: relative;
 }
@@ -411,62 +424,6 @@ body {
     padding: 25px 20px;
     position: relative;
     z-index: 10;
-}
-
-/* 🌟 إصلاح شكل مربعات الخدمات (عشان تكون مربعة 100%) */
-.services-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 15px !important;
-    padding: 0 20px !important;
-    align-items: start !important; 
-}
-
-.service-item {
-    background: white !important;
-    border-radius: 20px !important;
-    padding: 20px 10px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.04) !important;
-    border: 1px solid #f1f2f6 !important;
-    aspect-ratio: 1 / 1 !important; /* السر هنا اللي بيخليها مربعة */
-    transition: 0.3s !important;
-}
-
-.service-item .icon-wrapper {
-    width: 55px !important;
-    height: 55px !important;
-    margin-bottom: 12px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: transparent !important;
-    border: none !important;
-}
-
-.service-item p {
-    margin: 0 !important;
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    color: #2c3e50 !important;
-}
-/* =========================================
-   💎 التصميم النهائي الفخم (Big & Clean Icons)
-   ========================================= */
-
-/* =========================================
-   👑 تصميم e& money المستنسخ (UI Clone)
-   ========================================= */
-
-/* الهيدر المتدرج */
-.top-hero-section {
-    background: linear-gradient(135deg, #192a56, #273c75);
-    padding: 20px 20px 80px 20px;
-    border-radius: 0 0 25px 25px;
-    color: white;
 }
 
 /* زر السجل الأبيض */
@@ -494,7 +451,6 @@ body {
     z-index: 10;
 }
 
-/* الصفوف داخل الكارت */
 .actions-row {
     display: flex;
     justify-content: space-between;
@@ -504,7 +460,6 @@ body {
     justify-content: space-around;
 }
 
-/* الخط الفاصل */
 .actions-divider {
     border: 0;
     height: 1px;
@@ -512,7 +467,6 @@ body {
     margin: 15px 0;
 }
 
-/* أزرار العمليات (دوائر بحواف ملونة) */
 .action-btn {
     display: flex;
     flex-direction: column;
@@ -578,3 +532,57 @@ body {
 }
 .cat-icon img { width: 100%; height: 100%; object-fit: contain; }
 
+/* =========================================
+   🌟 تنسيقات القائمة الجانبية (Sidebar) الجديدة
+   ========================================= */
+#sidebar-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px);
+    z-index: 4000; display: none; opacity: 0; transition: opacity 0.3s ease;
+}
+
+#sidebar-menu {
+    position: fixed; top: 0; right: -300px; width: 280px; height: 100%;
+    background: #ffffff; z-index: 5000; box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; flex-direction: column; overflow-y: auto;
+}
+
+#sidebar-overlay.active { display: block; opacity: 1; }
+#sidebar-menu.active { right: 0; }
+
+.sidebar-header {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    padding: 40px 20px 20px; color: white; text-align: right; position: relative;
+}
+
+.close-sidebar-btn {
+    position: absolute; top: 15px; left: 15px;
+    background: rgba(255,255,255,0.2); border: none; color: white;
+    font-size: 20px; width: 35px; height: 35px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+.user-avatar {
+    width: 60px; height: 60px; background: rgba(255,255,255,0.3);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 10px; border: 2px solid white;
+}
+
+.sidebar-links { padding: 20px 0; flex: 1; }
+.sidebar-link {
+    display: flex; align-items: center; gap: 15px; padding: 15px 25px;
+    color: #2c3e50; text-decoration: none; font-size: 16px; font-weight: bold;
+    transition: background 0.2s; cursor: pointer;
+}
+.sidebar-link:hover { background: #f1f2f6; }
+.sidebar-link .icon { font-size: 20px; width: 25px; text-align: center; }
+
+.sidebar-footer { padding: 20px; border-top: 1px solid #eee; }
+.logout-sidebar-btn {
+    width: 100%; padding: 12px; background: #ffebee; color: #e74c3c;
+    border: 1px dashed #e74c3c; border-radius: 12px; font-weight: bold;
+    font-family: 'Tajawal'; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; gap: 10px;
+}
+ 
