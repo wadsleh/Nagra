@@ -16,8 +16,8 @@ const state = {
     selectedNetwork: null,
     unsubscribeOrders: null,
     unsubscribeCards: null,
-    realBalance: "0",        // 🌟 إضافة لحفظ الرصيد الحقيقي
-    balanceVisible: true     // 🌟 إضافة لمعرفة حالة الرصيد (مخفي/ظاهر)
+    realBalance: "0",        
+    balanceVisible: true     
 };
 
 // 2️⃣ Service Config System
@@ -81,6 +81,10 @@ window.toggleSidebar = () => {
     if (menu.classList.contains('active')) {
         menu.classList.remove('active');
         overlay.classList.remove('active');
+        
+        // إعادة تفعيل زر "الرئيسية" في الشريط السفلي عند إغلاق القائمة الجانبية
+        const homeNav = document.getElementById('nav-home');
+        if(homeNav) window.switchNavTab(homeNav, 'home');
     } else {
         menu.classList.add('active');
         overlay.classList.add('active');
@@ -145,7 +149,6 @@ onAuthStateChanged(auth, async (user) => {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
                 
-                // 🌟 التعديل الجديد لمنع تخريب الـ HTML 🌟
                 state.realBalance = (Number(data.balance) || 0).toLocaleString();
                 const balanceAmountEl = document.getElementById('balance-amount');
                 if (balanceAmountEl) {
@@ -309,8 +312,11 @@ document.querySelectorAll(".service-item").forEach(item => {
     });
 });
 
+// فتح نافذة السجل وتفعيل الأيقونة في الشريط السفلي
 document.getElementById('btn-history')?.addEventListener("click", () => {
     document.getElementById('history-modal').style.display = 'flex';
+    const historyNav = document.getElementById('nav-history');
+    if(historyNav) window.switchNavTab(historyNav, 'history');
 });
 
 window.proceedToStep2 = (subService) => {
@@ -323,8 +329,18 @@ window.proceedToStep2 = (subService) => {
 }
 
 window.closeModal = () => document.getElementById('order-modal').style.display = 'none'; 
-window.openHistoryModal = () => document.getElementById('history-modal').style.display = 'flex';
-window.closeHistoryModal = () => document.getElementById('history-modal').style.display = 'none';
+
+window.openHistoryModal = () => {
+    document.getElementById('history-modal').style.display = 'flex';
+};
+
+window.closeHistoryModal = () => {
+    document.getElementById('history-modal').style.display = 'none';
+    // إعادة تفعيل زر "الرئيسية" في الشريط السفلي
+    const homeNav = document.getElementById('nav-home');
+    if(homeNav) window.switchNavTab(homeNav, 'home');
+};
+
 window.openRechargeModal = () => document.getElementById('recharge-modal').style.display = 'flex';
 window.closeRechargeModal = () => document.getElementById('recharge-modal').style.display = 'none';
 
@@ -385,6 +401,11 @@ window.submitOrder = async () => {
 
 window.openMyCards = () => {
     document.getElementById('cards-modal').style.display = 'flex';
+    
+    // تفعيل أيقونة "بطاقاتي" في الشريط السفلي
+    const cardsNav = document.getElementById('nav-cards');
+    if(cardsNav) window.switchNavTab(cardsNav, 'cards');
+
     const list = document.getElementById('my-cards-list');
     list.innerHTML = "<p style='text-align:center; color: #7f8c8d;'>جاري جلب البطاقات... ⏳</p>";
 
@@ -423,7 +444,12 @@ window.openMyCards = () => {
     });
 };
 
-window.closeCardsModal = () => document.getElementById('cards-modal').style.display = 'none';
+window.closeCardsModal = () => {
+    document.getElementById('cards-modal').style.display = 'none';
+    // إعادة تفعيل زر "الرئيسية" في الشريط السفلي
+    const homeNav = document.getElementById('nav-home');
+    if(homeNav) window.switchNavTab(homeNav, 'home');
+};
 
 let logoutTimer;
 function resetTimer() {
@@ -449,7 +475,7 @@ window.forceLogout = async () => {
     location.reload(); 
 }
 
-// 🌟🌟 إضافة ميزة إخفاء/إظهار الرصيد 🌟🌟
+// ميزة إخفاء/إظهار الرصيد
 document.addEventListener("click", function(e) {
     if (e.target.id === "toggle-balance") {
         const balanceText = document.getElementById("balance-amount");
@@ -466,4 +492,38 @@ document.addEventListener("click", function(e) {
         state.balanceVisible = !state.balanceVisible;
     }
 });
- 
+
+// 🌟🌟 دالة التحكم في الشريط السفلي 🌟🌟
+window.switchNavTab = (element, tabName) => {
+    // إزالة كلاس active من كل الأزرار
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    
+    // إضافة كلاس active للزر المضغوط
+    element.classList.add('active');
+
+    // تنفيذ الإجراء المناسب بناءً على الزر
+    if (tabName === 'cards') {
+        if(document.getElementById('cards-modal').style.display !== 'flex') {
+            window.openMyCards();
+        }
+    } else if (tabName === 'history') {
+        if(document.getElementById('history-modal').style.display !== 'flex') {
+             window.openHistoryModal();
+        }
+    } else if (tabName === 'profile') {
+        const menu = document.getElementById('sidebar-menu');
+        if (!menu.classList.contains('active')) {
+            window.toggleSidebar();
+        }
+    } else if (tabName === 'home') {
+        // إغلاق أي نوافذ مفتوحة للعودة للرئيسية
+        document.getElementById('cards-modal').style.display = 'none';
+        document.getElementById('history-modal').style.display = 'none';
+        const menu = document.getElementById('sidebar-menu');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (menu.classList.contains('active')) {
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+    }
+};
