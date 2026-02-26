@@ -481,3 +481,34 @@ body {
     font-weight: 700 !important;
 }
 
+/* =========================================
+   إخفاء البوردر تماماً من البطاقات (لفخامة وبساطة أكثر)
+   ========================================= */
+
+/* 1. إزالة البوردر من كارت الإجراءات الرئيسي (تحويل، تغذية) */
+.main-actions-card {
+    border: none !important;
+    /* للحفاظ على الفصل، يمكن زيادة الـ Shadow قليلاً (اختياري) */
+    box-shadow: 0 4px 12px -1px rgba(0,0,0,0.05) !important;
+}
+
+/* 2. إزالة البوردر من بطاقات الفئات (ألعاب، ستارلينك، الخ) */
+.cat-item,
+.shadcn-card-interactive {
+    border: none !important;
+    /* جعل الخلفية بيضاء صريحة للتمييز */
+    background: #ffffff !important;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.02) !important;
+}
+
+/* 3. إزالة الآوت لاين الذي يظهر عند الضغط (Focus Outline) للمتصفح */
+.action-btn,
+.cat-item,
+.shadcn-card-interactive {
+    outline: none !important;
+}
+
+/* 4. تعديل حالة Hover لتكون ناعمة وبدون بوردر حاد */
+.shadcn-card-interactive:hover {
+    background-color: #f8fafc !important; /* تغيير الخلفية يكفي للتمييز */
+}
