@@ -7,6 +7,7 @@
     <title>نَقْرَة | Nagra</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=10.0">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 
 <body>
@@ -53,34 +54,34 @@
     <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar-menu" class="shadcn-sidebar">
         <div class="sidebar-header">
-            <button class="close-sidebar-btn" onclick="toggleSidebar()">✖</button>
-            <div class="user-avatar">👤</div>
+            <button class="close-sidebar-btn" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+            <div class="user-avatar"><i data-lucide="user"></i></div>
             <h3 id="sidebar-user-name">جاري التحميل...</h3>
             <p id="sidebar-user-email">...</p>
         </div>
         
         <div class="sidebar-links">
             <div class="sidebar-link" onclick="toggleSidebar(); window.showToast('إعدادات الحساب قريباً ⚙️');">
-                <span class="icon">⚙️</span>
+                <span class="icon"><i data-lucide="settings"></i></span>
                 <span>الإعدادات الشخصية</span>
             </div>
             <a href="https://wa.me/249100820822" target="_blank" class="sidebar-link support-link">
-                <span class="icon">💬</span>
+                <span class="icon"><i data-lucide="message-circle"></i></span>
                 <span>تواصل مع الدعم</span>
             </a>
             <div class="sidebar-link" onclick="toggleSidebar(); openMyCards();">
-                <span class="icon">💳</span>
+                <span class="icon"><i data-lucide="credit-card"></i></span>
                 <span>بطاقاتي الرقمية</span>
             </div>
             <div class="sidebar-link" onclick="toggleSidebar(); document.getElementById('btn-history').click();">
-                <span class="icon">📜</span>
+                <span class="icon"><i data-lucide="history"></i></span>
                 <span>سجل الطلبات</span>
             </div>
         </div>
 
         <div class="sidebar-footer">
             <button onclick="forceLogout()" class="logout-sidebar-btn shadcn-btn-ghost">
-                <span>🚪</span> تسجيل الخروج
+                <i data-lucide="log-out"></i> تسجيل الخروج
             </button>
         </div>
     </div>
@@ -90,11 +91,10 @@
         <div class="top-hero-section">
             <div class="top-header">
                 <div class="brand-container">
-                    <button onclick="toggleSidebar()" class="menu-btn">☰</button>
+                    <button onclick="toggleSidebar()" class="menu-btn"><i data-lucide="menu"></i></button>
                     <div class="brand-title">نَقْرَة <span class="brand-subtitle">| Nagra</span></div>
                 </div>
-                
-                <button class="notification-btn">🔔</button>
+                <button class="notification-btn"><i data-lucide="bell"></i></button>
             </div>
 
             <div class="balance-section">
@@ -113,15 +113,15 @@
         <div class="main-actions-card shadcn-card">
             <div class="actions-row">
                 <div class="action-btn" onclick="window.showToast('ميزة التحويل قريباً 🚀')">
-                    <div class="icon-circle text-blue">🔄</div>
+                    <div class="icon-circle text-blue"><i data-lucide="refresh-cw"></i></div>
                     <p>تحويل</p>
                 </div>
                 <div class="action-btn" onclick="openRechargeModal()">
-                    <div class="icon-circle text-green">📥</div>
+                    <div class="icon-circle text-green"><i data-lucide="download"></i></div>
                     <p>تغذية</p>
                 </div>
                 <div class="action-btn" onclick="window.showToast('ميزة السحب قريباً 🚀')">
-                    <div class="icon-circle text-red">📤</div>
+                    <div class="icon-circle text-red"><i data-lucide="upload"></i></div>
                     <p>سحب</p>
                 </div>
             </div>
@@ -130,11 +130,11 @@
 
             <div class="actions-row row-2">
                 <div class="action-btn" onclick="openOrderModal('شحن رصيد')">
-                    <div class="icon-circle text-orange">📱</div>
+                    <div class="icon-circle text-orange"><i data-lucide="smartphone"></i></div>
                     <p>شحن رصيد</p>
                 </div>
                 <div class="action-btn" onclick="window.showToast('ميزة دفع الفواتير قريباً 🚀')">
-                    <div class="icon-circle text-purple">🧾</div>
+                    <div class="icon-circle text-purple"><i data-lucide="receipt-text"></i></div>
                     <p>دفع فواتير</p>
                 </div>
             </div>
@@ -145,30 +145,27 @@
             
             <div class="categories-grid-3">
                 <div class="cat-item service-item shadcn-card-interactive" data-service="ألعاب">
-                    <div class="cat-icon"><img src="images/games.jpg" alt="ألعاب"></div>
+                    <div class="cat-icon"><i data-lucide="gamepad-2"></i></div>
                     <p>ألعاب</p>
                 </div>
                 <div class="cat-item service-item shadcn-card-interactive" data-service="اشتراكات">
-                    <div class="cat-icon"><img src="images/Subscriptions.png" alt="اشتراكات"></div>
+                    <div class="cat-icon"><i data-lucide="tv"></i></div>
                     <p>اشتراكات</p>
                 </div>
                 <div class="cat-item service-item shadcn-card-interactive" data-service="ستارلينك">
-    <div class="cat-icon">
-        <img src="images/starlink.jpg" alt="ستارلينك" class="starlink-img">
-    </div>
-    <p>ستارلينك</p>
-</div>
-
+                    <div class="cat-icon"><i data-lucide="satellite-dish"></i></div>
+                    <p>ستارلينك</p>
+                </div>
                 <div class="cat-item service-item shadcn-card-interactive" data-service="بطاقات دفع">
-                    <div class="cat-icon"><img src="images/cards.jpg" alt="بطاقات دفع"></div>
+                    <div class="cat-icon"><i data-lucide="credit-card"></i></div>
                     <p>بطاقات دفع</p>
                 </div>
                 <div class="cat-item service-item shadcn-card-interactive" data-service="عملات مشفرة">
-                    <div class="cat-icon"><img src="images/coins.jpg" alt="عملات مشفرة"></div>
+                    <div class="cat-icon"><i data-lucide="bitcoin"></i></div>
                     <p>عملات</p>
                 </div>
                 <div class="cat-item shadcn-card-interactive" onclick="openMyCards()">
-                    <div class="cat-icon my-cards-icon">💳</div>
+                    <div class="cat-icon"><i data-lucide="wallet"></i></div>
                     <p>بطاقاتي</p>
                 </div>
             </div>
@@ -178,19 +175,19 @@
 
         <nav class="bottom-nav shadcn-nav">
             <div class="nav-item active" id="nav-home" onclick="switchNavTab(this, 'home')">
-                <span class="nav-icon">🏠</span>
+                <span class="nav-icon"><i data-lucide="home"></i></span>
                 <span class="nav-text">الرئيسية</span>
             </div>
             <div class="nav-item" id="nav-cards" onclick="switchNavTab(this, 'cards')">
-                <span class="nav-icon">💳</span>
+                <span class="nav-icon"><i data-lucide="credit-card"></i></span>
                 <span class="nav-text">بطاقاتي</span>
             </div>
             <div class="nav-item" id="nav-history" onclick="switchNavTab(this, 'history')">
-                <span class="nav-icon">📜</span>
+                <span class="nav-icon"><i data-lucide="history"></i></span>
                 <span class="nav-text">السجل</span>
             </div>
             <div class="nav-item" id="nav-profile" onclick="switchNavTab(this, 'profile')">
-                <span class="nav-icon">👤</span>
+                <span class="nav-icon"><i data-lucide="user"></i></span>
                 <span class="nav-text">حسابي</span>
             </div>
         </nav>
@@ -237,7 +234,7 @@
         <div class="modal-box shadcn-dialog dialog-md">
             <h3 class="dialog-title">سجل طلباتي</h3>
             <div id="user-orders-list" class="orders-history-container"></div>
-            <button class="cancel-btn shadcn-btn-outline full-width mt-15" onclick="closeHistoryModal()">إغلاق</button>
+            <button class="cancel-btn shadcn-btn-outline full-width mt-15" onclick="closeHistoryModal()">إإغلاق</button>
         </div>
     </div>
 
@@ -251,7 +248,9 @@
 
     <div id="toast-message" class="toast shadcn-toast"></div>
 
+    <script>
+        lucide.createIcons();
+    </script>
     <script type="module" src="script.js?v=10.0"></script>
 </body>
 </html>
- 
