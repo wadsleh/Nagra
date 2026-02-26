@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نَقْرَة | Nagra</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=9.0">
+    <link rel="stylesheet" href="style.css?v=10.0">
 </head>
 
 <body>
@@ -104,8 +104,10 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
                 <div style="text-align: right;">
                     <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8);">الرصيد المتاح</p>
-                    <div id="user-balance" style="font-size: 32px; font-weight: 900; margin-top: 5px; display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 18px;">👁️</span> 0.00 ج.س
+                    <div id="user-balance" class="balance-box">
+                        <span id="toggle-balance" class="eye-btn">👁️</span>
+                        <span id="balance-amount">0.00</span>
+                        <span class="currency">ج.س</span>
                     </div>
                 </div>
                 <button id="btn-history" class="history-btn-top">سجل الطلبات</button>
@@ -169,7 +171,28 @@
             </div>
         </div>
         
-        <div style="height: 40px;"></div>
+        <div style="height: 100px;"></div>
+
+        [attachment_0](attachment)
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab(this, 'home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-text">الرئيسية</span>
+            </div>
+            <div class="nav-item" onclick="switchTab(this, 'cards'); openMyCards();">
+                <span class="nav-icon">💳</span>
+                <span class="nav-text">بطاقاتي</span>
+            </div>
+            <div class="nav-item" onclick="switchTab(this, 'history'); document.getElementById('btn-history').click();">
+                <span class="nav-icon">📜</span>
+                <span class="nav-text">السجل</span>
+            </div>
+            <div class="nav-item" onclick="switchTab(this, 'profile'); toggleSidebar();">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">حسابي</span>
+            </div>
+        </nav>
+
     </div>
 
     <div id="recharge-modal" class="modal-overlay" style="display:none;">
@@ -226,7 +249,7 @@
 
     <div id="toast-message" class="toast"></div>
 
-    <script type="module" src="script.js?v=9.0"></script>
+    <script type="module" src="script.js?v=10.0"></script>
 </body>
 </html>
  
