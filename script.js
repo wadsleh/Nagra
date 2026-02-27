@@ -2,13 +2,12 @@ import { firebaseConfig } from './config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-// 🌟 استدعاء مكتبات التخزين لرفع صور البطاقات
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
 const app = initializeApp(firebaseConfig); 
 const db = getFirestore(app); 
 const auth = getAuth(app); 
-const storage = getStorage(app); // 🌟 تشغيل خدمة التخزين
+const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 // 1️⃣ State Management
@@ -25,7 +24,6 @@ const state = {
     isVerified: false    
 };
 
-// 🌟 دالة توليد رقم حساب عشوائي من 7 أرقام
 function generateAccountNumber() {
     return Math.floor(1000000 + Math.random() * 9000000).toString();
 }
@@ -139,68 +137,14 @@ window.signInWithGoogle = async () => {
     }
 };
 
-onAuthStateChanged(auth, async (user) => {
-    if (user) {
-        const userRef = doc(db, "users", user.uid); 
-        const snap = await getDoc(userRef);
-        
-        if (!snap.exists()) {
-            await setDoc(userRef, { 
-                name: user.displayName || user.email.split('@')[0], 
-                email: user.email, 
-                balance: 0,
-                accountNumber: generateAccountNumber(), 
-                isVerified: false 
-            });
-        }
-
-        onSnapshot(userRef, async (s) => {
-            if (s.exists()) {
-                const data = s.data(); 
-                if(data.isBanned === true) {
-                    window.showToast("⛔ تم إيقاف حسابك من قبل الإدارة", true);
-                    signOut(auth).then(() => setTimeout(() => location.reload(), 2000));
-                    return; 
-                }
-
-                let accNum = data.accountNumber;
-                if (!accNum) {
-                    accNum = generateAccountNumber();
-                    await updateDoc(userRef, { accountNumber: accNum, isVerified: false });
-                }
-
-                state.currentUser = data.name; 
-                state.currentEmail = data.email;
-                state.accountNumber = accNum; 
-                state.isVerified = data.isVerified || false;
-
-                localStorage.setItem('nagra_user_name', data.name);
-                localStorage.setItem('nagra_user_email', data.email);
-
-                const sidebarName = document.getElementById('sidebar-user-name');
-                const sidebarEmail = document.getElementById('sidebar-user-email');
-                const sidebarAccNum = document.getElementById('sidebar-acc-num');
-                const sidebarVerification = document.getElementById('sidebar-verification');
-
-                if(sidebarName) sidebarName.innerText = data.name;
-                if(sidebarEmail) sidebarEmail.innerText = data.email;
-                if(sidebarAccNum) sidebarAccNum.innerText = `رقم الحساب: ${state.accountNumber}`;
-                
-                // 🌟 نظام عرض حالة التوثيق الجديد 🌟
-                if(sidebarVerification) {
-                    if(state.isVerified) {
-                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #10b981; font-weight: bold;">حساب موثق 🟢</span>';
-                        sidebarVerification.onclick = null; 
-                    } else if (data.verificationStatus === 'pending') {
+// 🌟 النظام المحدث لتهيئة الحساب ومنع التعليق
 onAuthStateChanged(auth, async (user) => {
     if (user) {
         try {
             const userRef = doc(db, "users", user.uid); 
             const snap = await getDoc(userRef);
             
-            // 1️⃣ معالجة الحساب وتأكيد البيانات (قبل المراقبة اللحظية لمنع التعليق)
             if (!snap.exists()) {
-                // مستخدم جديد تماماً
                 await setDoc(userRef, { 
                     name: user.displayName || user.email.split('@')[0], 
                     email: user.email, 
@@ -210,7 +154,6 @@ onAuthStateChanged(auth, async (user) => {
                     verificationStatus: "none"
                 });
             } else {
-                // مستخدم قديم، نتأكد إن عنده رقم حساب
                 const data = snap.data();
                 if (!data.accountNumber) {
                     await updateDoc(userRef, { 
@@ -221,11 +164,9 @@ onAuthStateChanged(auth, async (user) => {
                 }
             }
 
-            // 2️⃣ إخفاء شاشة الدخول وفتح التطبيق فوراً
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
 
-            // 3️⃣ تشغيل المراقبة اللحظية (للرصيد والتوثيق)
             onSnapshot(userRef, (s) => {
                 if (s.exists()) {
                     const data = s.data(); 
@@ -252,7 +193,6 @@ onAuthStateChanged(auth, async (user) => {
                     if(sidebarEmail) sidebarEmail.innerText = data.email;
                     if(sidebarAccNum) sidebarAccNum.innerText = `رقم الحساب: ${state.accountNumber}`;
                     
-                    // تحديث حالة التوثيق
                     if(sidebarVerification) {
                         if(state.isVerified) {
                             sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #10b981; font-weight: bold;">حساب موثق 🟢</span>';
@@ -284,7 +224,6 @@ onAuthStateChanged(auth, async (user) => {
             window.showToast("حدث خطأ أثناء تسجيل الدخول", true);
         }
     } else {
-        // في حالة تسجيل الخروج
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('main-app').style.display = 'none';
     }
@@ -304,7 +243,8 @@ document.getElementById('btn-signup-execute').onclick = async () => {
             email, 
             balance: 0,
             accountNumber: generateAccountNumber(),
-            isVerified: false 
+            isVerified: false,
+            verificationStatus: "none"
         });
     } catch (e) { 
         window.showToast("فشل التسجيل (قد يكون الإيميل مستخدماً أو كلمة المرور ضعيفة)", true); 
@@ -330,7 +270,7 @@ function loadOrders(userId) {
         orders.sort((a,b) => b.date.toMillis() - a.date.toMillis());
         
         if(orders.length === 0) {
-            container.innerHTML = "<p class='loading-text'>لا توجد طلبات سابقة 📭</p>";
+            container.innerHTML = "<p class='loading-text' style='text-align:center; padding:20px; color:#64748b;'>لا توجد طلبات سابقة 📭</p>";
             return;
         }
 
@@ -508,7 +448,7 @@ window.openMyCards = () => {
     if(cardsNav) window.switchNavTab(cardsNav, 'cards');
 
     const list = document.getElementById('my-cards-list');
-    list.innerHTML = "<p class='loading-text'>جاري جلب البطاقات... ⏳</p>";
+    list.innerHTML = "<p class='loading-text' style='text-align:center;'>جاري جلب البطاقات... ⏳</p>";
 
     onSnapshot(query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid)), (snap) => {
         list.innerHTML = ""; let cards = [];
@@ -668,3 +608,4 @@ window.submitVerification = async () => {
         }
     }
 };
+ 
