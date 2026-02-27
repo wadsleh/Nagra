@@ -17,10 +17,16 @@ const state = {
     unsubscribeOrders: null,
     unsubscribeCards: null,
     realBalance: "0",        
-    balanceVisible: true     
+    balanceVisible: true,
+    accountNumber: null, // 🌟 إضافة رقم الحساب
+    isVerified: false    // 🌟 إضافة حالة التوثيق
 };
 
-// 2️⃣ Service Config System (تم إصلاح صور ستارلينك لتكون من صورك المحلية 🌟)
+// 🌟 دالة توليد رقم حساب عشوائي من 7 أرقام
+function generateAccountNumber() {
+    return Math.floor(1000000 + Math.random() * 9000000).toString();
+}
+
 const servicesConfig = {
     "ستارلينك": {
         columns: 2,
@@ -102,6 +108,15 @@ window.toggleSidebar = () => {
     }
 };
 
+// 🌟 دالة فحص التوثيق قبل السحب والتحويل
+window.checkVerification = (actionName) => {
+    if (!state.isVerified) {
+        window.showToast(`⚠️ عذراً، يجب توثيق حسابك بالهوية لتتمكن من ${actionName}`, true);
+    } else {
+        window.showToast(`نافذة ${actionName} ستفتح هنا قريباً 🚀`);
+    }
+};
+
 window.forgotPassword = async () => {
     const email = document.getElementById('login-email').value;
     if(!email) return window.showToast("الرجاء إدخال إيميلك أولاً في حقل البريد أعلاه 📧", true);
@@ -127,8 +142,15 @@ onAuthStateChanged(auth, async (user) => {
         const userRef = doc(db, "users", user.uid); 
         const snap = await getDoc(userRef);
         
+        // إذا كان المستخدم جديداً (سجل بجوجل مثلاً)
         if (!snap.exists()) {
-            await setDoc(userRef, { name: user.displayName || user.email.split('@')[0], email: user.email, balance: 0 });
+            await setDoc(userRef, { 
+                name: user.displayName || user.email.split('@')[0], 
+                email: user.email, 
+                balance: 0,
+                accountNumber: generateAccountNumber(), // توليد رقم الحساب
+                isVerified: false // غير موثق افتراضياً
+            });
         }
 
         onSnapshot(userRef, (s) => {
@@ -142,13 +164,29 @@ onAuthStateChanged(auth, async (user) => {
 
                 state.currentUser = data.name; 
                 state.currentEmail = data.email;
+                state.accountNumber = data.accountNumber || "غير متوفر";
+                state.isVerified = data.isVerified || false;
+
                 localStorage.setItem('nagra_user_name', data.name);
                 localStorage.setItem('nagra_user_email', data.email);
 
                 const sidebarName = document.getElementById('sidebar-user-name');
                 const sidebarEmail = document.getElementById('sidebar-user-email');
+                const sidebarAccNum = document.getElementById('sidebar-acc-num');
+                const sidebarVerification = document.getElementById('sidebar-verification');
+
                 if(sidebarName) sidebarName.innerText = data.name;
                 if(sidebarEmail) sidebarEmail.innerText = data.email;
+                
+                // تحديث القائمة الجانبية برقم الحساب وحالة التوثيق
+                if(sidebarAccNum) sidebarAccNum.innerText = `رقم الحساب: ${state.accountNumber}`;
+                if(sidebarVerification) {
+                    if(state.isVerified) {
+                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #6ee7b7; font-weight: bold;">حساب موثق 🟢</span>';
+                    } else {
+                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #fca5a5; font-weight: bold;">غير موثق 🔴</span>';
+                    }
+                }
 
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('main-app').style.display = 'block';
@@ -166,16 +204,25 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
+// إنشاء مستخدم جديد عبر الإيميل
 document.getElementById('btn-signup-execute').onclick = async () => {
     const name = document.getElementById('reg-name').value; 
     const email = document.getElementById('reg-email').value; 
     const pass = document.getElementById('reg-pass').value;
     if(!name || !email || !pass) return window.showToast("املأ البيانات", true);
+    
     try {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
-        await setDoc(doc(db, "users", res.user.uid), { name, email, balance: 0 });
+        // حفظ بيانات المستخدم الجديد مع رقم الحساب
+        await setDoc(doc(db, "users", res.user.uid), { 
+            name, 
+            email, 
+            balance: 0,
+            accountNumber: generateAccountNumber(),
+            isVerified: false 
+        });
     } catch (e) { 
-        window.showToast("فشل التسجيل", true); 
+        window.showToast("فشل التسجيل (قد يكون الإيميل مستخدماً أو كلمة المرور ضعيفة)", true); 
     }
 }
 
@@ -187,7 +234,6 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
-// 🌟 طباعة سجل الطلبات بستايل shadcn
 function loadOrders(userId) {
     if (state.unsubscribeOrders) state.unsubscribeOrders(); 
     const q = query(collection(db, "orders"), where("uid", "==", userId));
@@ -205,7 +251,6 @@ function loadOrders(userId) {
 
         orders.forEach(o => {
             let statusClass = o.status === 'مكتمل' ? 'status-completed' : (o.status === 'مرفوض' ? 'status-rejected' : 'status-pending');
-            
             let adminReplyHtml = "";
             if (o.adminReply) {
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
@@ -232,7 +277,6 @@ function loadOrders(userId) {
     });
 }
 
-// 🌟 تعديل النوافذ المنبثقة (الخيارات) لتكون نسخة من صفحة البدء 🌟
 window.openOrderModal = (service) => {
     state.currentService = service;
     const config = servicesConfig[service];
@@ -246,11 +290,10 @@ window.openOrderModal = (service) => {
     
     grid.innerHTML = "";
     grid.style.gridTemplateColumns = `repeat(${config.columns}, 1fr)`;
-    grid.style.gap = "12px"; // مسافة ممتازة بين الكروت
+    grid.style.gap = "12px"; 
 
     config.options.forEach(opt => {
         const item = document.createElement("div");
-        // استخدام نفس كلاسات الصفحة الرئيسية تماماً
         item.className = "shadcn-card-interactive";
         item.style.border = "none";
         item.style.background = "#ffffff";
@@ -261,7 +304,6 @@ window.openOrderModal = (service) => {
         item.style.alignItems = "center";
         item.style.justifyContent = "center";
 
-        // طباعة اللوجو بشكل مطابق لصفحة البدء
         let imgHtml = opt.img ? `
             <div class="cat-icon" style="width: 48px; height: 48px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
                 <img src="${opt.img}" alt="${opt.name}" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.4);" onerror="this.style.display='none'">
@@ -375,7 +417,6 @@ window.submitOrder = async () => {
     }
 }
 
-// 🌟 طباعة البطاقات الافتراضية بستايل بنكي
 window.openMyCards = () => {
     document.getElementById('cards-modal').style.display = 'flex';
     const cardsNav = document.getElementById('nav-cards');
@@ -446,7 +487,6 @@ window.forceLogout = async () => {
     location.reload(); 
 }
 
-// 🌟🌟 ميزة إخفاء/إظهار الرصيد باستخدام Lucide Icons 🌟🌟
 document.addEventListener("click", function(e) {
     const toggleBtn = e.target.closest("#toggle-balance");
     
@@ -455,33 +495,21 @@ document.addEventListener("click", function(e) {
         if (!balanceText) return;
 
         if (state.balanceVisible) {
-            // إخفاء الرصيد
             balanceText.innerText = "••••••";
             toggleBtn.innerHTML = '<i data-lucide="eye-off"></i>';
         } else {
-            // إظهار الرصيد
             balanceText.innerText = state.realBalance;
             toggleBtn.innerHTML = '<i data-lucide="eye"></i>';
         }
 
-        state.balanceVisible = !state.balanceVisible;
-
-        // إعادة رسم الأيقونة الجديدة فوراً
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
+        
+        state.balanceVisible = !state.balanceVisible;
     }
 });
 
-// تفعيل الأيقونات عند تحميل الصفحة أول مرة
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
-});
-
-
-// تفعيل الأيقونات عند تحميل الصفحة أول مرة
 document.addEventListener("DOMContentLoaded", () => {
     if (typeof lucide !== 'undefined') {
         lucide.createIcons();
