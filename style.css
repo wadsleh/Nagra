@@ -759,4 +759,9 @@ body {
     text-decoration: none; 
     font-weight: 600; 
 }
- 
+ /* إصلاح توزيع الكروت داخل النوافذ المنبثقة (Grid) */
+.network-grid {
+    display: grid;
+    gap: 12px;
+}
+
