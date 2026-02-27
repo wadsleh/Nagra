@@ -35,21 +35,26 @@ body {
 }
 
 .brand-title { 
+/* =========================================
+   وزنة اسم التطبيق (العربي والإنجليزي)
+   ========================================= */
+.brand-title { 
     display: flex !important; 
     align-items: center !important; 
-    font-size: 20px !important; 
-    font-weight: 700 !important; 
-    line-height: 1 !important; 
+    font-size: 22px !important; /* صغرنا العربي تكة بسيطة */
+    font-weight: 800 !important; /* وحدنا السماكة */
+    color: #ffffff !important;
+    line-height: 1 !important;
 }
 
 .brand-subtitle { 
-    font-size: 20px !important; 
-    font-weight: 700 !important; 
-    font-family: 'Segoe UI', sans-serif !important; 
-    color: rgba(255, 255, 255, 0.85) !important; 
-    margin-right: 6px !important; 
+    font-size: 20px !important; /* كبرنا الإنجليزي عشان يوازي العربي */
+    font-weight: 800 !important; /* نفس سماكة العربي */
+    font-family: 'Segoe UI', Tahoma, sans-serif !important; 
+    color: #ffffff !important; /* شلنا الشفافية عشان يلمع بقوة */
+    margin-right: 8px !important; /* مسافة مريحة للفاصل */
     letter-spacing: 0.5px !important; 
-    padding-top: 3px !important; 
+    padding-top: 0 !important; /* شلنا المسافة العلوية عشان يكونوا في خط واحد */
 }
 
 /* =========================================
