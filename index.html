@@ -55,12 +55,22 @@
 
     <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar-menu" class="shadcn-sidebar">
-        <div class="sidebar-header">
-            <button class="close-sidebar-btn" onclick="toggleSidebar()"><i data-lucide="x"></i></button>
+                <div class="sidebar-header">
+            <button class="close-sidebar-btn" onclick="toggleSidebar()">
+                <i data-lucide="x"></i>
+            </button>
             <div class="user-avatar"><i data-lucide="user"></i></div>
-            <h3 id="sidebar-user-name">جاري التحميل...</h3>
-            <p id="sidebar-user-email">...</p>
+            <h3 id="sidebar-user-name" style="margin: 0 0 5px; font-size: 18px;">جاري التحميل...</h3>
+            <p id="sidebar-user-email" style="margin: 0 0 10px; font-size: 12px; opacity: 0.9;">...</p>
+            
+            <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; display: inline-block; margin-bottom: 5px;">
+                <p style="margin: 0; font-size: 13px; font-family: monospace; letter-spacing: 1px;" id="sidebar-acc-num">رقم الحساب: ----</p>
+            </div>
+            <div id="sidebar-verification" style="cursor: pointer;" onclick="window.showToast('سيتم إضافة صفحة رفع الهوية قريباً 📄')">
+                <span style="font-size: 11px; color: #fca5a5; font-weight: bold;">غير موثق 🔴</span>
+            </div>
         </div>
+
         
         <div class="sidebar-links">
             <div class="sidebar-link" onclick="toggleSidebar(); window.showToast('إعدادات الحساب قريباً ⚙️');">
@@ -120,8 +130,8 @@
         </div>
 
         <div class="main-actions-card shadcn-card">
-            <div class="actions-row">
-                <div class="action-btn" onclick="window.showToast('ميزة التحويل قريباً 🚀')">
+                        <div class="actions-row">
+                <div class="action-btn" onclick="checkVerification('التحويل')">
                     <div class="icon-circle text-blue"><i data-lucide="refresh-cw"></i></div>
                     <p>تحويل</p>
                 </div>
@@ -129,11 +139,12 @@
                     <div class="icon-circle text-green"><i data-lucide="download"></i></div>
                     <p>تغذية</p>
                 </div>
-                <div class="action-btn" onclick="window.showToast('ميزة السحب قريباً 🚀')">
+                <div class="action-btn" onclick="checkVerification('السحب')">
                     <div class="icon-circle text-red"><i data-lucide="upload"></i></div>
                     <p>سحب</p>
                 </div>
             </div>
+
 
             <hr class="actions-divider">
 
