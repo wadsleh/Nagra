@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نَقْرَة | Nagra</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=99.0">
+    <link rel="stylesheet" href="style.css?v=100.0">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebar-overlay" style="display: none;" onclick="toggleSidebar()"></div>
     <div id="sidebar-menu" class="shadcn-sidebar">
         <div class="sidebar-header">
             <button class="close-sidebar-btn" onclick="toggleSidebar()">
@@ -95,6 +95,7 @@
     </div>
 
     <div id="main-app" style="display:none; padding: 0;">
+        
         <div class="top-hero-section">
             <div class="top-header">
                 <div class="brand-container">
@@ -138,7 +139,9 @@
                     <p>سحب</p>
                 </div>
             </div>
+
             <hr class="actions-divider">
+
             <div class="actions-row row-2">
                 <div class="action-btn" onclick="openOrderModal('شحن رصيد')">
                     <div class="icon-circle"><i data-lucide="smartphone" class="text-orange"></i></div>
@@ -203,7 +206,7 @@
         </nav>
     </div>
 
-    <div id="recharge-modal" class="modal-overlay">
+    <div id="recharge-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box shadcn-dialog">
             <h3 class="modal-title-green" style="color: #10b981;">تغذية الرصيد 📥</h3>
             <p class="modal-subtitle">حول المبلغ لحساب (بنكك)، ثم أدخل رقم العملية.</p>
@@ -220,7 +223,7 @@
         </div>
     </div>
 
-    <div id="order-modal" class="modal-overlay">
+    <div id="order-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box shadcn-dialog">
             <h3 id="modal-title" class="dialog-title">طلب خدمة</h3>
             <div id="step-1-options" style="display: none;">
@@ -238,7 +241,7 @@
         </div>
     </div>
 
-    <div id="history-modal" class="modal-overlay">
+    <div id="history-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box shadcn-dialog dialog-md">
             <h3 class="dialog-title" style="color: #1e3a8a;">سجل طلباتي 📜</h3>
             <div id="user-orders-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 16px;"></div>
@@ -246,7 +249,7 @@
         </div>
     </div>
 
-    <div id="cards-modal" class="modal-overlay">
+    <div id="cards-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box shadcn-dialog dialog-md">
             <h3 class="dialog-title" style="color: #1e3a8a;">بطاقاتي الرقمية 💳</h3>
             <div id="my-cards-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 16px;"></div>
@@ -254,7 +257,7 @@
         </div>
     </div>
 
-    <div id="settings-modal" class="modal-overlay" style="display:none;">
+    <div id="settings-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box shadcn-dialog">
             <h3 class="dialog-title">الإعدادات الشخصية ⚙️</h3>
             
@@ -273,7 +276,7 @@
         </div>
     </div>
 
-    <div id="verification-modal" class="modal-overlay">
+    <div id="verification-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box shadcn-dialog">
             <h3 class="dialog-title">توثيق الحساب 🛡️</h3>
             <p class="modal-subtitle">يرجى إرفاق صورة واضحة للبطاقة القومية أو جواز السفر لتمكين ميزات السحب والتحويل.</p>
@@ -287,7 +290,7 @@
 
     <div id="toast-message" class="toast shadcn-toast"></div>
 
-    <script type="module" src="script.js?v=99.0"></script>
+    <script type="module" src="script.js?v=100.0"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             if (typeof lucide !== 'undefined') lucide.createIcons();
