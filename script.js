@@ -455,20 +455,31 @@ document.addEventListener("click", function(e) {
         if (!balanceText) return;
 
         if (state.balanceVisible) {
+            // إخفاء الرصيد
             balanceText.innerText = "••••••";
             toggleBtn.innerHTML = '<i data-lucide="eye-off"></i>';
         } else {
+            // إظهار الرصيد
             balanceText.innerText = state.realBalance;
             toggleBtn.innerHTML = '<i data-lucide="eye"></i>';
         }
 
+        state.balanceVisible = !state.balanceVisible;
+
+        // إعادة رسم الأيقونة الجديدة فوراً
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
-        
-        state.balanceVisible = !state.balanceVisible;
     }
 });
+
+// تفعيل الأيقونات عند تحميل الصفحة أول مرة
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+});
+
 
 // تفعيل الأيقونات عند تحميل الصفحة أول مرة
 document.addEventListener("DOMContentLoaded", () => {
