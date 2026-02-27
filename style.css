@@ -1,5 +1,5 @@
 /* =========================================
-   1. الإعدادات العامة والخلفية (Shadcn Style)
+   1. الإعدادات العامة والخلفية
    ========================================= */
 body {
     font-family: 'Tajawal', sans-serif;
@@ -11,12 +11,11 @@ body {
 }
 
 /* =========================================
-   2. الهوية البصرية (Logo & Brand)
+   2. الهوية البصرية (اللوجو والاسم)
    ========================================= */
 .app-logo-large { 
     width: 80px; 
     height: 80px; 
-    background: transparent; 
     margin: 0 auto 20px; 
     display: flex; 
     justify-content: center; 
@@ -40,21 +39,21 @@ body {
     align-items: center !important; 
     font-size: 24px !important; 
     font-weight: 900 !important; 
-    line-height: 1 !important;
+    line-height: 1 !important; 
 }
 
 .brand-subtitle { 
     font-size: 18px !important; 
     font-weight: 700 !important; 
     font-family: 'Segoe UI', sans-serif !important; 
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgba(255, 255, 255, 0.85) !important; 
     margin-right: 6px !important; 
     letter-spacing: 0.5px !important; 
-    padding-top: 3px !important;
+    padding-top: 3px !important; 
 }
 
 /* =========================================
-   3. الأيقونات الموحدة (Lucide Setup)
+   3. الأيقونات الموحدة (اللون الأزرق الخاص بك)
    ========================================= */
 .icon-circle, 
 .cat-icon {
@@ -62,12 +61,11 @@ body {
     justify-content: center !important; 
     align-items: center !important;
     background: #f1f5f9 !important; 
-    color: #1e3a8a !important; /* 🌟 اللون الأزرق الخاص بتطبيقك لكل الأيقونات 🌟 */
+    color: #1e3a8a !important; /* لونك الأزرق */
     border-radius: 12px !important; 
     border: none !important;
 }
 
-/* أحجام الأيقونات الموحدة */
 .icon-circle { 
     width: 54px !important; 
     height: 54px !important; 
@@ -78,77 +76,24 @@ body {
     height: 48px !important; 
 }
 
-/* ضبط سماكة وحجم رمز الأيقونة */
 .icon-circle i, 
 .cat-icon i, 
 .nav-icon i, 
-.sidebar-link .icon i {
+.sidebar-link .icon i { 
     width: 26px !important; 
     height: 26px !important; 
-    stroke-width: 2.5px !important;
+    stroke-width: 2.5px !important; 
 }
 
 /* =========================================
-   4. البطاقات والظلال (Cards & Shadows)
-   ========================================= */
-.shadcn-card, 
-.shadcn-card-interactive, 
-.shadcn-dialog {
-    background: #ffffff; 
-    border-radius: 12px; 
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.05) !important;
-}
-
-.main-actions-card {
-    margin: -30px 20px 0; 
-    padding: 20px; 
-    position: relative; 
-    z-index: 10;
-    border: none !important; 
-    box-shadow: 0 4px 12px -1px rgba(0,0,0,0.05) !important;
-}
-
-.shadcn-card-interactive { 
-    border: none !important; 
-}
-
-.shadcn-card-interactive:hover { 
-    background-color: #f8fafc !important; 
-}
-
-.shadcn-card-interactive:active { 
-    transform: scale(0.97); 
-}
-
-/* =========================================
-   5. القسم العلوي (البوكس الأزرق)
+   4. القسم العلوي (البوكس الأزرق)
    ========================================= */
 .top-hero-section { 
-    background-color: #1e3a8a !important; /* 🌟 لون البوكس الأعلى الأزرق 🌟 */
+    background-color: #1e3a8a !important; /* لونك الأزرق */
     padding: 20px 20px 60px 20px; 
     color: #f8fafc; 
-}
-
-.balance-box { 
-    font-size: 32px; 
-    font-weight: 800; 
-    display: flex; 
-    align-items: center; 
-    gap: 8px; 
-}
-
-.balance-label { 
-    margin: 0; 
-    font-size: 13px; 
-    color: rgba(255,255,255,0.8); 
-    font-weight: 500; 
-}
-
-.currency { 
-    font-size: 16px; 
-    color: rgba(255,255,255,0.8); 
-    font-weight: 500; 
+    position: relative; /* ضروري لعدم التداخل */
+    z-index: 1;
 }
 
 .top-header { 
@@ -163,7 +108,6 @@ body {
     border: none; 
     color: #f8fafc; 
     cursor: pointer; 
-    font-size: 24px; 
     padding: 0; 
 }
 
@@ -180,8 +124,345 @@ body {
     cursor: pointer; 
 }
 
+.balance-section { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+}
+
+.balance-info { 
+    text-align: right; 
+}
+
+.balance-label { 
+    margin: 0; 
+    font-size: 13px; 
+    color: rgba(255,255,255,0.8); 
+    font-weight: 500; 
+}
+
+.balance-box { 
+    font-size: 32px; 
+    font-weight: 800; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    margin-top: 4px; 
+}
+
+.currency { 
+    font-size: 16px; 
+    color: rgba(255,255,255,0.8); 
+    font-weight: 500; 
+}
+
+.eye-btn { 
+    cursor: pointer; 
+    font-size: 20px; 
+    opacity: 0.8; 
+}
+
 /* =========================================
-   6. الأزرار وحقول الإدخال
+   5. البطاقات الرئيسية (الظلال والحواف)
+   ========================================= */
+.shadcn-card, 
+.shadcn-dialog {
+    background: #ffffff; 
+    border-radius: 12px; 
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.main-actions-card {
+    margin: -30px 20px 0; 
+    padding: 20px; 
+    position: relative; 
+    z-index: 10;
+    border: none !important; 
+    box-shadow: 0 4px 12px -1px rgba(0,0,0,0.05) !important;
+}
+
+.actions-row { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.actions-row.row-2 { 
+    justify-content: space-around; 
+}
+
+.actions-divider { 
+    border: 0; 
+    height: 1px; 
+    background: #f1f5f9; 
+    margin: 16px 0; 
+}
+
+.action-btn { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 8px; 
+    cursor: pointer; 
+    width: 30%; 
+    transition: transform 0.2s; 
+}
+
+.action-btn:active { 
+    transform: scale(0.96); 
+}
+
+.action-btn p { 
+    margin: 4px 0 0 !important; 
+    font-size: 14px !important; 
+    font-weight: 600; 
+    color: #334155; 
+}
+
+/* =========================================
+   6. الفئات
+   ========================================= */
+.categories-section { 
+    padding: 0 20px; 
+    margin-top: 24px; 
+}
+
+.section-title { 
+    font-size: 16px; 
+    font-weight: 700; 
+    margin-bottom: 16px; 
+    margin-top: 0; 
+    color: #0f172a; 
+}
+
+.categories-grid-3 { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 12px; 
+}
+
+.shadcn-card-interactive {
+    background: #ffffff; 
+    border: none !important; 
+    border-radius: 10px; 
+    padding: 16px 8px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.02) !important;
+}
+
+.shadcn-card-interactive:hover { 
+    background-color: #f8fafc !important; 
+}
+
+.shadcn-card-interactive:active { 
+    transform: scale(0.97); 
+}
+
+.shadcn-card-interactive p { 
+    margin: 10px 0 0; 
+    font-size: 14px !important; 
+    font-weight: 700 !important; 
+    color: #334155; 
+}
+
+/* =========================================
+   7. النوافذ المنبثقة والخلفية الشفافة (هنا كان الخطأ)
+   ========================================= */
+.overlay, 
+.modal-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(15, 23, 42, 0.6); 
+    backdrop-filter: blur(4px); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999; 
+}
+
+/* 🌟 إصلاح الطبقة الشفافة للقائمة الجانبية 🌟 */
+#sidebar-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(15, 23, 42, 0.4); 
+    z-index: 4000;
+    display: none; /* إخفاء افتراضي لتجنب تجميد الشاشة */
+}
+
+#sidebar-overlay.active { 
+    display: block; 
+}
+
+.login-box { 
+    padding: 30px 20px; 
+    width: 90%; 
+    max-width: 350px; 
+    text-align: center; 
+}
+
+.modal-box { 
+    padding: 24px; 
+    width: 90%; 
+    max-width: 350px; 
+    text-align: right; 
+}
+
+.dialog-md { 
+    max-width: 400px; 
+}
+
+.dialog-lg { 
+    max-width: 500px; 
+}
+
+/* =========================================
+   8. القائمة الجانبية (Sidebar)
+   ========================================= */
+.shadcn-sidebar { 
+    position: fixed; 
+    top: 0; 
+    right: -300px; 
+    width: 280px; 
+    height: 100%; 
+    background: #ffffff; 
+    z-index: 5000; 
+    border-left: 1px solid #e2e8f0; 
+    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.shadcn-sidebar.active { 
+    right: 0; 
+}
+
+.sidebar-header { 
+    background: #1e3a8a; 
+    border-bottom: 1px solid #e2e8f0; 
+    padding: 40px 20px 20px; 
+    color: #ffffff; 
+    text-align: right; 
+    position: relative; 
+}
+
+.close-sidebar-btn { 
+    position: absolute; 
+    top: 15px; 
+    left: 15px; 
+    background: transparent; 
+    border: none; 
+    color: #ffffff; 
+    font-size: 20px; 
+    cursor: pointer; 
+}
+
+.user-avatar { 
+    width: 50px; 
+    height: 50px; 
+    background: rgba(255,255,255,0.2); 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    margin-bottom: 12px; 
+}
+
+.sidebar-links { 
+    padding: 16px 0; 
+    flex: 1; 
+    overflow-y: auto; 
+}
+
+.sidebar-link { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    padding: 12px 20px; 
+    color: #334155; 
+    text-decoration: none; 
+    font-size: 14px; 
+    font-weight: 600; 
+    cursor: pointer; 
+}
+
+.sidebar-link:hover { 
+    background: #f1f5f9; 
+}
+
+.sidebar-footer { 
+    padding: 20px; 
+    border-top: 1px solid #e2e8f0; 
+}
+
+/* =========================================
+   9. شريط التنقل السفلي
+   ========================================= */
+.bottom-spacer { 
+    height: 90px; 
+}
+
+.shadcn-nav {
+    position: fixed; 
+    bottom: 0; 
+    left: 0; 
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9); 
+    backdrop-filter: blur(12px);
+    display: flex; 
+    justify-content: space-around; 
+    align-items: center; 
+    padding: 12px 0 20px;
+    border-top: 1px solid #e2e8f0; 
+    z-index: 3000; 
+}
+
+.nav-item { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 4px; 
+    cursor: pointer; 
+    width: 60px; 
+}
+
+.nav-icon { 
+    color: #94a3b8; 
+    transition: all 0.2s ease; 
+    opacity: 0.7; 
+}
+
+.nav-text { 
+    font-size: 11px; 
+    font-weight: 600; 
+    color: #94a3b8; 
+    transition: color 0.2s ease; 
+}
+
+.nav-item.active .nav-icon { 
+    color: #1e3a8a !important; 
+    opacity: 1; 
+    transform: translateY(-2px); 
+}
+
+.nav-item.active .nav-text { 
+    color: #1e3a8a !important; 
+    font-weight: 700; 
+}
+
+/* =========================================
+   10. الأزرار وحقول الإدخال
    ========================================= */
 .shadcn-btn { 
     width: 100%; 
@@ -195,6 +476,10 @@ body {
     font-size: 14px; 
     cursor: pointer; 
     transition: 0.2s; 
+    display: inline-flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 8px; 
 }
 
 .shadcn-btn:hover { 
@@ -244,130 +529,7 @@ body {
 }
 
 /* =========================================
-   7. شريط التنقل السفلي (Bottom Navigation)
-   ========================================= */
-.bottom-nav {
-    position: fixed; 
-    bottom: 0; 
-    left: 0; 
-    width: 100%;
-    background: rgba(255, 255, 255, 0.9); 
-    backdrop-filter: blur(12px);
-    display: flex; 
-    justify-content: space-around; 
-    align-items: center; 
-    padding: 12px 0 20px;
-    border-top: 1px solid #e2e8f0; 
-    z-index: 1000;
-}
-
-.nav-item { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 4px; 
-    cursor: pointer; 
-    width: 60px; 
-}
-
-.nav-icon { 
-    color: #94a3b8; 
-    transition: all 0.2s ease; 
-    opacity: 0.7; 
-}
-
-.nav-text { 
-    font-size: 11px; 
-    font-weight: 600; 
-    color: #94a3b8; 
-    transition: color 0.2s ease; 
-}
-
-.nav-item.active .nav-icon { 
-    color: #1e3a8a !important; 
-    opacity: 1; 
-    transform: translateY(-2px); 
-}
-
-.nav-item.active .nav-text { 
-    color: #1e3a8a !important; 
-    font-weight: 700; 
-}
-
-/* =========================================
-   8. القائمة الجانبية (Sidebar)
-   ========================================= */
-.shadcn-sidebar { 
-    position: fixed; 
-    top: 0; 
-    right: -300px; 
-    width: 280px; 
-    height: 100%; 
-    background: #ffffff; 
-    z-index: 5000; 
-    border-left: 1px solid #e2e8f0; 
-    transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    display: flex; 
-    flex-direction: column; 
-}
-
-.shadcn-sidebar.active { 
-    right: 0; 
-}
-
-.sidebar-header { 
-    background: #1e3a8a; 
-    border-bottom: 1px solid #e2e8f0; 
-    padding: 40px 20px 20px; 
-    color: #ffffff; 
-    text-align: right; 
-    position: relative; 
-}
-
-.close-sidebar-btn { 
-    position: absolute; 
-    top: 15px; 
-    left: 15px; 
-    background: transparent; 
-    border: none; 
-    color: #ffffff; 
-    cursor: pointer; 
-}
-
-.user-avatar { 
-    width: 50px; 
-    height: 50px; 
-    background: rgba(255,255,255,0.2); 
-    border-radius: 50%; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    margin-bottom: 12px; 
-}
-
-.sidebar-links { 
-    padding: 16px 0; 
-    flex: 1; 
-}
-
-.sidebar-link { 
-    display: flex; 
-    align-items: center; 
-    gap: 12px; 
-    padding: 12px 20px; 
-    color: #334155; 
-    text-decoration: none; 
-    font-size: 14px; 
-    font-weight: 600; 
-    cursor: pointer; 
-}
-
-.sidebar-link .icon { 
-    color: #1e3a8a !important; 
-}
-
-/* =========================================
-   9. سجل الطلبات والبطاقات
+   11. سجل الطلبات والبطاقات
    ========================================= */
 .history-card { 
     background: #ffffff; 
@@ -409,23 +571,12 @@ body {
     display: inline-block; 
 }
 
-.status-completed { 
-    background: #dcfce7; 
-    color: #166534; 
-}
-
-.status-pending { 
-    background: #fef08a; 
-    color: #854d0e; 
-}
-
-.status-rejected { 
-    background: #fee2e2; 
-    color: #991b1b; 
-}
+.status-completed { background: #dcfce7; color: #166534; }
+.status-pending { background: #fef08a; color: #854d0e; }
+.status-rejected { background: #fee2e2; color: #991b1b; }
 
 .virtual-card {
-    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%); /* 🌟 لون بطاقة أزرق فخم 🌟 */
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
     color: white; 
     border-radius: 16px; 
     padding: 20px; 
@@ -468,71 +619,14 @@ body {
 }
 
 /* =========================================
-   10. التخطيط والنصوص الأخرى
+   12. التخطيط والنصوص الإضافية
    ========================================= */
-.actions-row { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-}
-
-.actions-row.row-2 { 
-    justify-content: space-around; 
-}
-
-.actions-divider { 
-    border: 0; 
-    height: 1px; 
-    background: #f1f5f9; 
-    margin: 16px 0; 
-}
-
-.action-btn { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 8px; 
-    cursor: pointer; 
-    width: 30%; 
-    transition: transform 0.2s; 
-    outline: none; 
-}
-
-.action-btn p { 
-    margin: 4px 0 0 !important; 
-    font-size: 14px !important; 
-    font-weight: 600; 
-    color: #334155; 
-}
-
-.section-title { 
-    font-size: 16px; 
+.dialog-title { 
+    font-size: 18px; 
     font-weight: 700; 
-    margin: 24px 20px 16px; 
     color: #0f172a; 
-}
-
-.categories-grid-3 { 
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 12px; 
-    padding: 0 20px; 
-}
-
-.shadcn-card-interactive p { 
-    margin: 10px 0 0; 
-    font-size: 14px !important; 
-    font-weight: 700 !important; 
-    color: #334155; 
-}
-
-.bottom-spacer { 
-    height: 90px; 
-}
-
-.shadcn-dialog { 
-    padding: 24px; 
-    text-align: right; 
+    margin-top: 0; 
+    margin-bottom: 16px; 
 }
 
 .modal-title-green { 
@@ -557,28 +651,6 @@ body {
     border: 1px dashed #cbd5e1; 
     margin-bottom: 16px; 
     text-align: center; 
-}
-
-.dialog-title { 
-    font-size: 18px; 
-    font-weight: 700; 
-    color: #0f172a; 
-    margin-top: 0; 
-    margin-bottom: 16px; 
-}
-
-.overlay { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(15, 23, 42, 0.6); 
-    backdrop-filter: blur(4px); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 1000; 
 }
 
 .auth-tabs { 
@@ -632,7 +704,7 @@ body {
     border-radius: 6px; 
     padding: 12px 16px; 
     position: fixed; 
-    z-index: 3000; 
+    z-index: 9999; 
     left: 50%; 
     bottom: 30px; 
     transform: translateX(-50%); 
