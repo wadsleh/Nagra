@@ -1,4 +1,3 @@
-
 import { firebaseConfig } from './config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -21,15 +20,15 @@ const state = {
     balanceVisible: true     
 };
 
-// 2️⃣ Service Config System (تمت إضافة ستارلينك والأسعار الثابتة 🌟)
+// 2️⃣ Service Config System (تم إصلاح صور ستارلينك لتكون من صورك المحلية 🌟)
 const servicesConfig = {
     "ستارلينك": {
         columns: 2,
         options: [
-            { name: "فرنسا 🇫🇷", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 450000 },
-            { name: "الدومينيكان 🇩🇴", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 390000 },
-            { name: "نيجيريا 🇳🇬", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 250000 }, 
-            { name: "رواندا 🇷🇼", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Starlink_Logo.svg/512px-Starlink_Logo.svg.png", price: 260000 }
+            { name: "فرنسا 🇫🇷", img: "images/starlink.jpg", price: 450000 },
+            { name: "الدومينيكان 🇩🇴", img: "images/starlink.jpg", price: 390000 },
+            { name: "نيجيريا 🇳🇬", img: "images/starlink.jpg", price: 250000 }, 
+            { name: "رواندا 🇷🇼", img: "images/starlink.jpg", price: 260000 }
         ]
     },
     "شحن رصيد": {
@@ -188,7 +187,7 @@ document.getElementById('btn-login-execute').onclick = async () => {
     }
 }
 
-// 🌟 تعديل طباعة السجل بستايل shadcn
+// 🌟 طباعة سجل الطلبات بستايل shadcn
 function loadOrders(userId) {
     if (state.unsubscribeOrders) state.unsubscribeOrders(); 
     const q = query(collection(db, "orders"), where("uid", "==", userId));
@@ -205,10 +204,8 @@ function loadOrders(userId) {
         }
 
         orders.forEach(o => {
-            // تحديد كلاس الحالة
             let statusClass = o.status === 'مكتمل' ? 'status-completed' : (o.status === 'مرفوض' ? 'status-rejected' : 'status-pending');
             
-            // معالجة رد الإدارة
             let adminReplyHtml = "";
             if (o.adminReply) {
                 if(o.service === 'بطاقات دفع' && o.status === 'مكتمل') {
@@ -235,6 +232,7 @@ function loadOrders(userId) {
     });
 }
 
+// 🌟 تعديل النوافذ المنبثقة (الخيارات) لتكون نسخة من صفحة البدء 🌟
 window.openOrderModal = (service) => {
     state.currentService = service;
     const config = servicesConfig[service];
@@ -248,17 +246,34 @@ window.openOrderModal = (service) => {
     
     grid.innerHTML = "";
     grid.style.gridTemplateColumns = `repeat(${config.columns}, 1fr)`;
+    grid.style.gap = "12px"; // مسافة ممتازة بين الكروت
 
     config.options.forEach(opt => {
         const item = document.createElement("div");
-        item.className = "network-card";
-        item.style.border = "1px solid #e2e8f0";
-        item.style.borderRadius = "8px";
+        // استخدام نفس كلاسات الصفحة الرئيسية تماماً
+        item.className = "shadcn-card-interactive";
+        item.style.border = "none";
+        item.style.background = "#ffffff";
+        item.style.padding = "16px 8px";
+        item.style.boxShadow = "0 1px 3px rgba(0,0,0,0.02)";
+        item.style.display = "flex";
+        item.style.flexDirection = "column";
+        item.style.alignItems = "center";
+        item.style.justifyContent = "center";
+
+        // طباعة اللوجو بشكل مطابق لصفحة البدء
+        let imgHtml = opt.img ? `
+            <div class="cat-icon" style="width: 48px; height: 48px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                <img src="${opt.img}" alt="${opt.name}" style="width: 100%; height: 100%; object-fit: contain; transform: scale(1.4);" onerror="this.style.display='none'">
+            </div>
+        ` : '';
+
         item.innerHTML = `
-            <div class="pro-logo" style="border:none; box-shadow:none; background:transparent;"><img src="${opt.img}" alt="${opt.name}"></div>
-            <p style="color: #0f172a; font-weight: 600;">${opt.name}</p>
-            ${opt.price ? `<p style="color: #0f172a; font-size: 12px; margin-top: 5px; font-weight: 700;">${opt.price.toLocaleString()} ج.س</p>` : ''}
+            ${imgHtml}
+            <p style="color: #0f172a; font-weight: 700; font-size: 14px; margin: 0;">${opt.name}</p>
+            ${opt.price ? `<p style="color: #10b981; font-size: 14px; margin-top: 6px; font-weight: 800; direction: ltr;">${opt.price.toLocaleString()} ج.س</p>` : ''}
         `;
+        
         item.addEventListener("click", () => {
             window.proceedToStep2(opt.name, opt.price); 
         });
@@ -360,7 +375,7 @@ window.submitOrder = async () => {
     }
 }
 
-// 🌟 تعديل طباعة البطاقات بستايل shadcn Premium
+// 🌟 طباعة البطاقات الافتراضية بستايل بنكي
 window.openMyCards = () => {
     document.getElementById('cards-modal').style.display = 'flex';
     const cardsNav = document.getElementById('nav-cards');
@@ -383,7 +398,6 @@ window.openMyCards = () => {
         }
 
         cards.forEach(c => {
-            // اختيار لون البطاقة بناءً على نوعها لتعطي إحساس حقيقي
             let cardBg = c.network === 'Visa' ? '#0f172a' : (c.network === 'Mastercard' ? '#020817' : '#1e293b'); 
 
             list.innerHTML += `
@@ -393,7 +407,7 @@ window.openMyCards = () => {
                         <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid rgba(16, 185, 129, 0.3);">🟢 فعالة</span>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); color: #f8fafc;">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 16px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); color: #f8fafc; font-family: monospace; font-size: 15px; letter-spacing: 1px; line-height: 1.6;">
                         ${c.adminReply}
                     </div>
                 </div>
@@ -465,3 +479,4 @@ window.switchNavTab = (element, tabName) => {
         }
     }
 };
+ 
