@@ -124,6 +124,19 @@
             </div>
         </div>
     </div>
+    <div id="verification-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3 class="dialog-title">توثيق الحساب 🛡️</h3>
+            <p class="modal-subtitle">يرجى إرفاق صورة واضحة للبطاقة القومية أو جواز السفر لتمكين ميزات السحب والتحويل.</p>
+            
+            <input type="file" id="id-upload-input" accept="image/*" class="shadcn-input" style="margin-bottom: 20px; background: #f8fafc; padding: 10px;">
+            
+            <div style="display: flex; gap: 12px;">
+                <button id="btn-submit-verification" class="shadcn-btn" style="flex:1;" onclick="submitVerification()">رفع المستند</button>
+                <button class="shadcn-btn-outline" style="flex:1;" onclick="closeVerificationModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <div id="toast-message" class="toast"></div>
 
