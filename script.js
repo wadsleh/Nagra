@@ -153,7 +153,7 @@ onAuthStateChanged(auth, async (user) => {
             });
         }
 
-        onSnapshot(userRef, (s) => {
+                onSnapshot(userRef, async (s) => {
             if (s.exists()) {
                 const data = s.data(); 
                 if(data.isBanned === true) {
@@ -162,9 +162,17 @@ onAuthStateChanged(auth, async (user) => {
                     return; 
                 }
 
+                // 🌟 توليد رقم حساب للمستخدمين القدامى تلقائياً 🌟
+                let accNum = data.accountNumber;
+                if (!accNum) {
+                    accNum = generateAccountNumber();
+                    // حفظ الرقم الجديد في قاعدة البيانات فوراً
+                    await updateDoc(userRef, { accountNumber: accNum, isVerified: false });
+                }
+
                 state.currentUser = data.name; 
                 state.currentEmail = data.email;
-                state.accountNumber = data.accountNumber || "غير متوفر";
+                state.accountNumber = accNum; // استخدام الرقم المضبوط
                 state.isVerified = data.isVerified || false;
 
                 localStorage.setItem('nagra_user_name', data.name);
@@ -178,7 +186,6 @@ onAuthStateChanged(auth, async (user) => {
                 if(sidebarName) sidebarName.innerText = data.name;
                 if(sidebarEmail) sidebarEmail.innerText = data.email;
                 
-                // تحديث القائمة الجانبية برقم الحساب وحالة التوثيق
                 if(sidebarAccNum) sidebarAccNum.innerText = `رقم الحساب: ${state.accountNumber}`;
                 if(sidebarVerification) {
                     if(state.isVerified) {
@@ -195,12 +202,15 @@ onAuthStateChanged(auth, async (user) => {
                 const balanceAmountEl = document.getElementById('balance-amount');
                 if (balanceAmountEl) {
                     if (state.balanceVisible) {
+                        balanceAmountEl.innerText = "••••••";
+                    } else {
                         balanceAmountEl.innerText = state.realBalance;
                     }
                 }
                 loadOrders(user.uid);
             }
         });
+
     }
 });
 
