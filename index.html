@@ -1,52 +1,49 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نَقْرَة | Nagra</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=10.0">
+    <link rel="stylesheet" href="style.css?v=99.0">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
 </head>
-
 <body>
 
     <div id="login-screen" class="overlay">
-        <div class="login-box shadcn-card">
-            <div class="logo-container">
-                <div class="app-logo-large">
-                    <img src="images/logo.png" alt="Nagra Logo">
-                </div>
+        <div class="login-box shadcn-dialog">
+            <div class="app-logo-large">
+                <img src="images/logo.png" alt="Nagra Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/6314/6314050.png'">
             </div>
             <div class="auth-tabs">
                 <button id="tab-login" class="active" onclick="switchAuth('login')">دخول للحساب</button>
                 <button id="tab-signup" onclick="switchAuth('signup')">حساب جديد</button>
             </div>
+            
             <div id="login-form">
                 <h3 class="auth-title">مرحباً بك مجدداً 👋</h3>
                 <div class="input-group">
-                    <input type="email" id="login-email" class="modern-input-login shadcn-input" placeholder="البريد الإلكتروني">
-                    <input type="password" id="login-pass" class="modern-input-login shadcn-input" placeholder="كلمة المرور">
+                    <input type="email" id="login-email" class="shadcn-input" placeholder="البريد الإلكتروني">
+                    <input type="password" id="login-pass" class="shadcn-input" placeholder="كلمة المرور">
                 </div>
                 <div class="forgot-pass-container">
                     <a href="#" onclick="forgotPassword()" class="forgot-pass-link">نسيت كلمة المرور؟</a>
                 </div>
-                <button id="btn-login-execute" class="btn-primary shadcn-btn">تسجيل الدخول</button>
+                <button id="btn-login-execute" class="shadcn-btn">تسجيل الدخول</button>
             </div>
+            
             <div id="signup-form" style="display: none;">
                 <h3 class="auth-title">إنشاء حساب جديد 🚀</h3>
                 <div class="input-group">
-                    <input type="text" id="reg-name" class="modern-input-login shadcn-input" placeholder="الاسم بالكامل">
-                    <input type="email" id="reg-email" class="modern-input-login shadcn-input" placeholder="البريد الإلكتروني">
-                    <input type="password" id="reg-pass" class="modern-input-login shadcn-input" placeholder="كلمة مرور قوية">
+                    <input type="text" id="reg-name" class="shadcn-input" placeholder="الاسم بالكامل">
+                    <input type="email" id="reg-email" class="shadcn-input" placeholder="البريد الإلكتروني">
+                    <input type="password" id="reg-pass" class="shadcn-input" placeholder="كلمة مرور قوية">
                 </div>
-                <button id="btn-signup-execute" class="btn-primary shadcn-btn">إنشاء الحساب</button>
+                <button id="btn-signup-execute" class="shadcn-btn">إنشاء الحساب</button>
             </div>
+            
             <div class="divider"><span>أو الدخول السريع عبر</span></div>
-            <button id="btn-google" class="btn-google shadcn-btn-outline" onclick="signInWithGoogle()">
+            <button id="btn-google" class="shadcn-btn-outline btn-google" onclick="signInWithGoogle()">
                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
                 Google
             </button>
@@ -55,7 +52,7 @@
 
     <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar-menu" class="shadcn-sidebar">
-                <div class="sidebar-header">
+        <div class="sidebar-header">
             <button class="close-sidebar-btn" onclick="toggleSidebar()">
                 <i data-lucide="x"></i>
             </button>
@@ -66,18 +63,17 @@
             <div style="background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; display: inline-block; margin-bottom: 5px;">
                 <p style="margin: 0; font-size: 13px; font-family: monospace; letter-spacing: 1px;" id="sidebar-acc-num">رقم الحساب: ----</p>
             </div>
-            <div id="sidebar-verification" style="cursor: pointer;" onclick="window.showToast('سيتم إضافة صفحة رفع الهوية قريباً 📄')">
+            <div id="sidebar-verification" style="cursor: pointer;">
                 <span style="font-size: 11px; color: #fca5a5; font-weight: bold;">غير موثق 🔴</span>
             </div>
         </div>
-
         
         <div class="sidebar-links">
-            <div class="sidebar-link" onclick="toggleSidebar(); window.showToast('إعدادات الحساب قريباً ⚙️');">
+            <div class="sidebar-link" onclick="toggleSidebar(); openSettingsModal();">
                 <span class="icon"><i data-lucide="settings"></i></span>
                 <span>الإعدادات الشخصية</span>
             </div>
-            <a href="https://wa.me/249100820822" target="_blank" class="sidebar-link support-link">
+            <a href="https://wa.me/249100820822" target="_blank" class="sidebar-link" style="color: #10b981;">
                 <span class="icon"><i data-lucide="message-circle"></i></span>
                 <span>تواصل مع الدعم</span>
             </a>
@@ -92,101 +88,94 @@
         </div>
 
         <div class="sidebar-footer">
-            <button onclick="forceLogout()" class="logout-sidebar-btn shadcn-btn-ghost">
+            <button onclick="forceLogout()" class="shadcn-btn-outline" style="color: #ef4444; border-color: #fca5a5; display: flex; justify-content: center; gap: 8px;">
                 <i data-lucide="log-out"></i> تسجيل الخروج
             </button>
         </div>
     </div>
 
-    <div id="main-app" style="display:none;">
-        
-                <div class="top-hero-section">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <button onclick="toggleSidebar()" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 26px; padding: 0;">
+    <div id="main-app" style="display:none; padding: 0;">
+        <div class="top-hero-section">
+            <div class="top-header">
+                <div class="brand-container">
+                    <button onclick="toggleSidebar()" class="menu-btn">
                         <i data-lucide="menu"></i>
                     </button>
                     <div class="brand-title">نَقْرَة <span class="brand-subtitle">| Nagra</span></div>
                 </div>
-                
-                <button class="notification-btn">
-                    <i data-lucide="bell"></i>
+                <button class="notification-btn" onclick="window.showToast('لا توجد إشعارات جديدة 🔔')">
+                    <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
                 </button>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
-                <div style="text-align: right;">
-                    <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8);">الرصيد المتاح</p>
+            <div class="balance-section">
+                <div class="balance-info">
+                    <p class="balance-label">الرصيد المتاح</p>
                     <div id="user-balance" class="balance-box">
-                        <span id="toggle-balance" class="eye-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center; height: 35px; width: 35px; background: rgba(255,255,255,0.1); border-radius: 50%;">
-                            <i data-lucide="eye"></i>
-                        </span>
                         <span id="balance-amount">0.00</span>
                         <span class="currency">ج.س</span>
+                        <span id="toggle-balance" class="eye-btn" style="margin-right: 10px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1); width: 32px; height: 32px; border-radius: 50%;">
+                            <i data-lucide="eye-off"></i>
+                        </span>
                     </div>
                 </div>
-                <button id="btn-history" class="history-btn-top">سجل الطلبات</button>
+                <button id="btn-history" class="shadcn-btn-secondary" style="border: 1px solid rgba(255,255,255,0.3);">سجل الطلبات</button>
             </div>
         </div>
 
         <div class="main-actions-card shadcn-card">
-                        <div class="actions-row">
+            <div class="actions-row">
                 <div class="action-btn" onclick="checkVerification('التحويل')">
-                    <div class="icon-circle text-blue"><i data-lucide="refresh-cw"></i></div>
+                    <div class="icon-circle"><i data-lucide="refresh-cw" class="text-blue"></i></div>
                     <p>تحويل</p>
                 </div>
                 <div class="action-btn" onclick="openRechargeModal()">
-                    <div class="icon-circle text-green"><i data-lucide="download"></i></div>
+                    <div class="icon-circle"><i data-lucide="download" class="text-green"></i></div>
                     <p>تغذية</p>
                 </div>
                 <div class="action-btn" onclick="checkVerification('السحب')">
-                    <div class="icon-circle text-red"><i data-lucide="upload"></i></div>
+                    <div class="icon-circle"><i data-lucide="upload" class="text-red"></i></div>
                     <p>سحب</p>
                 </div>
             </div>
-
-
             <hr class="actions-divider">
-
             <div class="actions-row row-2">
                 <div class="action-btn" onclick="openOrderModal('شحن رصيد')">
-                    <div class="icon-circle text-orange"><i data-lucide="smartphone"></i></div>
+                    <div class="icon-circle"><i data-lucide="smartphone" class="text-orange"></i></div>
                     <p>شحن رصيد</p>
                 </div>
                 <div class="action-btn" onclick="window.showToast('ميزة دفع الفواتير قريباً 🚀')">
-                    <div class="icon-circle text-purple"><i data-lucide="receipt"></i></div>
+                    <div class="icon-circle"><i data-lucide="receipt" class="text-purple"></i></div>
                     <p>دفع فواتير</p>
                 </div>
             </div>
         </div>
 
-
         <div class="categories-section">
             <h3 class="section-title">الفئات</h3>
-            
             <div class="categories-grid-3">
-                <div class="cat-item service-item shadcn-card-interactive" data-service="ألعاب">
-                    <div class="cat-icon"><i data-lucide="gamepad-2"></i></div>
-                    <p>ألعاب</p>
-                </div>
-                <div class="cat-item service-item shadcn-card-interactive" data-service="اشتراكات">
-                    <div class="cat-icon"><i data-lucide="tv"></i></div>
-                    <p>اشتراكات</p>
-                </div>
-                <div class="cat-item service-item shadcn-card-interactive" data-service="ستارلينك">
-                    <div class="cat-icon"><i data-lucide="satellite-dish"></i></div>
+                <div class="shadcn-card-interactive service-item" data-service="ستارلينك">
+                    <div class="cat-icon" style="background: #0f172a; color: white;"><i data-lucide="satellite-dish"></i></div>
                     <p>ستارلينك</p>
                 </div>
-                <div class="cat-item service-item shadcn-card-interactive" data-service="بطاقات دفع">
-                    <div class="cat-icon"><i data-lucide="credit-card"></i></div>
+                <div class="shadcn-card-interactive service-item" data-service="اشتراكات">
+                    <div class="cat-icon" style="color: #ef4444;"><i data-lucide="tv"></i></div>
+                    <p>اشتراكات</p>
+                </div>
+                <div class="shadcn-card-interactive service-item" data-service="ألعاب">
+                    <div class="cat-icon" style="color: #3b82f6;"><i data-lucide="gamepad-2"></i></div>
+                    <p>ألعاب</p>
+                </div>
+                <div class="shadcn-card-interactive service-item" data-service="بطاقات دفع">
+                    <div class="cat-icon" style="color: #1e3a8a;"><i data-lucide="credit-card"></i></div>
                     <p>بطاقات دفع</p>
                 </div>
-                <div class="cat-item service-item shadcn-card-interactive" data-service="عملات مشفرة">
-                    <div class="cat-icon"><i data-lucide="bitcoin"></i></div>
+                <div class="shadcn-card-interactive service-item" data-service="عملات مشفرة">
+                    <div class="cat-icon" style="color: #f59e0b;"><i data-lucide="bitcoin"></i></div>
                     <p>عملات</p>
                 </div>
-                <div class="cat-item shadcn-card-interactive" onclick="openMyCards()">
-                    <div class="cat-icon"><i data-lucide="wallet"></i></div>
+                <div class="shadcn-card-interactive" onclick="openMyCards()">
+                    <div class="cat-icon" style="background:#e0f2fe; color: #0284c7;"><i data-lucide="wallet"></i></div>
                     <p>بطاقاتي</p>
                 </div>
             </div>
@@ -194,7 +183,7 @@
         
         <div class="bottom-spacer"></div>
 
-        <nav class="bottom-nav shadcn-nav">
+        <nav class="shadcn-nav">
             <div class="nav-item active" id="nav-home" onclick="switchNavTab(this, 'home')">
                 <span class="nav-icon"><i data-lucide="home"></i></span>
                 <span class="nav-text">الرئيسية</span>
@@ -212,66 +201,98 @@
                 <span class="nav-text">حسابي</span>
             </div>
         </nav>
-
     </div>
 
-    <div id="recharge-modal" class="modal-overlay" style="display:none;">
+    <div id="recharge-modal" class="modal-overlay">
         <div class="modal-box shadcn-dialog">
-            <h3 class="modal-title-green">تغذية الرصيد 💰</h3>
+            <h3 class="modal-title-green" style="color: #10b981;">تغذية الرصيد 📥</h3>
             <p class="modal-subtitle">حول المبلغ لحساب (بنكك)، ثم أدخل رقم العملية.</p>
             <div class="bank-details-box">
-                <b class="account-number">2559830</b><br>
-                <span class="account-name">اسم الحساب: مـرتـضـى صـالـح</span>
+                <b style="font-size: 24px; color: #0f172a; letter-spacing: 2px;">2559830</b><br>
+                <span style="font-size: 13px; color: #10b981; font-weight: bold;">اسم الحساب: مـرتـضـى صـالـح</span>
             </div>
-            <input type="number" id="recharge-amount" class="modern-input shadcn-input" placeholder="المبلغ (ج.س)">
-            <input type="number" id="recharge-receipt" class="modern-input shadcn-input" placeholder="رقم الإشعار">
-            <div class="modal-buttons">
-                <button class="confirm-btn shadcn-btn" onclick="submitRecharge()">تأكيد التحويل</button>
-                <button class="cancel-btn shadcn-btn-outline" onclick="closeRechargeModal()">إلغاء</button>
+            <input type="number" id="recharge-amount" class="shadcn-input" style="margin-bottom:12px;" placeholder="المبلغ (ج.س)">
+            <input type="number" id="recharge-receipt" class="shadcn-input" style="margin-bottom:16px;" placeholder="رقم الإشعار">
+            <div style="display: flex; gap: 10px;">
+                <button class="shadcn-btn" style="background: #10b981 !important; flex:1;" onclick="submitRecharge()">تأكيد التحويل</button>
+                <button class="shadcn-btn-outline" style="flex:1;" onclick="closeRechargeModal()">إلغاء</button>
             </div>
         </div>
     </div>
 
-    <div id="order-modal" class="modal-overlay" style="display:none;">
+    <div id="order-modal" class="modal-overlay">
         <div class="modal-box shadcn-dialog">
             <h3 id="modal-title" class="dialog-title">طلب خدمة</h3>
             <div id="step-1-options" style="display: none;">
                 <div class="network-grid" id="dynamic-options-grid"></div>
-                <button class="cancel-btn shadcn-btn-outline full-width mt-10" onclick="closeModal()">إلغاء</button>
+                <button class="shadcn-btn-outline" style="margin-top:16px;" onclick="closeModal()">إلغاء</button>
             </div>
             <div id="step-2-details" style="display: none;">
-                <div id="card-info-box" class="card-info-alert" style="display: none;"></div>
-                <input type="text" id="order-target" class="modern-input shadcn-input" placeholder="البيانات المطلوبة">
-                <input type="number" id="order-amount" class="modern-input shadcn-input" placeholder="المبلغ (المعادل بـ ج.س)">
-                <div class="modal-buttons">
-                    <button id="submitBtn" class="confirm-btn shadcn-btn" onclick="submitOrder()">تأكيد الطلب</button>
-                    <button class="cancel-btn shadcn-btn-outline" onclick="closeModal()">إلغاء</button>
+                <input type="text" id="order-target" class="shadcn-input" style="margin-bottom:12px;" placeholder="البيانات المطلوبة">
+                <input type="number" id="order-amount" class="shadcn-input" style="margin-bottom:16px;" placeholder="المبلغ (المعادل بـ ج.س)">
+                <div style="display: flex; gap: 10px;">
+                    <button id="submitBtn" class="shadcn-btn" style="flex:1;" onclick="submitOrder()">تأكيد الطلب</button>
+                    <button class="shadcn-btn-outline" style="flex:1;" onclick="closeModal()">إلغاء</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="history-modal" class="modal-overlay" style="display:none;">
+    <div id="history-modal" class="modal-overlay">
         <div class="modal-box shadcn-dialog dialog-md">
-            <h3 class="dialog-title">سجل طلباتي</h3>
-            <div id="user-orders-list" class="orders-history-container"></div>
-            <button class="cancel-btn shadcn-btn-outline full-width mt-15" onclick="closeHistoryModal()">إإغلاق</button>
+            <h3 class="dialog-title" style="color: #1e3a8a;">سجل طلباتي 📜</h3>
+            <div id="user-orders-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 16px;"></div>
+            <button class="shadcn-btn-outline" onclick="closeHistoryModal()">إغلاق</button>
         </div>
     </div>
 
-    <div id="cards-modal" class="modal-overlay" style="display:none;">
-        <div class="modal-box shadcn-dialog dialog-lg">
-            <h3 class="dialog-title with-border">💳 بطاقاتي الرقمية</h3>
-            <div id="my-cards-list" class="cards-list-container"><p class="loading-text">جاري جلب البطاقات... ⏳</p></div>
-            <button onclick="closeCardsModal()" class="shadcn-btn-destructive full-width mt-15">إغلاق</button>
+    <div id="cards-modal" class="modal-overlay">
+        <div class="modal-box shadcn-dialog dialog-md">
+            <h3 class="dialog-title" style="color: #1e3a8a;">بطاقاتي الرقمية 💳</h3>
+            <div id="my-cards-list" style="max-height: 400px; overflow-y: auto; margin-bottom: 16px;"></div>
+            <button class="shadcn-btn-outline" onclick="closeCardsModal()">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-box shadcn-dialog">
+            <h3 class="dialog-title">الإعدادات الشخصية ⚙️</h3>
+            
+            <div style="background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 20px; text-align: right; border: 1px solid #e2e8f0;">
+                <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">الاسم: <b id="set-name" style="color: #0f172a; font-size: 14px;">...</b></p>
+                <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">الإيميل: <b id="set-email" style="color: #0f172a; font-size: 14px;">...</b></p>
+                <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">رقم الحساب: <b id="set-acc" style="color: #0f172a; font-size: 14px; font-family: monospace; letter-spacing: 1px;">...</b></p>
+                <p style="margin: 0; color: #64748b; font-size: 13px;">حالة الحساب: <span id="set-status">...</span></p>
+            </div>
+
+            <button id="btn-open-verify-from-settings" class="shadcn-btn" style="background: #3b82f6 !important; margin-bottom: 12px; display: none;" onclick="closeSettingsModal(); openVerificationModal();">
+                <i data-lucide="shield-check" style="width: 18px; height: 18px; margin-left: 8px;"></i> رفع الهوية لتوثيق الحساب
+            </button>
+
+            <button class="shadcn-btn-outline" onclick="closeSettingsModal()">إغلاق</button>
+        </div>
+    </div>
+
+    <div id="verification-modal" class="modal-overlay">
+        <div class="modal-box shadcn-dialog">
+            <h3 class="dialog-title">توثيق الحساب 🛡️</h3>
+            <p class="modal-subtitle">يرجى إرفاق صورة واضحة للبطاقة القومية أو جواز السفر لتمكين ميزات السحب والتحويل.</p>
+            <input type="file" id="id-upload-input" accept="image/*" class="shadcn-input" style="margin-bottom: 20px; background: #f8fafc; padding: 10px;">
+            <div style="display: flex; gap: 12px;">
+                <button id="btn-submit-verification" class="shadcn-btn" style="flex:1;" onclick="submitVerification()">رفع المستند</button>
+                <button class="shadcn-btn-outline" style="flex:1;" onclick="closeVerificationModal()">إلغاء</button>
+            </div>
         </div>
     </div>
 
     <div id="toast-message" class="toast shadcn-toast"></div>
 
+    <script type="module" src="script.js?v=99.0"></script>
     <script>
-        lucide.createIcons();
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
     </script>
-    <script type="module" src="script.js?v=10.0"></script>
 </body>
 </html>
+ 
