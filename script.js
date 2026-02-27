@@ -10,7 +10,6 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
-// 1️⃣ State Management (تمت إضافة حالة المراجعة)
 const state = {
     currentUser: null,
     currentEmail: null,
@@ -56,11 +55,13 @@ window.toggleSidebar = () => {
     const menu = document.getElementById('sidebar-menu');
     const overlay = document.getElementById('sidebar-overlay');
     if (menu.classList.contains('active')) {
-        menu.classList.remove('active'); overlay.classList.remove('active');
+        menu.classList.remove('active'); 
+        overlay.style.display = 'none';
         const homeNav = document.getElementById('nav-home');
         if(homeNav) window.switchNavTab(homeNav, 'home');
     } else {
-        menu.classList.add('active'); overlay.classList.add('active');
+        menu.classList.add('active'); 
+        overlay.style.display = 'block';
         document.getElementById('sidebar-user-name').innerText = localStorage.getItem('nagra_user_name') || 'زبون نَقْرَة';
         document.getElementById('sidebar-user-email').innerText = localStorage.getItem('nagra_user_email') || 'جاري التحميل...';
     }
@@ -108,7 +109,7 @@ onAuthStateChanged(auth, async (user) => {
                     state.currentEmail = data.email;
                     state.accountNumber = data.accountNumber; 
                     state.isVerified = data.isVerified || false;
-                    state.verificationStatus = data.verificationStatus || "none"; // 🌟 تحديث حالة المراجعة
+                    state.verificationStatus = data.verificationStatus || "none"; 
 
                     localStorage.setItem('nagra_user_name', data.name); 
                     localStorage.setItem('nagra_user_email', data.email);
@@ -268,17 +269,14 @@ window.openSettingsModal = () => {
     if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
-window.closeSettingsModal = () => {
-    document.getElementById('settings-modal').style.display = 'none';
-};
+window.closeSettingsModal = () => { document.getElementById('settings-modal').style.display = 'none'; };
 
 window.switchNavTab = (element, tabName) => {
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); element.classList.add('active');
     if (tabName === 'cards') { if(document.getElementById('cards-modal').style.display !== 'flex') window.openMyCards();
     } else if (tabName === 'history') { if(document.getElementById('history-modal').style.display !== 'flex') window.openHistoryModal();
-    } else if (tabName === 'profile') { 
-        window.openSettingsModal(); // 🌟 يفتح الإعدادات مباشرة من الشريط السفلي
-    } else if (tabName === 'home') { document.getElementById('cards-modal').style.display = 'none'; document.getElementById('history-modal').style.display = 'none'; const menu = document.getElementById('sidebar-menu'); const overlay = document.getElementById('sidebar-overlay'); if (menu.classList.contains('active')) { menu.classList.remove('active'); overlay.classList.remove('active'); } }
+    } else if (tabName === 'profile') { window.openSettingsModal();
+    } else if (tabName === 'home') { document.getElementById('cards-modal').style.display = 'none'; document.getElementById('history-modal').style.display = 'none'; const menu = document.getElementById('sidebar-menu'); const overlay = document.getElementById('sidebar-overlay'); if (menu.classList.contains('active')) { menu.classList.remove('active'); overlay.style.display = 'none'; } }
 };
 
 // 🌟🌟 دوال التوثيق ورفع المستندات 🌟🌟
