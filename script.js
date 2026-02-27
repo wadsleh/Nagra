@@ -497,4 +497,3 @@ window.switchNavTab = (element, tabName) => {
         }
     }
 };
- 
