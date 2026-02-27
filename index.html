@@ -99,27 +99,14 @@
                 <button class="notification-btn"><i data-lucide="bell"></i></button>
             </div>
 
-            <span id="toggle-balance" class="eye-btn" style="display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.8);">
-    <i data-lucide="eye"></i>
-</span>
+            <div id="user-balance" class="balance-box">
+    <span id="toggle-balance" class="eye-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center; height: 35px; width: 35px; background: rgba(255,255,255,0.1); border-radius: 50%;">
+        <i data-lucide="eye"></i>
+    </span>
+    <span id="balance-amount">0.00</span>
+    <span class="currency">ج.س</span>
+</div>
 
-        </div>
-
-        <div class="main-actions-card shadcn-card">
-            <div class="actions-row">
-                <div class="action-btn" onclick="window.showToast('ميزة التحويل قريباً 🚀')">
-                    <div class="icon-circle text-blue"><i data-lucide="refresh-cw"></i></div>
-                    <p>تحويل</p>
-                </div>
-                <div class="action-btn" onclick="openRechargeModal()">
-                    <div class="icon-circle text-green"><i data-lucide="download"></i></div>
-                    <p>تغذية</p>
-                </div>
-                <div class="action-btn" onclick="window.showToast('ميزة السحب قريباً 🚀')">
-                    <div class="icon-circle text-red"><i data-lucide="upload"></i></div>
-                    <p>سحب</p>
-                </div>
-            </div>
 
             <hr class="actions-divider">
 
