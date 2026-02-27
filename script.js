@@ -192,32 +192,104 @@ onAuthStateChanged(auth, async (user) => {
                         sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #10b981; font-weight: bold;">حساب موثق 🟢</span>';
                         sidebarVerification.onclick = null; 
                     } else if (data.verificationStatus === 'pending') {
-                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #f59e0b; font-weight: bold;">قيد المراجعة ⏳</span>';
-                        sidebarVerification.onclick = () => window.showToast('مستنداتك قيد المراجعة من قبل الإدارة ⏳');
-                    } else {
-                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #ef4444; font-weight: bold;">غير موثق 🔴</span>';
-                        sidebarVerification.onclick = () => window.openVerificationModal();
-                    }
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        try {
+            const userRef = doc(db, "users", user.uid); 
+            const snap = await getDoc(userRef);
+            
+            // 1️⃣ معالجة الحساب وتأكيد البيانات (قبل المراقبة اللحظية لمنع التعليق)
+            if (!snap.exists()) {
+                // مستخدم جديد تماماً
+                await setDoc(userRef, { 
+                    name: user.displayName || user.email.split('@')[0], 
+                    email: user.email, 
+                    balance: 0,
+                    accountNumber: generateAccountNumber(), 
+                    isVerified: false,
+                    verificationStatus: "none"
+                });
+            } else {
+                // مستخدم قديم، نتأكد إن عنده رقم حساب
+                const data = snap.data();
+                if (!data.accountNumber) {
+                    await updateDoc(userRef, { 
+                        accountNumber: generateAccountNumber(), 
+                        isVerified: false,
+                        verificationStatus: "none"
+                    });
                 }
-
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                
-                state.realBalance = (Number(data.balance) || 0).toLocaleString();
-                const balanceAmountEl = document.getElementById('balance-amount');
-                if (balanceAmountEl) {
-                    if (state.balanceVisible) {
-                        balanceAmountEl.innerText = "••••••";
-                    } else {
-                        balanceAmountEl.innerText = state.realBalance;
-                    }
-                }
-                loadOrders(user.uid);
             }
-        });
 
+            // 2️⃣ إخفاء شاشة الدخول وفتح التطبيق فوراً
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+
+            // 3️⃣ تشغيل المراقبة اللحظية (للرصيد والتوثيق)
+            onSnapshot(userRef, (s) => {
+                if (s.exists()) {
+                    const data = s.data(); 
+                    if(data.isBanned === true) {
+                        window.showToast("⛔ تم إيقاف حسابك من قبل الإدارة", true);
+                        signOut(auth).then(() => setTimeout(() => location.reload(), 2000));
+                        return; 
+                    }
+
+                    state.currentUser = data.name; 
+                    state.currentEmail = data.email;
+                    state.accountNumber = data.accountNumber; 
+                    state.isVerified = data.isVerified || false;
+
+                    localStorage.setItem('nagra_user_name', data.name);
+                    localStorage.setItem('nagra_user_email', data.email);
+
+                    const sidebarName = document.getElementById('sidebar-user-name');
+                    const sidebarEmail = document.getElementById('sidebar-user-email');
+                    const sidebarAccNum = document.getElementById('sidebar-acc-num');
+                    const sidebarVerification = document.getElementById('sidebar-verification');
+
+                    if(sidebarName) sidebarName.innerText = data.name;
+                    if(sidebarEmail) sidebarEmail.innerText = data.email;
+                    if(sidebarAccNum) sidebarAccNum.innerText = `رقم الحساب: ${state.accountNumber}`;
+                    
+                    // تحديث حالة التوثيق
+                    if(sidebarVerification) {
+                        if(state.isVerified) {
+                            sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #10b981; font-weight: bold;">حساب موثق 🟢</span>';
+                            sidebarVerification.onclick = null; 
+                        } else if (data.verificationStatus === 'pending') {
+                            sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #f59e0b; font-weight: bold;">قيد المراجعة ⏳</span>';
+                            sidebarVerification.onclick = () => window.showToast('مستنداتك قيد المراجعة من قبل الإدارة ⏳');
+                        } else {
+                            sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #ef4444; font-weight: bold;">غير موثق 🔴</span>';
+                            sidebarVerification.onclick = () => window.openVerificationModal();
+                        }
+                    }
+                    
+                    state.realBalance = (Number(data.balance) || 0).toLocaleString();
+                    const balanceAmountEl = document.getElementById('balance-amount');
+                    if (balanceAmountEl) {
+                        if (state.balanceVisible) {
+                            balanceAmountEl.innerText = "••••••";
+                        } else {
+                            balanceAmountEl.innerText = state.realBalance;
+                        }
+                    }
+                    loadOrders(user.uid);
+                }
+            });
+
+        } catch (error) {
+            console.error("Auth Error:", error);
+            window.showToast("حدث خطأ أثناء تسجيل الدخول", true);
+        }
+    } else {
+        // في حالة تسجيل الخروج
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('main-app').style.display = 'none';
     }
 });
+
 
 document.getElementById('btn-signup-execute').onclick = async () => {
     const name = document.getElementById('reg-name').value; 
