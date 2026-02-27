@@ -2,10 +2,13 @@ import { firebaseConfig } from './config.js';
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, onSnapshot, query, where, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+// 🌟 استدعاء مكتبات التخزين لرفع صور البطاقات
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
 const app = initializeApp(firebaseConfig); 
 const db = getFirestore(app); 
 const auth = getAuth(app); 
+const storage = getStorage(app); // 🌟 تشغيل خدمة التخزين
 const googleProvider = new GoogleAuthProvider();
 
 // 1️⃣ State Management
@@ -18,8 +21,8 @@ const state = {
     unsubscribeCards: null,
     realBalance: "0",        
     balanceVisible: true,
-    accountNumber: null, // 🌟 إضافة رقم الحساب
-    isVerified: false    // 🌟 إضافة حالة التوثيق
+    accountNumber: null, 
+    isVerified: false    
 };
 
 // 🌟 دالة توليد رقم حساب عشوائي من 7 أرقام
@@ -108,7 +111,6 @@ window.toggleSidebar = () => {
     }
 };
 
-// 🌟 دالة فحص التوثيق قبل السحب والتحويل
 window.checkVerification = (actionName) => {
     if (!state.isVerified) {
         window.showToast(`⚠️ عذراً، يجب توثيق حسابك بالهوية لتتمكن من ${actionName}`, true);
@@ -142,18 +144,17 @@ onAuthStateChanged(auth, async (user) => {
         const userRef = doc(db, "users", user.uid); 
         const snap = await getDoc(userRef);
         
-        // إذا كان المستخدم جديداً (سجل بجوجل مثلاً)
         if (!snap.exists()) {
             await setDoc(userRef, { 
                 name: user.displayName || user.email.split('@')[0], 
                 email: user.email, 
                 balance: 0,
-                accountNumber: generateAccountNumber(), // توليد رقم الحساب
-                isVerified: false // غير موثق افتراضياً
+                accountNumber: generateAccountNumber(), 
+                isVerified: false 
             });
         }
 
-                onSnapshot(userRef, async (s) => {
+        onSnapshot(userRef, async (s) => {
             if (s.exists()) {
                 const data = s.data(); 
                 if(data.isBanned === true) {
@@ -162,17 +163,15 @@ onAuthStateChanged(auth, async (user) => {
                     return; 
                 }
 
-                // 🌟 توليد رقم حساب للمستخدمين القدامى تلقائياً 🌟
                 let accNum = data.accountNumber;
                 if (!accNum) {
                     accNum = generateAccountNumber();
-                    // حفظ الرقم الجديد في قاعدة البيانات فوراً
                     await updateDoc(userRef, { accountNumber: accNum, isVerified: false });
                 }
 
                 state.currentUser = data.name; 
                 state.currentEmail = data.email;
-                state.accountNumber = accNum; // استخدام الرقم المضبوط
+                state.accountNumber = accNum; 
                 state.isVerified = data.isVerified || false;
 
                 localStorage.setItem('nagra_user_name', data.name);
@@ -185,13 +184,19 @@ onAuthStateChanged(auth, async (user) => {
 
                 if(sidebarName) sidebarName.innerText = data.name;
                 if(sidebarEmail) sidebarEmail.innerText = data.email;
-                
                 if(sidebarAccNum) sidebarAccNum.innerText = `رقم الحساب: ${state.accountNumber}`;
+                
+                // 🌟 نظام عرض حالة التوثيق الجديد 🌟
                 if(sidebarVerification) {
                     if(state.isVerified) {
-                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #6ee7b7; font-weight: bold;">حساب موثق 🟢</span>';
+                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #10b981; font-weight: bold;">حساب موثق 🟢</span>';
+                        sidebarVerification.onclick = null; 
+                    } else if (data.verificationStatus === 'pending') {
+                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #f59e0b; font-weight: bold;">قيد المراجعة ⏳</span>';
+                        sidebarVerification.onclick = () => window.showToast('مستنداتك قيد المراجعة من قبل الإدارة ⏳');
                     } else {
-                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #fca5a5; font-weight: bold;">غير موثق 🔴</span>';
+                        sidebarVerification.innerHTML = '<span style="font-size: 11px; color: #ef4444; font-weight: bold;">غير موثق 🔴</span>';
+                        sidebarVerification.onclick = () => window.openVerificationModal();
                     }
                 }
 
@@ -214,7 +219,6 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-// إنشاء مستخدم جديد عبر الإيميل
 document.getElementById('btn-signup-execute').onclick = async () => {
     const name = document.getElementById('reg-name').value; 
     const email = document.getElementById('reg-email').value; 
@@ -223,7 +227,6 @@ document.getElementById('btn-signup-execute').onclick = async () => {
     
     try {
         const res = await createUserWithEmailAndPassword(auth, email, pass);
-        // حفظ بيانات المستخدم الجديد مع رقم الحساب
         await setDoc(doc(db, "users", res.user.uid), { 
             name, 
             email, 
@@ -543,6 +546,53 @@ window.switchNavTab = (element, tabName) => {
         const overlay = document.getElementById('sidebar-overlay');
         if (menu.classList.contains('active')) {
             menu.classList.remove('active'); overlay.classList.remove('active');
+        }
+    }
+};
+
+// 🌟🌟 دوال التوثيق ورفع المستندات 🌟🌟
+window.openVerificationModal = () => {
+    const modal = document.getElementById('verification-modal');
+    if(modal) modal.style.display = 'flex';
+};
+
+window.closeVerificationModal = () => {
+    const modal = document.getElementById('verification-modal');
+    if(modal) modal.style.display = 'none';
+};
+
+window.submitVerification = async () => {
+    const fileInput = document.getElementById('id-upload-input');
+    if (!fileInput) return;
+    const file = fileInput.files[0];
+    
+    if (!file) return window.showToast("الرجاء اختيار صورة المستند أولاً", true);
+
+    const btn = document.getElementById('btn-submit-verification');
+    if(btn) {
+        btn.disabled = true;
+        btn.innerText = "جاري الرفع... ⏳";
+    }
+
+    try {
+        const storageRef = ref(storage, `verifications/${auth.currentUser.uid}/${file.name}`);
+        await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(storageRef);
+
+        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+            verificationStatus: "pending",
+            idDocumentUrl: downloadURL
+        });
+
+        window.showToast("تم رفع المستند بنجاح! جاري المراجعة ⏳");
+        window.closeVerificationModal();
+    } catch (error) {
+        console.error(error);
+        window.showToast("حدث خطأ أثناء الرفع. تأكد من اتصالك بالإنترنت.", true);
+    } finally {
+        if(btn) {
+            btn.disabled = false;
+            btn.innerText = "رفع المستند";
         }
     }
 };
