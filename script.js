@@ -446,16 +446,34 @@ window.forceLogout = async () => {
     location.reload(); 
 }
 
+// 🌟🌟 ميزة إخفاء/إظهار الرصيد باستخدام Lucide Icons 🌟🌟
 document.addEventListener("click", function(e) {
-    if (e.target.id === "toggle-balance") {
+    const toggleBtn = e.target.closest("#toggle-balance");
+    
+    if (toggleBtn) {
         const balanceText = document.getElementById("balance-amount");
         if (!balanceText) return;
+
         if (state.balanceVisible) {
-            balanceText.innerText = "••••••"; e.target.innerText = "🙈";
+            balanceText.innerText = "••••••";
+            toggleBtn.innerHTML = '<i data-lucide="eye-off"></i>';
         } else {
-            balanceText.innerText = state.realBalance; e.target.innerText = "👁️";
+            balanceText.innerText = state.realBalance;
+            toggleBtn.innerHTML = '<i data-lucide="eye"></i>';
         }
+
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+        
         state.balanceVisible = !state.balanceVisible;
+    }
+});
+
+// تفعيل الأيقونات عند تحميل الصفحة أول مرة
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
     }
 });
 
