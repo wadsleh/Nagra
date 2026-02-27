@@ -90,23 +90,50 @@
 
     <div id="main-app" style="display:none;">
         
-        <div class="top-hero-section">
-            <div class="top-header">
-                <div class="brand-container">
-                    <button onclick="toggleSidebar()" class="menu-btn"><i data-lucide="menu"></i></button>
+                <div class="top-hero-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button onclick="toggleSidebar()" style="background: transparent; border: none; color: white; cursor: pointer; font-size: 26px; padding: 0;">
+                        <i data-lucide="menu"></i>
+                    </button>
                     <div class="brand-title">نَقْرَة <span class="brand-subtitle">| Nagra</span></div>
                 </div>
-                <button class="notification-btn"><i data-lucide="bell"></i></button>
+                
+                <button class="notification-btn">
+                    <i data-lucide="bell"></i>
+                </button>
             </div>
 
-            <div id="user-balance" class="balance-box">
-    <span id="toggle-balance" class="eye-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center; height: 35px; width: 35px; background: rgba(255,255,255,0.1); border-radius: 50%;">
-        <i data-lucide="eye"></i>
-    </span>
-    <span id="balance-amount">0.00</span>
-    <span class="currency">ج.س</span>
-</div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
+                <div style="text-align: right;">
+                    <p style="margin: 0; font-size: 14px; color: rgba(255,255,255,0.8);">الرصيد المتاح</p>
+                    <div id="user-balance" class="balance-box">
+                        <span id="toggle-balance" class="eye-btn" style="cursor: pointer; display: flex; align-items: center; justify-content: center; height: 35px; width: 35px; background: rgba(255,255,255,0.1); border-radius: 50%;">
+                            <i data-lucide="eye"></i>
+                        </span>
+                        <span id="balance-amount">0.00</span>
+                        <span class="currency">ج.س</span>
+                    </div>
+                </div>
+                <button id="btn-history" class="history-btn-top">سجل الطلبات</button>
+            </div>
+        </div>
 
+        <div class="main-actions-card shadcn-card">
+            <div class="actions-row">
+                <div class="action-btn" onclick="window.showToast('ميزة التحويل قريباً 🚀')">
+                    <div class="icon-circle text-blue"><i data-lucide="refresh-cw"></i></div>
+                    <p>تحويل</p>
+                </div>
+                <div class="action-btn" onclick="openRechargeModal()">
+                    <div class="icon-circle text-green"><i data-lucide="download"></i></div>
+                    <p>تغذية</p>
+                </div>
+                <div class="action-btn" onclick="window.showToast('ميزة السحب قريباً 🚀')">
+                    <div class="icon-circle text-red"><i data-lucide="upload"></i></div>
+                    <p>سحب</p>
+                </div>
+            </div>
 
             <hr class="actions-divider">
 
@@ -116,11 +143,12 @@
                     <p>شحن رصيد</p>
                 </div>
                 <div class="action-btn" onclick="window.showToast('ميزة دفع الفواتير قريباً 🚀')">
-                    <div class="icon-circle text-purple"><i data-lucide="receipt-text"></i></div>
+                    <div class="icon-circle text-purple"><i data-lucide="receipt"></i></div>
                     <p>دفع فواتير</p>
                 </div>
             </div>
         </div>
+
 
         <div class="categories-section">
             <h3 class="section-title">الفئات</h3>
